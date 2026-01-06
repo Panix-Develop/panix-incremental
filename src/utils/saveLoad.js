@@ -17,7 +17,8 @@ export function saveGame(managers) {
       timestamp: Date.now(),
       resources: managers.resourceManager.getSaveData(),
       crafting: managers.craftingManager.getSaveData(),
-      drones: managers.droneManager.getSaveData()
+      drones: managers.droneManager.getSaveData(),
+      structures: managers.structureManager ? managers.structureManager.save() : null
     };
 
     localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
@@ -63,6 +64,10 @@ export function loadGame(managers) {
 
     if (saveData.drones && managers.droneManager) {
       managers.droneManager.loadSaveData(saveData.drones);
+    }
+
+    if (saveData.structures && managers.structureManager) {
+      managers.structureManager.load(saveData.structures);
     }
 
     console.log('Game loaded successfully from', new Date(saveData.timestamp));

@@ -246,88 +246,88 @@ Update the file after completing each sub-task, not just after completing an ent
 
 ### PHASE 4: STRUCTURES SYSTEM
 
-- [ ] 4.0 Build Structures System with Solar Panel
-  - [ ] 4.1 Remove energy tiles from map
-    - [ ] 4.1.1 Read `src/config/mapConfig.js` layout array
-    - [ ] 4.1.2 Replace all 'energy' tiles with 'empty' tiles
-    - [ ] 4.1.3 Update HexGrid to not recognize 'energy' type
-    - [ ] 4.1.4 Remove energy tile color from MapScene COLORS
-    - [ ] 4.1.5 Test that no energy tiles appear on map
-  - [ ] 4.2 Create structure configuration
-    - [ ] 4.2.1 Create `src/config/structures.js`
-    - [ ] 4.2.2 Define structures object with solarPanel
-    - [ ] 4.2.3 Add solarPanel id, name, description
-    - [ ] 4.2.4 Add costs: iron 10, silicon 5
-    - [ ] 4.2.5 Add stats: energyGeneration 1.0
-    - [ ] 4.2.6 Add buildableOn: ['empty']
-    - [ ] 4.2.7 Add isVisible() and isUnlocked() functions
-    - [ ] 4.2.8 Export structures and getStructure() helper
-  - [ ] 4.3 Create StructureManager
-    - [ ] 4.3.1 Create `src/systems/StructureManager.js`
-    - [ ] 4.3.2 Add constructor with resourceManager, hexGrid params
-    - [ ] 4.3.3 Initialize structures Map (key: "q,r", value: structure)
-    - [ ] 4.3.4 Implement canBuildStructure(q, r, structureType)
-    - [ ] 4.3.5 Check tile is empty, check resource costs
-    - [ ] 4.3.6 Implement buildStructure(q, r, structureType)
-    - [ ] 4.3.7 Deduct resource costs via resourceManager
-    - [ ] 4.3.8 Add structure to structures Map
-    - [ ] 4.3.9 Update tile in hexGrid (mark as has structure)
-    - [ ] 4.3.10 Implement getStructureAt(q, r)
-    - [ ] 4.3.11 Implement getAllStructures()
-    - [ ] 4.3.12 Implement getTotalEnergyGeneration()
-    - [ ] 4.3.13 Implement update(deltaTime) for energy generation
-    - [ ] 4.3.14 Add getSaveData() method
-    - [ ] 4.3.15 Add loadSaveData(data) method
-  - [ ] 4.4 Update ResourceManager for energy generation
-    - [ ] 4.4.1 Read `src/systems/ResourceManager.js`
-    - [ ] 4.4.2 Add structureManager reference (passed in update)
-    - [ ] 4.4.3 In update(), call structureManager.getTotalEnergyGeneration()
-    - [ ] 4.4.4 Add energy to resources based on structure generation
-    - [ ] 4.4.5 Update generationRates.energy accordingly
-    - [ ] 4.4.6 Test energy increments from solar panels
-  - [ ] 4.5 Update TileInfoPanel for structure building
-    - [ ] 4.5.1 Read `src/ui/TileInfoPanel.js`
-    - [ ] 4.5.2 In show(), detect if tile is empty
-    - [ ] 4.5.3 Add "Build Structure" section for empty tiles
-    - [ ] 4.5.4 Get available structures from structures.js
-    - [ ] 4.5.5 Filter by isVisible() and isUnlocked()
-    - [ ] 4.5.6 Render structure cards with name, description, costs, stats
-    - [ ] 4.5.7 Color code costs (red if can't afford, green if can)
-    - [ ] 4.5.8 Add "Build" button for each structure
-    - [ ] 4.5.9 Disable button if can't afford
-    - [ ] 4.5.10 Add click handler to dispatch 'buildStructure' event
-    - [ ] 4.5.11 Show existing structure info if tile has structure
-  - [ ] 4.6 Update MapScene for structure building
-    - [ ] 4.6.1 Read `src/scenes/MapScene.js`
-    - [ ] 4.6.2 Add structureManager reference
-    - [ ] 4.6.3 Add event listener for 'buildStructure' event
-    - [ ] 4.6.4 Call structureManager.buildStructure() on event
-    - [ ] 4.6.5 Update tile visual to show structure icon/indicator
-    - [ ] 4.6.6 Refresh TileInfoPanel after building
-    - [ ] 4.6.7 Test building solar panel on empty tile
-    - [ ] 4.6.8 Verify energy generation starts
-  - [ ] 4.7 Create Structures page
-    - [ ] 4.7.1 Create `src/scenes/StructuresScene.js`
-    - [ ] 4.7.2 Add init(data) to receive structureManager
-    - [ ] 4.7.3 Create structures panel with standard layout
-    - [ ] 4.7.4 Add "Statistics" section
-    - [ ] 4.7.5 Show total structures built
-    - [ ] 4.7.6 Show total energy generation
-    - [ ] 4.7.7 Show structures by type breakdown
-    - [ ] 4.7.8 Add "Structures List" section
-    - [ ] 4.7.9 Group structures by type (Energy, Production, etc.)
-    - [ ] 4.7.10 Show each structure location (Q, R)
-    - [ ] 4.7.11 Show current stats for each structure
-    - [ ] 4.7.12 Add update() method to refresh stats
-    - [ ] 4.7.13 Test page shows all built structures
-  - [ ] 4.8 Integrate structures into main game
-    - [ ] 4.8.1 Update `src/main.js` to import StructureManager
-    - [ ] 4.8.2 Initialize StructureManager after ResourceManager
-    - [ ] 4.8.3 Pass to MapScene for building
-    - [ ] 4.8.4 Initialize StructuresScene with structureManager
-    - [ ] 4.8.5 Add to managers object for save/load
-    - [ ] 4.8.6 Update saveLoad.js to handle structures data
-    - [ ] 4.8.7 Test full cycle: build, save, reload, verify persists
+- [x] 4.0 Build Structures System with Solar Panel
+  - [x] 4.1 Remove energy tiles from map
+    - [x] 4.1.1 Read `src/config/mapConfig.js` layout array
+    - [x] 4.1.2 Replace all 'energy' tiles with 'empty' tiles
+    - [x] 4.1.3 Update HexGrid to not recognize 'energy' type
+    - [x] 4.1.4 Remove energy tile color from MapScene COLORS
+    - [x] 4.1.5 Test that no energy tiles appear on map
+  - [x] 4.2 Create structure configuration
+    - [x] 4.2.1 Create `src/config/structures.js`
+    - [x] 4.2.2 Define structures object with solarPanel
+    - [x] 4.2.3 Add solarPanel id, name, description
+    - [x] 4.2.4 Add costs: iron 10, silicon 5
+    - [x] 4.2.5 Add stats: energyGeneration 1.0
+    - [x] 4.2.6 Add buildableOn: ['empty']
+    - [x] 4.2.7 Add isVisible() and isUnlocked() functions
+    - [x] 4.2.8 Export structures and getStructure() helper
+  - [x] 4.3 Create StructureManager
+    - [x] 4.3.1 Create `src/systems/StructureManager.js`
+    - [x] 4.3.2 Add constructor with resourceManager, hexGrid params
+    - [x] 4.3.3 Initialize structures Map (key: "q,r", value: structure)
+    - [x] 4.3.4 Implement canBuildStructure(q, r, structureType)
+    - [x] 4.3.5 Check tile is empty, check resource costs
+    - [x] 4.3.6 Implement buildStructure(q, r, structureType)
+    - [x] 4.3.7 Deduct resource costs via resourceManager
+    - [x] 4.3.8 Add structure to structures Map
+    - [x] 4.3.9 Update tile in hexGrid (mark as has structure)
+    - [x] 4.3.10 Implement getStructureAt(q, r)
+    - [x] 4.3.11 Implement getAllStructures()
+    - [x] 4.3.12 Implement getTotalEnergyGeneration()
+    - [x] 4.3.13 Implement update(deltaTime) for energy generation
+    - [x] 4.3.14 Add getSaveData() method
+    - [x] 4.3.15 Add loadSaveData(data) method
+  - [x] 4.4 Update ResourceManager for energy generation
+    - [x] 4.4.1 Read `src/systems/ResourceManager.js`
+    - [x] 4.4.2 Add structureManager reference (passed in update)
+    - [x] 4.4.3 In update(), call structureManager.getTotalEnergyGeneration()
+    - [x] 4.4.4 Add energy to resources based on structure generation
+    - [x] 4.4.5 Update generationRates.energy accordingly
+    - [x] 4.4.6 Test energy increments from solar panels
+  - [x] 4.5 Update TileInfoPanel for structure building
+    - [x] 4.5.1 Read `src/ui/TileInfoPanel.js`
+    - [x] 4.5.2 In show(), detect if tile is empty
+    - [x] 4.5.3 Add "Build Structure" section for empty tiles
+    - [x] 4.5.4 Get available structures from structures.js
+    - [x] 4.5.5 Filter by isVisible() and isUnlocked()
+    - [x] 4.5.6 Render structure cards with name, description, costs, stats
+    - [x] 4.5.7 Color code costs (red if can't afford, green if can)
+    - [x] 4.5.8 Add "Build" button for each structure
+    - [x] 4.5.9 Disable button if can't afford
+    - [x] 4.5.10 Add click handler to dispatch 'buildStructure' event
+    - [x] 4.5.11 Show existing structure info if tile has structure
+  - [x] 4.6 Update MapScene for structure building
+    - [x] 4.6.1 Read `src/scenes/MapScene.js`
+    - [x] 4.6.2 Add structureManager reference
+    - [x] 4.6.3 Add event listener for 'buildStructure' event
+    - [x] 4.6.4 Call structureManager.buildStructure() on event
+    - [x] 4.6.5 Update tile visual to show structure icon/indicator
+    - [x] 4.6.6 Refresh TileInfoPanel after building
+    - [x] 4.6.7 Test building solar panel on empty tile
+    - [x] 4.6.8 Verify energy generation starts
+  - [x] 4.7 Create Structures page
+    - [x] 4.7.1 Create `src/scenes/StructuresScene.js`
+    - [x] 4.7.2 Add init(data) to receive structureManager
+    - [x] 4.7.3 Create structures panel with standard layout
+    - [x] 4.7.4 Add "Statistics" section
+    - [x] 4.7.5 Show total structures built
+    - [x] 4.7.6 Show total energy generation
+    - [x] 4.7.7 Show structures by type breakdown
+    - [x] 4.7.8 Add "Structures List" section
+    - [x] 4.7.9 Group structures by type (Energy, Production, etc.)
+    - [x] 4.7.10 Show each structure location (Q, R)
+    - [x] 4.7.11 Show current stats for each structure
+    - [x] 4.7.12 Add update() method to refresh stats
+    - [x] 4.7.13 Test page shows all built structures
+  - [x] 4.8 Integrate structures into main game
+    - [x] 4.8.1 Update `src/main.js` to import StructureManager
+    - [x] 4.8.2 Initialize StructureManager after ResourceManager
+    - [x] 4.8.3 Pass to MapScene for building
+    - [x] 4.8.4 Initialize StructuresScene with structureManager
+    - [x] 4.8.5 Add to managers object for save/load
+    - [x] 4.8.6 Update saveLoad.js to handle structures data
+    - [x] 4.8.7 Test full cycle: build, save, reload, verify persists
 
 ---
 

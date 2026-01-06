@@ -187,26 +187,6 @@ export class StructureManager {
   }
   
   /**
-   * Update structure generation (called from game update loop)
-   * @param {number} delta - Time elapsed in milliseconds
-   */
-  update(delta) {
-    if (!this.resourceManager) return;
-    
-    // Calculate energy generation
-    const energyPerSecond = this.getTotalEnergyGeneration();
-    
-    if (energyPerSecond > 0) {
-      // Convert delta to seconds
-      const deltaSeconds = delta / 1000;
-      const energyToAdd = energyPerSecond * deltaSeconds;
-      
-      // Add energy to resources
-      this.resourceManager.addResource('energy', energyToAdd);
-    }
-  }
-  
-  /**
    * Save structures to storage
    * @returns {object} Serialized structures data
    */

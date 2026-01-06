@@ -1,6 +1,9 @@
 // TileInfoPanel.js - Tile details panel component
 // REQ-INFO-001: Display selected tile details
 
+import { getAllStructures, getStructure } from '../config/structures.js';
+import { t } from '../utils/i18n.js';
+
 export class TileInfoPanel {
   constructor() {
     this.panel = document.getElementById('tile-info-panel');
@@ -13,6 +16,18 @@ export class TileInfoPanel {
     this.currentTile = null;
     this.deployBtn = null;
     this.removeBtn = null;
+    this.structureManager = null;
+    this.resourceManager = null;
+  }
+
+  /**
+   * Set managers for structure building
+   * @param {object} structureManager - StructureManager instance
+   * @param {object} resourceManager - ResourceManager instance
+   */
+  setManagers(structureManager, resourceManager) {
+    this.structureManager = structureManager;
+    this.resourceManager = resourceManager;
   }
 
   /**
@@ -58,15 +73,95 @@ export class TileInfoPanel {
     }
     // REQ-INFO-004: Empty tile display
     else if (tile.type === 'empty') {
-      content += `
-        <div class="tile-info-row">
-          <span class="tile-info-label">Type:</span>
-          <span class="tile-info-value">Empty Tile</span>
-        </div>
-        <div style="margin-top: 1rem; color: var(--text-secondary); font-style: italic;">
-          No resources available
-        </div>
-      `;
+      // Check if tile has a structure
+      const existingStructure = this.structureManager ? 
+        this.structureManager.getStructureAt(tile.q, tile.r) : null;
+
+      if (existingStructure) {
+        // Show existing structure info
+        const structureDef = getStructure(existingStructure.structureType);
+        content += `
+          <div class="tile-info-row">
+            <span class="tile-info-label">Structure:</span>
+            <span class="tile-info-value">${structureDef.icon} ${t(structureDef.name)}</span>
+          </div>
+          <div class="tile-info-row">
+            <span class="tile-info-label">${t('structures.stats')}:</span>
+            <span class="tile-info-value">${t('structures.energyPerSecond', { amount: existingStructure.stats.energyPerSecond.toFixed(1) })}</span>
+          </div>
+        `;
+      } else {
+        // Show empty tile + structure building options
+        content += `
+          <div class="tile-info-row">
+            <span class="tile-info-label">Type:</span>
+            <span class="tile-info-value">Empty Tile</span>
+          </div>
+        `;
+
+        // Show buildable structures
+        if (this.structureManager && this.resourceManager) {
+          const structures = getAllStructures();
+          
+          if (structures.length > 0) {
+            content += `
+              <div style="margin-top: 1rem;">
+                <div style="font-weight: 600; margin-bottom: 0.5rem; color: var(--primary);">
+                  ${t('structures.build')} ${t('structures.title')}
+                </div>
+            `;
+
+            for (const structure of structures) {
+              const check = this.structureManager.canBuildStructure(
+                structure.id, tile.q, tile.r, tile
+              );
+              const canAfford = this.resourceManager.canAfford(structure.costs);
+
+              content += `
+                <div class="structure-card" style="margin-bottom: 0.75rem; padding: 0.75rem; background: var(--bg-secondary); border-radius: 4px;">
+                  <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <span style="font-size: 1.5rem;">${structure.icon}</span>
+                    <div style="flex: 1;">
+                      <div style="font-weight: 600;">${t(structure.name)}</div>
+                      <div style="font-size: 0.85rem; color: var(--text-secondary);">${t(structure.description)}</div>
+                    </div>
+                  </div>
+                  <div style="font-size: 0.85rem; margin-bottom: 0.5rem;">
+                    <strong>${t('structures.cost')}:</strong>
+              `;
+
+              for (const [resource, amount] of Object.entries(structure.costs)) {
+                const current = this.resourceManager.getResource(resource);
+                const hasEnough = current >= amount;
+                const color = hasEnough ? 'var(--success)' : 'var(--danger)';
+                content += ` <span style="color: ${color};">${resource}: ${amount}</span>`;
+              }
+
+              content += `
+                  </div>
+                  <div style="font-size: 0.85rem; margin-bottom: 0.5rem;">
+                    <strong>${t('structures.stats')}:</strong>
+                    ${t('structures.energyPerSecond', { amount: structure.stats.energyPerSecond.toFixed(1) })}
+                  </div>
+                  <button class="btn build-structure-btn" 
+                          data-structure-id="${structure.id}"
+                          ${!check.canBuild ? 'disabled' : ''}>
+                    ${check.canBuild ? t('structures.build') : t('structures.insufficientResources')}
+                  </button>
+                </div>
+              `;
+            }
+
+            content += `</div>`;
+          }
+        } else {
+          content += `
+            <div style="margin-top: 1rem; color: var(--text-secondary); font-style: italic;">
+              No resources available
+            </div>
+          `;
+        }
+      }
     }
     // REQ-INFO-002: Resource tile display
     else {
@@ -128,6 +223,15 @@ export class TileInfoPanel {
         this.onRemoveDrone();
       });
     }
+
+    // Set up build structure button handlers
+    const buildButtons = this.panel.querySelectorAll('.build-structure-btn');
+    buildButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const structureId = btn.getAttribute('data-structure-id');
+        this.onBuildStructure(structureId);
+      });
+    });
   }
 
   /**
@@ -175,6 +279,33 @@ export class TileInfoPanel {
       detail: { tile: this.currentTile }
     });
     window.dispatchEvent(event);
+  }
+
+  /**
+   * Handle build structure button click
+   * @param {string} structureId - Structure type to build
+   */
+  onBuildStructure(structureId) {
+    if (!this.currentTile || !this.structureManager) return;
+
+    const success = this.structureManager.buildStructure(
+      structureId,
+      this.currentTile.q,
+      this.currentTile.r,
+      this.currentTile
+    );
+
+    if (success) {
+      // Emit event for UI updates
+      const event = new CustomEvent('structureBuilt', {
+        detail: {
+          structureId,
+          q: this.currentTile.q,
+          r: this.currentTile.r
+        }
+      });
+      window.dispatchEvent(event);
+    }
   }
 
   /**

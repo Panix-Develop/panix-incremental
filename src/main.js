@@ -12,17 +12,19 @@ import { gameConfig } from './config/gameConfig.js';
 import { MapScene } from './scenes/MapScene.js';
 import { CraftingScene } from './scenes/CraftingScene.js';
 import { DronesScene } from './scenes/DronesScene.js';
+import { StructuresScene } from './scenes/StructuresScene.js';
 import { SettingsScene } from './scenes/SettingsScene.js';
 import { ResourceManager } from './systems/ResourceManager.js';
 import { SettingsManager } from './systems/SettingsManager.js';
 import { CraftingManager } from './systems/CraftingManager.js';
 import { DroneManager } from './systems/DroneManager.js';
+import { StructureManager } from './systems/StructureManager.js';
 import { TabNavigation } from './ui/TabNavigation.js';
 import { ResourcePanel } from './ui/ResourcePanel.js';
 import { saveGame, loadGame, hasSaveData } from './utils/saveLoad.js';
 
 // Add scenes to config
-gameConfig.scene = [MapScene, CraftingScene, DronesScene, SettingsScene];
+gameConfig.scene = [MapScene, CraftingScene, DronesScene, StructuresScene, SettingsScene];
 
 // Create Phaser game instance
 const game = new Phaser.Game(gameConfig);
@@ -42,6 +44,7 @@ game.events.once('ready', () => {
       const resourceManager = new ResourceManager();
       const craftingManager = new CraftingManager(resourceManager);
       const droneManager = new DroneManager(craftingManager, mapScene.hexGrid);
+      const structureManager = new StructureManager(resourceManager);
       const settingsManager = new SettingsManager();
 
       // Store managers for save/load
@@ -49,6 +52,7 @@ game.events.once('ready', () => {
         resourceManager,
         craftingManager,
         droneManager,
+        structureManager,
         settingsManager,
         hexGrid: mapScene.hexGrid
       };
@@ -68,10 +72,16 @@ game.events.once('ready', () => {
       mapScene.resourceManager = resourceManager;
       mapScene.craftingManager = craftingManager;
       mapScene.droneManager = droneManager;
+      mapScene.structureManager = structureManager;
       mapScene.settingsManager = settingsManager;
       
       // Recreate ResourcePanel with settingsManager
       mapScene.resourcePanel = new ResourcePanel(settingsManager);
+      
+      // Set managers on TileInfoPanel
+      if (mapScene.tileInfoPanel) {
+        mapScene.tileInfoPanel.setManagers(structureManager, resourceManager);
+      }
 
       // Initialize CraftingScene with managers
       game.scene.start('CraftingScene', {
@@ -85,6 +95,12 @@ game.events.once('ready', () => {
         craftingManager: craftingManager
       });
 
+      // Initialize StructuresScene with managers
+      game.scene.start('StructuresScene', {
+        structureManager: structureManager,
+        resourceManager: resourceManager
+      });
+
       // Initialize SettingsScene with managers
       game.scene.start('SettingsScene', {
         settingsManager: settingsManager
@@ -93,6 +109,7 @@ game.events.once('ready', () => {
       // Start with MapScene active, other scenes in background
       game.scene.sleep('CraftingScene');
       game.scene.sleep('DronesScene');
+      game.scene.sleep('StructuresScene');
 
       // Initialize tab navigation
       const tabNavigation = new TabNavigation(game);
@@ -145,6 +162,7 @@ game.events.once('ready', () => {
           managers.droneManager.availableDrones = 0;
           managers.droneManager.totalBuilt = 0;
           managers.droneManager.deployments = [];
+          managers.structureManager.reset();
           
           // Reset all drones from tiles
           managers.hexGrid.getAllTiles().forEach(tile => {

@@ -24,6 +24,7 @@ export class MapScene extends Phaser.Scene {
     super({ key: 'MapScene' });
     this.hexGrid = null;
     this.resourceManager = null;
+    this.structureManager = null;
     this.resourcePanel = null;
     this.tileInfoPanel = null;
     this.hexSize = balance.map.hexSize;
@@ -107,6 +108,20 @@ export class MapScene extends Phaser.Scene {
         } else {
           console.error('Failed to remove drone:', result.error);
         }
+      }
+    });
+
+    // Listen for structure built
+    window.addEventListener('structureBuilt', (e) => {
+      const { q, r } = e.detail;
+      
+      // Refresh tile visuals to show structure
+      this.refreshTile(q, r);
+      
+      // Refresh tile info panel
+      const updatedTile = this.hexGrid.getTile(q, r);
+      if (this.tileInfoPanel) {
+        this.tileInfoPanel.show(updatedTile, this.hexGrid);
       }
     });
     
@@ -388,7 +403,7 @@ export class MapScene extends Phaser.Scene {
   update(time, delta) {
     // Update resource generation
     if (this.resourceManager && this.hexGrid) {
-      this.resourceManager.update(delta, this.hexGrid);
+      this.resourceManager.update(delta, this.hexGrid, this.structureManager);
       
       // Update resource panel
       if (this.resourcePanel) {

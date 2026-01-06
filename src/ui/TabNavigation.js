@@ -9,6 +9,7 @@ export class TabNavigation {
       { id: 'map', label: 'Map', icon: '🗺️' },
       { id: 'crafting', label: 'Crafting', icon: '🔧' },
       { id: 'drones', label: 'Drones', icon: '🤖' },
+      { id: 'structures', label: 'Structures', icon: '🏗️' },
       { id: 'settings', label: 'Settings', icon: '⚙️' }
     ];
     
@@ -71,6 +72,7 @@ export class TabNavigation {
     const uiOverlay = document.getElementById('ui-overlay');
     const craftingPanel = document.getElementById('crafting-panel');
     const dronesPanel = document.getElementById('drones-panel');
+    const structuresPanel = document.getElementById('structures-panel');
     const settingsPanel = document.getElementById('settings-panel');
 
     // Hide all content first
@@ -78,6 +80,7 @@ export class TabNavigation {
     if (uiOverlay) uiOverlay.style.display = 'none';
     if (craftingPanel) craftingPanel.style.display = 'none';
     if (dronesPanel) dronesPanel.style.display = 'none';
+    if (structuresPanel) structuresPanel.style.display = 'none';
     if (settingsPanel) settingsPanel.style.display = 'none';
 
     // Show appropriate content
@@ -103,6 +106,16 @@ export class TabNavigation {
           const dronesScene = this.game.scene.getScene('DronesScene');
           if (dronesScene) {
             dronesScene.updateUI();
+          }
+        }
+        break;
+
+      case 'structures':
+        if (structuresPanel) {
+          structuresPanel.style.display = 'block';
+          const structuresScene = this.game.scene.getScene('StructuresScene');
+          if (structuresScene) {
+            structuresScene.updatePanel();
           }
         }
         break;
