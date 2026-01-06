@@ -350,7 +350,6 @@ export class MapScene extends Phaser.Scene {
       const tile = this.hexGrid.getTile(hex.q, hex.r);
       
       // If no tile at this location, deselect
-      this.updateDroneCountText(q, r);
       if (!tile) {
         this.selectedTile = null;
         this.updateTileVisuals();
