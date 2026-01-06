@@ -196,14 +196,14 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 3.1.10 Add setLanguage(lang) method
     - [x] 3.1.11 Add getPlayerName() method
     - [x] 3.1.12 Add setPlayerName(name) method
-  - [ ] 3.2 Create number formatting utility
-    - [ ] 3.2.1 Create `src/utils/formatNumber.js`
-    - [ ] 3.2.2 Implement formatNormal(num) - suffix notation (K, M, B, T)
-    - [ ] 3.2.3 Implement formatScientific(num) - 1e9, 1e10, 1e11 format
-    - [ ] 3.2.4 Implement formatEngineering(num) - 1e9, 10e9, 100e9, 1e12 format
-    - [ ] 3.2.5 Add formatNumber(num, format) as main function
-    - [ ] 3.2.6 Handle edge cases (0, negative, very large numbers)
-    - [ ] 3.2.7 Add tests for all three formats
+  - [x] 3.2 Create number formatting utility
+    - [x] 3.2.1 Create `src/utils/formatNumber.js`
+    - [x] 3.2.2 Implement formatNormal(num) - suffix notation (K, M, B, T)
+    - [x] 3.2.3 Implement formatScientific(num) - 1e9, 1e10, 1e11 format
+    - [x] 3.2.4 Implement formatEngineering(num) - 1e9, 10e9, 100e9, 1e12 format
+    - [x] 3.2.5 Add formatNumber(num, format) as main function
+    - [x] 3.2.6 Handle edge cases (0, negative, very large numbers)
+    - [x] 3.2.7 Add tests for all three formats
   - [ ] 3.3 Create localization system
     - [ ] 3.3.1 Create `src/locales/` directory
     - [ ] 3.3.2 Create `src/locales/en.json` with English translations
