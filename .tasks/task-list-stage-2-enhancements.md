@@ -160,13 +160,13 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 2.1.5 Create `src/styles/utilities.css` with helper classes
     - [x] 2.1.6 Extract existing styles from `style.css` into new files
     - [x] 2.1.7 Import all style files in `src/main.js` in correct order
-  - [ ] 2.2 Apply consistent page layout to all pages
-    - [ ] 2.2.1 Create `.page-panel` base class with standard properties
-    - [ ] 2.2.2 Update CraftingScene to use standard layout
-    - [ ] 2.2.3 Update DronesScene to use standard layout
-    - [ ] 2.2.4 Verify all pages have 2rem padding, overflow-y auto
-    - [ ] 2.2.5 Ensure consistent heading styles (H2, H3)
-    - [ ] 2.2.6 Test responsive behavior on different viewport sizes
+  - [x] 2.2 Apply consistent page layout to all pages
+    - [x] 2.2.1 Create `.page-panel` base class with standard properties
+    - [x] 2.2.2 Update CraftingScene to use standard layout
+    - [x] 2.2.3 Update DronesScene to use standard layout
+    - [x] 2.2.4 Verify all pages have 2rem padding, overflow-y auto
+    - [x] 2.2.5 Ensure consistent heading styles (H1, H3)
+    - [x] 2.2.6 Test responsive behavior on different viewport sizes
   - [ ] 2.3 Standardize card components
     - [ ] 2.3.1 Create `.info-card` base class
     - [ ] 2.3.2 Update crafting cards to use standard class

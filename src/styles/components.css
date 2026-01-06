@@ -1,5 +1,37 @@
 /* Component Styles - Reusable UI Components */
 
+/* Page Panel Base Class */
+.page-panel {
+  padding: 2rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+.page-panel h1 {
+  color: var(--accent-primary);
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: bold;
+  border-bottom: 2px solid var(--accent-primary);
+  padding-bottom: 0.75rem;
+}
+
+.page-panel h2 {
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.page-panel h3 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
 /* Panel styling */
 .panel {
   background-color: rgba(22, 33, 62, 0.95);

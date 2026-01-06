@@ -66,17 +66,34 @@
 
 /* Crafting Panel */
 #crafting-panel {
-  padding: 2rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-primary);
   overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 5;
+  display: none;
+  padding: 2rem;
   box-sizing: border-box;
 }
 
 #crafting-panel h1 {
   color: var(--accent-primary);
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   font-size: 2rem;
+  font-weight: bold;
   border-bottom: 2px solid var(--accent-primary);
   padding-bottom: 0.75rem;
+}
+
+#crafting-panel h3 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 
 #craft-list {
@@ -87,17 +104,34 @@
 
 /* Drones Panel */
 #drones-panel {
-  padding: 2rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-primary);
   overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 5;
+  display: none;
+  padding: 2rem;
   box-sizing: border-box;
 }
 
 #drones-panel h1 {
   color: var(--accent-primary);
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   font-size: 2rem;
+  font-weight: bold;
   border-bottom: 2px solid var(--accent-primary);
   padding-bottom: 0.75rem;
+}
+
+#drones-panel h3 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 
 #drones-list {

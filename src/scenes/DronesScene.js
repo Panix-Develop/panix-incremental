@@ -61,10 +61,10 @@ export class DronesScene extends Phaser.Scene {
     const totalBuilt = this.droneManager.getTotalBuilt();
 
     let html = `
-      <h2 style="color: var(--accent-primary); margin-bottom: 2rem;">Drone Assembly Bay</h2>
+      <h1>Drone Assembly Bay</h1>
         
         <div style="margin-bottom: 2rem;">
-          <h3 style="color: var(--text-primary); margin-bottom: 1rem;">Drone Inventory</h3>
+          <h3>Drone Inventory</h3>
           <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 1rem;">
             <div style="background: rgba(233, 69, 96, 0.1); border: 2px solid var(--accent-primary); border-radius: 8px; padding: 1.5rem; text-align: center;">
               <div style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">Available Drones</div>
@@ -83,7 +83,7 @@ export class DronesScene extends Phaser.Scene {
         </div>
 
         <div style="margin-bottom: 2rem;">
-          <h3 style="color: var(--text-primary); margin-bottom: 1rem;">Component Inventory</h3>
+          <h3>Component Inventory</h3>
           <div style="display: flex; gap: 2rem;">
             <div>
               <span style="color: var(--text-secondary);">Chassis:</span>
@@ -100,7 +100,7 @@ export class DronesScene extends Phaser.Scene {
           </div>
         </div>
 
-        <h3 style="color: var(--text-primary); margin-bottom: 1rem;">Build Drones</h3>
+        <h3>Build Drones</h3>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem;">
     `;
 
