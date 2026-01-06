@@ -152,14 +152,14 @@ Update the file after completing each sub-task, not just after completing an ent
 ### PHASE 2: UI/UX CONSISTENCY
 
 - [ ] 2.0 Establish UI/UX Consistency System
-  - [ ] 2.1 Create modular CSS architecture
-    - [ ] 2.1.1 Create `src/styles/` directory
-    - [ ] 2.1.2 Create `src/styles/base.css` with CSS variables and resets
-    - [ ] 2.1.3 Create `src/styles/components.css` with button, card, panel styles
-    - [ ] 2.1.4 Create `src/styles/pages.css` with page-specific styles
-    - [ ] 2.1.5 Create `src/styles/utilities.css` with helper classes
-    - [ ] 2.1.6 Extract existing styles from `style.css` into new files
-    - [ ] 2.1.7 Import all style files in `src/main.js` in correct order
+  - [x] 2.1 Create modular CSS architecture
+    - [x] 2.1.1 Create `src/styles/` directory
+    - [x] 2.1.2 Create `src/styles/base.css` with CSS variables and resets
+    - [x] 2.1.3 Create `src/styles/components.css` with button, card, panel styles
+    - [x] 2.1.4 Create `src/styles/pages.css` with page-specific styles
+    - [x] 2.1.5 Create `src/styles/utilities.css` with helper classes
+    - [x] 2.1.6 Extract existing styles from `style.css` into new files
+    - [x] 2.1.7 Import all style files in `src/main.js` in correct order
   - [ ] 2.2 Apply consistent page layout to all pages
     - [ ] 2.2.1 Create `.page-panel` base class with standard properties
     - [ ] 2.2.2 Update CraftingScene to use standard layout
