@@ -53,9 +53,11 @@ export class StructureManager {
     // Check if player has enough resources
     if (this.resourceManager) {
       const costs = getStructureCost(structureType);
-      for (const [resource, amount] of Object.entries(costs)) {
-        if (this.resourceManager.getResource(resource) < amount) {
-          return { canBuild: false, reason: 'Insufficient resources' };
+      if (costs) {
+        for (const [resource, amount] of Object.entries(costs)) {
+          if (this.resourceManager.getResource(resource) < amount) {
+            return { canBuild: false, reason: 'Insufficient resources' };
+          }
         }
       }
     }

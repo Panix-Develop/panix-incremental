@@ -469,14 +469,13 @@ export class ConfigScene extends Phaser.Scene {
         category: 'custom',
         unlocked: true,
         buildableOn: ['empty'],
-        cost: {
+        costs: {
           iron: 100,
           silicon: 50,
           energy: 0
         },
-        effects: {
-          energyPerSecond: 0,
-          storageBonus: 0
+        stats: {
+          energyPerSecond: 0
         },
         buildable: true
       };
