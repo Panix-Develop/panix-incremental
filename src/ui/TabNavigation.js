@@ -8,7 +8,8 @@ export class TabNavigation {
     this.tabs = [
       { id: 'map', label: 'Map', icon: '🗺️' },
       { id: 'crafting', label: 'Crafting', icon: '🔧' },
-      { id: 'drones', label: 'Drones', icon: '🤖' }
+      { id: 'drones', label: 'Drones', icon: '🤖' },
+      { id: 'settings', label: 'Settings', icon: '⚙️' }
     ];
     
     this.setupTabs();
@@ -70,12 +71,14 @@ export class TabNavigation {
     const uiOverlay = document.getElementById('ui-overlay');
     const craftingPanel = document.getElementById('crafting-panel');
     const dronesPanel = document.getElementById('drones-panel');
+    const settingsPanel = document.getElementById('settings-panel');
 
     // Hide all content first
     if (phaserGame) phaserGame.style.display = 'none';
     if (uiOverlay) uiOverlay.style.display = 'none';
     if (craftingPanel) craftingPanel.style.display = 'none';
     if (dronesPanel) dronesPanel.style.display = 'none';
+    if (settingsPanel) settingsPanel.style.display = 'none';
 
     // Show appropriate content
     switch (tabName) {
@@ -100,6 +103,16 @@ export class TabNavigation {
           const dronesScene = this.game.scene.getScene('DronesScene');
           if (dronesScene) {
             dronesScene.updateUI();
+          }
+        }
+        break;
+
+      case 'settings':
+        if (settingsPanel) {
+          settingsPanel.style.display = 'block';
+          const settingsScene = this.game.scene.getScene('SettingsScene');
+          if (settingsScene) {
+            settingsScene.updateUI();
           }
         }
         break;

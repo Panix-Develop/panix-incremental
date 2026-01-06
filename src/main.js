@@ -12,14 +12,16 @@ import { gameConfig } from './config/gameConfig.js';
 import { MapScene } from './scenes/MapScene.js';
 import { CraftingScene } from './scenes/CraftingScene.js';
 import { DronesScene } from './scenes/DronesScene.js';
+import { SettingsScene } from './scenes/SettingsScene.js';
 import { ResourceManager } from './systems/ResourceManager.js';
+import { SettingsManager } from './systems/SettingsManager.js';
 import { CraftingManager } from './systems/CraftingManager.js';
 import { DroneManager } from './systems/DroneManager.js';
 import { TabNavigation } from './ui/TabNavigation.js';
 import { saveGame, loadGame, hasSaveData } from './utils/saveLoad.js';
 
 // Add scenes to config
-gameConfig.scene = [MapScene, CraftingScene, DronesScene];
+gameConfig.scene = [MapScene, CraftingScene, DronesScene, SettingsScene];
 
 // Create Phaser game instance
 const game = new Phaser.Game(gameConfig);
@@ -39,12 +41,14 @@ game.events.once('ready', () => {
       const resourceManager = new ResourceManager();
       const craftingManager = new CraftingManager(resourceManager);
       const droneManager = new DroneManager(craftingManager, mapScene.hexGrid);
+      const settingsManager = new SettingsManager();
 
       // Store managers for save/load
       managers = {
         resourceManager,
         craftingManager,
         droneManager,
+        settingsManager,
         hexGrid: mapScene.hexGrid
       };
 
@@ -74,6 +78,11 @@ game.events.once('ready', () => {
       game.scene.start('DronesScene', {
         droneManager: droneManager,
         craftingManager: craftingManager
+      });
+
+      // Initialize SettingsScene with managers
+      game.scene.start('SettingsScene', {
+        settingsManager: settingsManager
       });
 
       // Start with MapScene active, other scenes in background

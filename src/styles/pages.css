@@ -134,6 +134,52 @@
   font-weight: 600;
 }
 
+/* Settings Panel */
+#settings-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-primary);
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 5;
+  display: none;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+#settings-panel h1 {
+  color: var(--accent-primary);
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: bold;
+  border-bottom: 2px solid var(--accent-primary);
+  padding-bottom: 0.75rem;
+}
+
+#settings-panel h3 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.settings-select {
+  transition: border-color 0.3s ease;
+}
+
+.settings-select:hover {
+  border-color: var(--accent-primary);
+}
+
+.settings-select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.1);
+}
+
 #drones-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));

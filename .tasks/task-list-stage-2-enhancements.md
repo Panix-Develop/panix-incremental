@@ -216,22 +216,22 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 3.3.9 Implement fallback to English for missing keys
     - [x] 3.3.10 Add currentLanguage variable
     - [x] 3.3.11 Add setLanguage(lang) to switch language
-  - [ ] 3.4 Build Settings page
-    - [ ] 3.4.1 Create `src/scenes/SettingsScene.js`
-    - [ ] 3.4.2 Add create() method to initialize UI
-    - [ ] 3.4.3 Create settings panel with standard layout
-    - [ ] 3.4.4 Add "Display Settings" section
-    - [ ] 3.4.5 Add number format dropdown (Normal, Scientific, Engineering)
-    - [ ] 3.4.6 Add language dropdown (English, German)
-    - [ ] 3.4.7 Add "Player Settings" section
-    - [ ] 3.4.8 Add rename input field with validation
-    - [ ] 3.4.9 Add "Update Name" button
-    - [ ] 3.4.10 Add "About" section with version info
-    - [ ] 3.4.11 Connect number format changes to SettingsManager
-    - [ ] 3.4.12 Connect language changes to i18n system
-    - [ ] 3.4.13 Connect rename to SettingsManager
-    - [ ] 3.4.14 Emit 'settingsUpdated' event on changes
-    - [ ] 3.4.15 Test settings persistence across page reloads
+  - [x] 3.4 Build Settings page
+    - [x] 3.4.1 Create `src/scenes/SettingsScene.js`
+    - [x] 3.4.2 Add create() method to initialize UI
+    - [x] 3.4.3 Create settings panel with standard layout
+    - [x] 3.4.4 Add "Display Settings" section
+    - [x] 3.4.5 Add number format dropdown (Normal, Scientific, Engineering)
+    - [x] 3.4.6 Add language dropdown (English, German)
+    - [x] 3.4.7 Add "Player Settings" section
+    - [x] 3.4.8 Add rename input field with validation
+    - [x] 3.4.9 Add "Update Name" button
+    - [x] 3.4.10 Add "About" section with version info
+    - [x] 3.4.11 Connect number format changes to SettingsManager
+    - [x] 3.4.12 Connect language changes to i18n system
+    - [x] 3.4.13 Connect rename to SettingsManager
+    - [x] 3.4.14 Emit 'settingsUpdated' event on changes
+    - [x] 3.4.15 Test settings persistence across page reloads
   - [ ] 3.5 Integrate settings into main game
     - [ ] 3.5.1 Update `src/main.js` to initialize SettingsManager
     - [ ] 3.5.2 Load settings on game start
