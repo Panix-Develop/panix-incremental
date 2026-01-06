@@ -73,7 +73,7 @@ export class ConfigScene extends Phaser.Scene {
           <!-- Entity Editor -->
           <div>
             <h3>Editor</h3>
-            <div id="config-editor" class="stat-card">
+            <div id="config-editor" class="stat-card" style="max-height: 500px; overflow-y: auto;">
               <p style="color: var(--text-secondary); font-style: italic;">
                 Select an entity from the list to edit
               </p>
@@ -221,23 +221,43 @@ export class ConfigScene extends Phaser.Scene {
         <h4 style="margin-bottom: 0.5rem;">${this.selectedEntity.icon || '⚙️'} ${this.selectedEntity.name || this.selectedEntity.id}</h4>
       </div>
 
-      <div class="info-box" style="background: rgba(245, 166, 35, 0.1); border-color: #F5A623;">
+      <div class="info-box" style="background: rgba(126, 211, 33, 0.1); border-color: #7ED321;">
         <p style="margin: 0; font-size: 0.9rem;">
-          <strong>Read-Only View</strong><br>
-          Full editing functionality coming soon. For now, you can export and manually edit JSON files.
+          <strong>💡 Live Editing</strong><br>
+          Edit the JSON below and click "Save Changes" to update localStorage. 
+          The game will use your changes on next page load. Click "Reset" to restore defaults.
         </p>
       </div>
 
-      <pre style="
+      <textarea id="config-json-editor" style="
+        width: 100%;
+        min-height: 300px;
         background: var(--bg-primary);
+        color: var(--text-primary);
         padding: 1rem;
+        border: 1px solid var(--border-color);
         border-radius: 4px;
-        overflow-x: auto;
         margin-top: 1rem;
+        font-family: 'Courier New', monospace;
         font-size: 0.85rem;
         line-height: 1.5;
-      ">${JSON.stringify(this.selectedEntity, null, 2)}</pre>
+        resize: vertical;
+      ">${JSON.stringify(this.selectedEntity, null, 2)}</textarea>
+
+      <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+        <button id="config-save-changes" class="btn">💾 Save Changes</button>
+        <button id="config-reset-entity" class="btn secondary">🔄 Reset to Default</button>
+      </div>
     `;
+
+    // Add event listeners for save and reset
+    document.getElementById('config-save-changes')?.addEventListener('click', () => {
+      this.saveEntityChanges();
+    });
+
+    document.getElementById('config-reset-entity')?.addEventListener('click', () => {
+      this.resetEntity();
+    });
   }
 
   /**
@@ -265,6 +285,114 @@ export class ConfigScene extends Phaser.Scene {
     URL.revokeObjectURL(url);
 
     console.log(`Exported ${filename}`);
+  }
+
+  /**
+   * Save changes to the current entity in localStorage
+   */
+  saveEntityChanges() {
+    const textarea = document.getElementById('config-json-editor');
+    if (!textarea) return;
+
+    try {
+      const editedData = JSON.parse(textarea.value);
+      
+      // Get storage key based on type
+      const storageKey = this.selectedType === 'structures' 
+        ? 'dev_structures_override' 
+        : 'dev_drones_override';
+      
+      // Get existing overrides or create new object
+      let overrides = {};
+      const existing = localStorage.getItem(storageKey);
+      if (existing) {
+        overrides = JSON.parse(existing);
+      }
+      
+      // Store the edited entity
+      overrides[this.selectedEntity.id] = editedData;
+      localStorage.setItem(storageKey, JSON.stringify(overrides));
+      
+      // Update the selected entity with new data
+      this.selectedEntity = { id: this.selectedEntity.id, ...editedData };
+      
+      // Show success message
+      const infoBox = document.querySelector('#config-editor .info-box');
+      if (infoBox) {
+        infoBox.style.background = 'rgba(126, 211, 33, 0.2)';
+        infoBox.style.borderColor = '#7ED321';
+        infoBox.innerHTML = `
+          <p style="margin: 0; font-size: 0.9rem;">
+            <strong>✅ Saved!</strong><br>
+            Changes saved to localStorage. Reload the page to see changes take effect.
+          </p>
+        `;
+        
+        setTimeout(() => {
+          infoBox.style.background = 'rgba(126, 211, 33, 0.1)';
+          infoBox.innerHTML = `
+            <p style="margin: 0; font-size: 0.9rem;">
+              <strong>💡 Live Editing</strong><br>
+              Edit the JSON below and click "Save Changes" to update localStorage. 
+              The game will use your changes on next page load. Click "Reset" to restore defaults.
+            </p>
+          `;
+        }, 3000);
+      }
+      
+      console.log(`Saved ${this.selectedEntity.id} to localStorage`);
+      
+    } catch (error) {
+      // Show error message
+      const infoBox = document.querySelector('#config-editor .info-box');
+      if (infoBox) {
+        infoBox.style.background = 'rgba(233, 69, 96, 0.2)';
+        infoBox.style.borderColor = 'var(--accent-primary)';
+        infoBox.innerHTML = `
+          <p style="margin: 0; font-size: 0.9rem;">
+            <strong>❌ Error</strong><br>
+            Invalid JSON: ${error.message}
+          </p>
+        `;
+      }
+      console.error('Failed to save config:', error);
+    }
+  }
+
+  /**
+   * Reset entity to default (remove localStorage override)
+   */
+  resetEntity() {
+    const storageKey = this.selectedType === 'structures' 
+      ? 'dev_structures_override' 
+      : 'dev_drones_override';
+    
+    // Get existing overrides
+    const existing = localStorage.getItem(storageKey);
+    if (existing) {
+      const overrides = JSON.parse(existing);
+      delete overrides[this.selectedEntity.id];
+      
+      if (Object.keys(overrides).length === 0) {
+        localStorage.removeItem(storageKey);
+      } else {
+        localStorage.setItem(storageKey, JSON.stringify(overrides));
+      }
+    }
+    
+    // Reload the entity from defaults
+    if (this.selectedType === 'structures') {
+      const defaultEntity = getAllStructures().find(s => s.id === this.selectedEntity.id);
+      if (defaultEntity) {
+        this.selectedEntity = defaultEntity;
+      }
+    } else if (this.selectedType === 'drones') {
+      this.selectedEntity = { id: this.selectedEntity.id, ...droneRecipes[this.selectedEntity.id] };
+    }
+    
+    this.updateEditor();
+    
+    console.log(`Reset ${this.selectedEntity.id} to default`);
   }
 
   /**
