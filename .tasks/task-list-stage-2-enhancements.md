@@ -97,7 +97,7 @@ Update the file after completing each sub-task, not just after completing an ent
 
 ### ⚠️ PHASE 1: CRITICAL BUGFIXES (MUST COMPLETE 100% BEFORE PHASE 2)
 
-- [ ] 1.0 Fix Critical Bugs
+- [x] 1.0 Fix Critical Bugs
   - [x] 1.1 Fix scrolling issues in Crafting and Drones pages
     - [x] 1.1.1 Read `src/scenes/CraftingScene.js` and check updateUI() method
     - [x] 1.1.2 Read `src/scenes/DronesScene.js` and check updateUI() method
@@ -106,17 +106,17 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 1.1.5 Ensure panels are NOT wrapped in extra divs that prevent scrolling
     - [x] 1.1.6 Test scrolling in both pages with enough content
     - [x] 1.1.7 Add webkit-scrollbar styling if not present
-  - [ ] 1.2 Fix drone deployment functionality
-    - [ ] 1.2.1 Read `src/ui/TileInfoPanel.js` and verify deployDrone event is dispatched
-    - [ ] 1.2.2 Read `src/scenes/MapScene.js` and check deployDrone event listener
-    - [ ] 1.2.3 Read `src/systems/DroneManager.js` and verify deployDrone() logic
-    - [ ] 1.2.4 Add console.log statements to trace event flow
-    - [ ] 1.2.5 Verify hexGrid reference is valid in DroneManager
-    - [ ] 1.2.6 Check that available drones > 0 before deployment
-    - [ ] 1.2.7 Test deployment: build drone, select tile, click deploy
-    - [ ] 1.2.8 Verify tile visual updates immediately after deployment
-    - [ ] 1.2.9 Test remove drone functionality as well
-    - [ ] 1.2.10 Remove debug console.log statements
+  - [x] 1.2 Fix drone deployment functionality
+    - [x] 1.2.1 Read `src/ui/TileInfoPanel.js` and verify deployDrone event is dispatched
+    - [x] 1.2.2 Read `src/scenes/MapScene.js` and check deployDrone event listener
+    - [x] 1.2.3 Read `src/systems/DroneManager.js` and verify deployDrone() logic
+    - [x] 1.2.4 Add console.log statements to trace event flow
+    - [x] 1.2.5 Verify hexGrid reference is valid in DroneManager
+    - [x] 1.2.6 Check that available drones > 0 before deployment
+    - [x] 1.2.7 Test deployment: build drone, select tile, click deploy
+    - [x] 1.2.8 Verify tile visual updates immediately after deployment
+    - [x] 1.2.9 Test remove drone functionality as well
+    - [x] 1.2.10 Remove debug console.log statements
   - [x] 1.3 Fix hard reset button
     - [x] 1.3.1 Read `src/ui/ResourcePanel.js` and find hard reset button code
     - [x] 1.3.2 Verify event listener is attached in createPanelContent()
@@ -142,10 +142,10 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 1.5.2 Change width from 250px to 180px
     - [x] 1.5.3 Reduce padding from 1rem to 0.75rem
     - [x] 1.5.4 Reduce font sizes slightly (test readability)
-    - [ ] 1.5.5 Ensure all resources still visible
-    - [ ] 1.5.6 Ensure generation rates still visible
-    - [ ] 1.5.7 Ensure debug buttons still functional
-    - [ ] 1.5.8 Test on Chrome, Firefox, Safari
+    - [x] 1.5.5 Ensure all resources still visible
+    - [x] 1.5.6 Ensure generation rates still visible
+    - [x] 1.5.7 Ensure debug buttons still functional
+    - [x] 1.5.8 Test on Chrome, Firefox, Safari
 
 ---
 
