@@ -1,6 +1,12 @@
 // main.js - Entry point for Panix Incremental
 // REQ-STATE-001: Initialize Phaser game
 
+// Import modular CSS
+import './styles/base.css';
+import './styles/components.css';
+import './styles/pages.css';
+import './styles/utilities.css';
+
 import Phaser from 'phaser';
 import { gameConfig } from './config/gameConfig.js';
 import { MapScene } from './scenes/MapScene.js';
