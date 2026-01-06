@@ -117,6 +117,11 @@ export class ConfigScene extends Phaser.Scene {
     document.getElementById('config-import-file')?.addEventListener('change', (e) => {
       this.importConfig(e);
     });
+
+    // Add New button
+    document.getElementById('config-add-new')?.addEventListener('click', () => {
+      this.addNewEntity();
+    });
   }
 
   /**
@@ -162,7 +167,25 @@ export class ConfigScene extends Phaser.Scene {
       }));
     }
 
-    listEl.innerHTML = entities.map(entity => `
+    // Add custom entities from localStorage
+    const storageKey = this.selectedType === 'structures' 
+      ? 'dev_structures_override' 
+      : 'dev_drones_override';
+    
+    const existing = localStorage.getItem(storageKey);
+    if (existing) {
+      const overrides = JSON.parse(existing);
+      Object.keys(overrides).forEach(id => {
+        // Add custom entities (those starting with 'custom_')
+        if (id.startsWith('custom_')) {
+          entities.push({ id, ...overrides[id] });
+        }
+      });
+    }
+
+    listEl.innerHTML = entities.map(entity => {
+      const isCustom = entity.id.startsWith('custom_');
+      return `
       <div class="config-entity-item" data-id="${entity.id}" style="
         padding: 0.75rem;
         margin-bottom: 0.5rem;
@@ -172,10 +195,14 @@ export class ConfigScene extends Phaser.Scene {
         cursor: pointer;
         transition: all 0.2s;
       ">
-        <div style="font-weight: 600;">${entity.icon || '⚙️'} ${entity.name || entity.id}</div>
+        <div style="font-weight: 600;">
+          ${entity.icon || '⚙️'} ${entity.name || entity.id}
+          ${isCustom ? '<span style="color: var(--accent-primary); font-size: 0.75rem; margin-left: 0.25rem;">CUSTOM</span>' : ''}
+        </div>
         <div style="font-size: 0.85rem; color: var(--text-secondary);">${entity.id}</div>
       </div>
-    `).join('');
+    `;
+    }).join('');
 
     // Add click handlers
     listEl.querySelectorAll('.config-entity-item').forEach(item => {
@@ -190,10 +217,26 @@ export class ConfigScene extends Phaser.Scene {
    * Select an entity to edit
    */
   selectEntity(id) {
-    if (this.selectedType === 'structures') {
-      this.selectedEntity = getAllStructures().find(s => s.id === id);
-    } else if (this.selectedType === 'drones') {
-      this.selectedEntity = { id, ...droneRecipes[id] };
+    // Check if it's a custom entity in localStorage
+    if (id.startsWith('custom_')) {
+      const storageKey = this.selectedType === 'structures' 
+        ? 'dev_structures_override' 
+        : 'dev_drones_override';
+      
+      const existing = localStorage.getItem(storageKey);
+      if (existing) {
+        const overrides = JSON.parse(existing);
+        if (overrides[id]) {
+          this.selectedEntity = { id, ...overrides[id] };
+        }
+      }
+    } else {
+      // Load from defaults
+      if (this.selectedType === 'structures') {
+        this.selectedEntity = getAllStructures().find(s => s.id === id);
+      } else if (this.selectedType === 'drones') {
+        this.selectedEntity = { id, ...droneRecipes[id] };
+      }
     }
 
     this.updateEntityList();
@@ -247,6 +290,7 @@ export class ConfigScene extends Phaser.Scene {
       <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
         <button id="config-save-changes" class="btn">💾 Save Changes</button>
         <button id="config-reset-entity" class="btn secondary">🔄 Reset to Default</button>
+        ${this.selectedEntity.id.startsWith('custom_') ? '<button id="config-delete-entity" class="btn secondary" style="margin-left: auto; background: rgba(233, 69, 96, 0.2);">🗑️ Delete</button>' : ''}
       </div>
     `;
 
@@ -258,6 +302,13 @@ export class ConfigScene extends Phaser.Scene {
     document.getElementById('config-reset-entity')?.addEventListener('click', () => {
       this.resetEntity();
     });
+
+    // Add delete listener for custom entities
+    if (this.selectedEntity.id.startsWith('custom_')) {
+      document.getElementById('config-delete-entity')?.addEventListener('click', () => {
+        this.deleteEntity();
+      });
+    }
   }
 
   /**
@@ -393,6 +444,115 @@ export class ConfigScene extends Phaser.Scene {
     this.updateEditor();
     
     console.log(`Reset ${this.selectedEntity.id} to default`);
+  }
+
+  /**
+   * Add a new entity (creates a template in localStorage)
+   */
+  addNewEntity() {
+    // Generate a unique ID
+    const timestamp = Date.now();
+    const newId = `custom_${this.selectedType.slice(0, -1)}_${timestamp}`;
+    
+    // Create template based on type
+    let template = {};
+    
+    if (this.selectedType === 'structures') {
+      template = {
+        id: newId,
+        name: 'New Structure',
+        icon: '🏗️',
+        description: 'Custom structure description',
+        category: 'custom',
+        unlocked: true,
+        cost: {
+          iron: 100,
+          silicon: 50,
+          energy: 0
+        },
+        effects: {
+          energyPerSecond: 0,
+          storageBonus: 0
+        },
+        buildable: true
+      };
+    } else if (this.selectedType === 'drones') {
+      template = {
+        id: newId,
+        name: 'New Drone',
+        description: 'Custom drone description',
+        components: {
+          chassis: 1,
+          circuit: 1,
+          powerCore: 1
+        },
+        buildTime: 0,
+        stats: {
+          gatherRate: 0.5,
+          durability: Infinity
+        }
+      };
+    }
+    
+    // Save to localStorage
+    const storageKey = this.selectedType === 'structures' 
+      ? 'dev_structures_override' 
+      : 'dev_drones_override';
+    
+    let overrides = {};
+    const existing = localStorage.getItem(storageKey);
+    if (existing) {
+      overrides = JSON.parse(existing);
+    }
+    
+    overrides[newId] = template;
+    localStorage.setItem(storageKey, JSON.stringify(overrides));
+    
+    // Select the new entity
+    this.selectedEntity = { id: newId, ...template };
+    
+    // Update UI
+    this.updateEntityList();
+    this.updateEditor();
+    
+    console.log(`Created new ${this.selectedType} entity: ${newId}`);
+  }
+
+  /**
+   * Delete a custom entity
+   */
+  deleteEntity() {
+    if (!this.selectedEntity || !this.selectedEntity.id.startsWith('custom_')) {
+      console.warn('Can only delete custom entities');
+      return;
+    }
+
+    if (!confirm(`Delete ${this.selectedEntity.name || this.selectedEntity.id}? This cannot be undone.`)) {
+      return;
+    }
+
+    const storageKey = this.selectedType === 'structures' 
+      ? 'dev_structures_override' 
+      : 'dev_drones_override';
+    
+    const existing = localStorage.getItem(storageKey);
+    if (existing) {
+      const overrides = JSON.parse(existing);
+      delete overrides[this.selectedEntity.id];
+      
+      if (Object.keys(overrides).length === 0) {
+        localStorage.removeItem(storageKey);
+      } else {
+        localStorage.setItem(storageKey, JSON.stringify(overrides));
+      }
+    }
+
+    console.log(`Deleted custom entity: ${this.selectedEntity.id}`);
+    
+    // Clear selection and refresh
+    this.selectedEntity = null;
+    this.updateEntityList();
+    this.updateEditor();
   }
 
   /**
