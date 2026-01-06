@@ -111,10 +111,15 @@ export class TileInfoPanel {
 
     // Set up deploy button click handler
     const deployBtn = document.getElementById('deploy-drone-btn');
+    console.log('[TileInfoPanel] Deploy button element:', deployBtn);
     if (deployBtn) {
+      console.log('[TileInfoPanel] Adding click listener to deploy button');
       deployBtn.addEventListener('click', () => {
+        console.log('[TileInfoPanel] Deploy button CLICKED!');
         this.onDeployDrone();
       });
+    } else {
+      console.log('[TileInfoPanel] Deploy button not found - tile type:', tile.type, 'isStarting:', tile.isStarting);
     }
 
     // Set up remove button click handler
