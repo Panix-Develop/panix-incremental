@@ -468,6 +468,7 @@ export class ConfigScene extends Phaser.Scene {
         description: 'Custom structure description',
         category: 'custom',
         unlocked: true,
+        buildableOn: ['empty'],
         cost: {
           iron: 100,
           silicon: 50,

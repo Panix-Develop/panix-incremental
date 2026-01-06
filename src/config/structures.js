@@ -111,7 +111,9 @@ export function canBuildOnTileType(structureId, tileType) {
   const structure = getStructure(structureId);
   if (!structure) return false;
   
-  return structure.buildableOn.includes(tileType);
+  // Default to ['empty'] if buildableOn is not defined
+  const buildableOn = structure.buildableOn || ['empty'];
+  return buildableOn.includes(tileType);
 }
 
 /**
