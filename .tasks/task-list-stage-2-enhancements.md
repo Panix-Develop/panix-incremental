@@ -167,11 +167,11 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 2.2.4 Verify all pages have 2rem padding, overflow-y auto
     - [x] 2.2.5 Ensure consistent heading styles (H1, H3)
     - [x] 2.2.6 Test responsive behavior on different viewport sizes
-  - [ ] 2.3 Standardize card components
-    - [ ] 2.3.1 Create `.info-card` base class
-    - [ ] 2.3.2 Update crafting cards to use standard class
-    - [ ] 2.3.3 Update drone cards to use standard class
-    - [ ] 2.3.4 Ensure consistent border, border-radius, padding
+  - [x] 2.3 Standardize card components
+    - [x] 2.3.1 Create `.info-card` base class
+    - [x] 2.3.2 Update crafting cards to use standard class
+    - [x] 2.3.3 Update drone cards to use standard class
+    - [x] 2.3.4 Ensure consistent border, border-radius, padding
   - [ ] 2.4 Verify button consistency
     - [ ] 2.4.1 Check all `.btn` elements have consistent styling
     - [ ] 2.4.2 Verify hover states work correctly

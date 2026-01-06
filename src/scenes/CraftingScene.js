@@ -78,7 +78,7 @@ export class CraftingScene extends Phaser.Scene {
               <span style="color: var(--text-primary); margin-left: 0.5rem; font-weight: bold;">${components.powerCore}</span>
             </div>
           </div>
-          <div style="margin-top: 1rem; padding: 1rem; background: rgba(233, 69, 96, 0.1); border-left: 3px solid var(--accent-primary); border-radius: 4px;">
+          <div class="info-box">
             <div style="color: var(--text-secondary); font-size: 0.9rem;">
               💡 <strong>Tip:</strong> Craft components from resources, then use them to build drones in the Drones tab.
             </div>
@@ -98,7 +98,7 @@ export class CraftingScene extends Phaser.Scene {
       const displayName = this.formatComponentName(componentType);
       
       html += `
-        <div class="craft-card" style="background: var(--bg-secondary); border: 2px solid ${canCraft ? 'var(--accent-primary)' : 'var(--text-secondary)'}; border-radius: 8px; padding: 1.5rem;">
+        <div class="craft-card ${canCraft ? 'craftable' : 'not-craftable'}">
           <h4 style="color: var(--text-primary); margin-bottom: 1rem;">${displayName}</h4>
           <div style="margin-bottom: 1rem;">
             <div style="color: var(--text-secondary); margin-bottom: 0.5rem;">Cost:</div>

@@ -66,16 +66,16 @@ export class DronesScene extends Phaser.Scene {
         <div style="margin-bottom: 2rem;">
           <h3>Drone Inventory</h3>
           <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 1rem;">
-            <div style="background: rgba(233, 69, 96, 0.1); border: 2px solid var(--accent-primary); border-radius: 8px; padding: 1.5rem; text-align: center;">
-              <div style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">Available Drones</div>
-              <div style="color: var(--accent-primary); font-size: 2rem; font-weight: bold;">${availableDrones}</div>
+            <div class="stat-card">
+              <div class="stat-card-label">Available Drones</div>
+              <div class="stat-card-value">${availableDrones}</div>
             </div>
-            <div style="background: rgba(74, 144, 226, 0.1); border: 2px solid var(--color-silicon); border-radius: 8px; padding: 1.5rem; text-align: center;">
-              <div style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">Total Built</div>
-              <div style="color: var(--color-silicon); font-size: 2rem; font-weight: bold;">${totalBuilt}</div>
+            <div class="stat-card secondary">
+              <div class="stat-card-label">Total Built</div>
+              <div class="stat-card-value">${totalBuilt}</div>
             </div>
           </div>
-          <div style="margin-top: 1rem; padding: 1rem; background: rgba(233, 69, 96, 0.1); border-left: 3px solid var(--accent-primary); border-radius: 4px;">
+          <div class="info-box">
             <div style="color: var(--text-secondary); font-size: 0.9rem;">
               💡 <strong>Tip:</strong> Build drones here, then deploy them to resource tiles in the Map tab to generate resources.
             </div>
@@ -110,7 +110,7 @@ export class DronesScene extends Phaser.Scene {
     const canBuild = this.droneManager.canBuildDrone(droneType);
     
     html += `
-      <div class="craft-card" style="background: var(--bg-secondary); border: 2px solid ${canBuild ? 'var(--accent-primary)' : 'var(--text-secondary)'}; border-radius: 8px; padding: 1.5rem;">
+      <div class="craft-card ${canBuild ? 'craftable' : 'not-craftable'}">
         <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">${recipe.name}</h4>
         <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">${recipe.description}</p>
         
