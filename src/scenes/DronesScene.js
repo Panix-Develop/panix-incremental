@@ -56,6 +56,7 @@ export class DronesScene extends Phaser.Scene {
   updateUI() {
     if (!this.uiContainer) return;
 
+    console.log('[DronesScene] Updating UI');
     const components = this.craftingManager.getAllComponents();
     const availableDrones = this.droneManager.getAvailableDrones();
     const totalBuilt = this.droneManager.getTotalBuilt();

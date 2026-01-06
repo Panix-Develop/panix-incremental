@@ -10,7 +10,9 @@ export class ResourcePanel {
       return;
     }
 
+    console.log('[ResourcePanel] Initializing resource panel');
     this.createPanelContent();
+    console.log('[ResourcePanel] Panel width:', this.panel.offsetWidth);
   }
 
   /**
