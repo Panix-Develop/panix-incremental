@@ -10,6 +10,7 @@
     "deploy:check": "npm run build && npm run preview"
   },
   "devDependencies": {
+    "terser": "^5.44.1",
     "vite": "^7.2.4"
   },
   "dependencies": {

@@ -4,13 +4,10 @@ This project is automatically deployed to GitHub Pages when changes are pushed t
 
 ## 🚀 Automatic Deployment
 
-Every push to a `release/**` branch triggers:
+Every push to the `main` branch triggers:
 1. **Build**: Vite builds the production bundle
 2. **Deploy**: Artifact is deployed to GitHub Pages
 3. **Live**: Game is accessible at your GitHub Pages URL
-
-**Release Branch Format**: `release/vX.Y.Z`
-- Example: `release/v1.0.0`, `release/v2.0.0`
 
 ## 🔧 Setup Instructions
 
@@ -32,16 +29,17 @@ base: process.env.NODE_ENV === 'production' ? '/YOUR-REPO-NAME/' : '/',
 
 Replace `YOUR-REPO-NAME` with your actual repository name.
 
-### 3. Push to Release Branch
+### 3. Deploy to GitHub Pages
 
-After completing a phase, create and push a release branch:
+After completing your work, merge to main and push:
 
 ```bash
-# Create release branch
-git checkout -b release/v1.0.0
+# Merge your feature/task branches to main
+git checkout main
+git merge your-feature-branch
 
 # Push to trigger deployment
-git push origin release/v1.0.0
+git push origin main
 
 # Tag the release
 git tag v1.0.0
@@ -59,7 +57,7 @@ https://YOUR-USERNAME.github.io/YOUR-REPO-NAME/
 ## 📋 Deployment Workflow
 
 - **File**: `.github/workflows/deploy.yml`
-- **Trigger**: Push to `release/**` branch or manual dispatch
+- **Trigger**: Push to `main` branch or manual dispatch
 - **Build Command**: `npm run build`
 - **Output**: `dist/` folder
 
@@ -70,7 +68,7 @@ You can also trigger deployment manually:
 1. Go to **Actions** tab on GitHub
 2. Select "Deploy to GitHub Pages" workflow
 3. Click "Run workflow"
-4. Select a `release/*` branch
+4. Select `main` branch
 5. Click "Run workflow"
 
 ## 🧪 Testing Locally
