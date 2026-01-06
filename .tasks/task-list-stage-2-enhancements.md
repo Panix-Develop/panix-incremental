@@ -385,57 +385,57 @@ Update the file after completing each sub-task, not just after completing an ent
 ### PHASE 6: NAVIGATION UPDATES
 
 - [ ] 6.0 Update Navigation Menu with Locked Pages
-  - [ ] 6.1 Create locked page overlay component
-    - [ ] 6.1.1 Create `src/ui/LockedPageOverlay.js`
-    - [ ] 6.1.2 Add constructor with message, hint params
-    - [ ] 6.1.3 Create overlay div with lock icon 🔒
-    - [ ] 6.1.4 Add semi-transparent background
-    - [ ] 6.1.5 Add centered message and hint text
-    - [ ] 6.1.6 Add show() and hide() methods
-    - [ ] 6.1.7 Style with CSS (semi-transparent, centered, z-index)
-  - [ ] 6.2 Create Research page placeholder
-    - [ ] 6.2.1 Create `src/scenes/ResearchScene.js`
-    - [ ] 6.2.2 Add create() method
-    - [ ] 6.2.3 Create research panel with standard layout
-    - [ ] 6.2.4 Add placeholder research tree structure
-    - [ ] 6.2.5 Add category nodes: Resource Gen, Drone Efficiency, Structures, Map, Automation
-    - [ ] 6.2.6 Dim/grey out the tree with CSS
-    - [ ] 6.2.7 Create LockedPageOverlay instance
-    - [ ] 6.2.8 Show overlay with message "Research Lab not yet constructed"
-    - [ ] 6.2.9 Add hint "Complete initial objectives to unlock research"
-  - [ ] 6.3 Create Galaxy page placeholder
-    - [ ] 6.3.1 Create `src/scenes/GalaxyScene.js`
-    - [ ] 6.3.2 Add create() method
-    - [ ] 6.3.3 Create galaxy panel with standard layout
-    - [ ] 6.3.4 Add 3-5 placeholder planets with simple visuals
-    - [ ] 6.3.5 Use CSS circles with different colors for planets
-    - [ ] 6.3.6 Optional: Add simple rotation animations
-    - [ ] 6.3.7 Dim/grey out with CSS
-    - [ ] 6.3.8 Create LockedPageOverlay instance
-    - [ ] 6.3.9 Show overlay with message "Deep Space Scanner offline"
-    - [ ] 6.3.10 Add hint "Upgrade your base infrastructure to unlock"
-  - [ ] 6.4 Update navigation menu
-    - [ ] 6.4.1 Read `src/ui/TabNavigation.js`
-    - [ ] 6.4.2 Update navigation order: Map, Galaxy, Crafting, Drones, Structures, Research, Settings, Config
-    - [ ] 6.4.3 Add Galaxy nav button with 🌌 icon
-    - [ ] 6.4.4 Add Structures nav button with 🏗️ icon
-    - [ ] 6.4.5 Add Research nav button with 🔬 icon
-    - [ ] 6.4.6 Add Settings nav button with ⚙️ icon
-    - [ ] 6.4.7 Mark Galaxy and Research buttons as locked
-    - [ ] 6.4.8 Add .locked CSS class to locked buttons
-    - [ ] 6.4.9 Add lock icon 🔒 after label for locked pages
-    - [ ] 6.4.10 Add opacity: 0.5 and cursor: not-allowed for locked
-    - [ ] 6.4.11 Add hover tooltip showing unlock condition
-    - [ ] 6.4.12 Test all navigation buttons work correctly
-  - [ ] 6.5 Initialize new scenes in main.js
-    - [ ] 6.5.1 Update `src/main.js` to import new scenes
-    - [ ] 6.5.2 Add ResearchScene, GalaxyScene, SettingsScene, StructuresScene to gameConfig
-    - [ ] 6.5.3 Initialize StructuresScene with managers
-    - [ ] 6.5.4 Initialize SettingsScene with SettingsManager
-    - [ ] 6.5.5 Initialize ResearchScene (locked, no data needed)
-    - [ ] 6.5.6 Initialize GalaxyScene (locked, no data needed)
-    - [ ] 6.5.7 Initialize ConfigScene only if dev mode
-    - [ ] 6.5.8 Test all pages accessible via navigation
+  - [x] 6.1 Create locked page overlay component
+    - [x] 6.1.1 Create `src/ui/LockedPageOverlay.js`
+    - [x] 6.1.2 Add constructor with message, hint params
+    - [x] 6.1.3 Create overlay div with lock icon 🔒
+    - [x] 6.1.4 Add semi-transparent background
+    - [x] 6.1.5 Add centered message and hint text
+    - [x] 6.1.6 Add show() and hide() methods
+    - [x] 6.1.7 Style with CSS (semi-transparent, centered, z-index)
+  - [x] 6.2 Create Research page placeholder
+    - [x] 6.2.1 Create `src/scenes/ResearchScene.js`
+    - [x] 6.2.2 Add create() method
+    - [x] 6.2.3 Create research panel with standard layout
+    - [x] 6.2.4 Add placeholder research tree structure
+    - [x] 6.2.5 Add category nodes: Resource Gen, Drone Efficiency, Structures, Map, Automation
+    - [x] 6.2.6 Dim/grey out the tree with CSS
+    - [x] 6.2.7 Create LockedPageOverlay instance
+    - [x] 6.2.8 Show overlay with message "Research Lab not yet constructed"
+    - [x] 6.2.9 Add hint "Complete initial objectives to unlock research"
+  - [x] 6.3 Create Galaxy page placeholder
+    - [x] 6.3.1 Create `src/scenes/GalaxyScene.js`
+    - [x] 6.3.2 Add create() method
+    - [x] 6.3.3 Create galaxy panel with standard layout
+    - [x] 6.3.4 Add 3-5 placeholder planets with simple visuals
+    - [x] 6.3.5 Use CSS circles with different colors for planets
+    - [x] 6.3.6 Optional: Add simple rotation animations
+    - [x] 6.3.7 Dim/grey out with CSS
+    - [x] 6.3.8 Create LockedPageOverlay instance
+    - [x] 6.3.9 Show overlay with message "Deep Space Scanner offline"
+    - [x] 6.3.10 Add hint "Upgrade your base infrastructure to unlock"
+  - [x] 6.4 Update navigation menu
+    - [x] 6.4.1 Read `src/ui/TabNavigation.js`
+    - [x] 6.4.2 Update navigation order: Map, Galaxy, Crafting, Drones, Structures, Research, Settings
+    - [x] 6.4.3 Add Galaxy nav button with 🌌 icon
+    - [x] 6.4.4 Add Structures nav button with 🏗️ icon
+    - [x] 6.4.5 Add Research nav button with 🔬 icon
+    - [x] 6.4.6 Add Settings nav button with ⚙️ icon
+    - [x] 6.4.7 Mark Galaxy and Research buttons as locked
+    - [x] 6.4.8 Add .locked CSS class to locked buttons
+    - [x] 6.4.9 Add lock icon 🔒 after label for locked pages
+    - [x] 6.4.10 Add opacity: 0.5 and cursor: not-allowed for locked
+    - [x] 6.4.11 Add hover tooltip showing unlock condition
+    - [x] 6.4.12 Test all navigation buttons work correctly
+  - [x] 6.5 Initialize new scenes in main.js
+    - [x] 6.5.1 Update `src/main.js` to import new scenes
+    - [x] 6.5.2 Add ResearchScene, GalaxyScene, SettingsScene, StructuresScene to gameConfig
+    - [x] 6.5.3 Initialize StructuresScene with managers
+    - [x] 6.5.4 Initialize SettingsScene with SettingsManager
+    - [x] 6.5.5 Initialize ResearchScene (locked, no data needed)
+    - [x] 6.5.6 Initialize GalaxyScene (locked, no data needed)
+    - [x] 6.5.7 Initialize ConfigScene only if dev mode (skipped - no dev mode yet)
+    - [x] 6.5.8 Test all pages accessible via navigation
 
 ---
 
