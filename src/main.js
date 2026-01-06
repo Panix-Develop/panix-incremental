@@ -18,6 +18,7 @@ import { SettingsManager } from './systems/SettingsManager.js';
 import { CraftingManager } from './systems/CraftingManager.js';
 import { DroneManager } from './systems/DroneManager.js';
 import { TabNavigation } from './ui/TabNavigation.js';
+import { ResourcePanel } from './ui/ResourcePanel.js';
 import { saveGame, loadGame, hasSaveData } from './utils/saveLoad.js';
 
 // Add scenes to config
@@ -70,7 +71,7 @@ game.events.once('ready', () => {
       mapScene.settingsManager = settingsManager;
       
       // Recreate ResourcePanel with settingsManager
-      mapScene.resourcePanel = new (await import('./ui/ResourcePanel.js')).ResourcePanel(settingsManager);
+      mapScene.resourcePanel = new ResourcePanel(settingsManager);
 
       // Initialize CraftingScene with managers
       game.scene.start('CraftingScene', {
