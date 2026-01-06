@@ -1,0 +1,85 @@
+{
+  "navigation": {
+    "map": "Map",
+    "crafting": "Crafting",
+    "drones": "Drones",
+    "settings": "Settings"
+  },
+  "resources": {
+    "iron": "Iron",
+    "silicon": "Silicon",
+    "energy": "Energy"
+  },
+  "crafting": {
+    "title": "Crafting Station",
+    "componentInventory": "Component Inventory",
+    "craftComponents": "Craft Components",
+    "chassis": "Chassis",
+    "circuits": "Circuits",
+    "powerCores": "Power Cores",
+    "cost": "Cost",
+    "craft": "Craft",
+    "insufficientResources": "Insufficient Resources",
+    "tip": "💡 <strong>Tip:</strong> Craft components from raw resources, then use them to build drones in the Drones tab."
+  },
+  "drones": {
+    "title": "Drone Assembly Bay",
+    "droneInventory": "Drone Inventory",
+    "availableDrones": "Available Drones",
+    "totalBuilt": "Total Built",
+    "componentInventory": "Component Inventory",
+    "buildDrones": "Build Drones",
+    "buildDrone": "Build Drone",
+    "insufficientComponents": "Insufficient Components",
+    "description": "Description",
+    "gatherRate": "Generation Rate",
+    "gatherRateValue": "{rate} resources/sec per drone",
+    "tip": "💡 <strong>Tip:</strong> Build drones here, then deploy them to resource tiles in the Map tab to generate resources."
+  },
+  "map": {
+    "selectTile": "Select a tile to view details",
+    "tileInfo": "Tile Information",
+    "type": "Type",
+    "drones": "Drones",
+    "maxDrones": "Max Drones",
+    "generationRate": "Generation Rate",
+    "perSecond": "{amount}/sec",
+    "deployDrone": "Deploy Drone",
+    "removeDrone": "Remove Drone",
+    "atCapacity": "At Capacity",
+    "startingBase": "Starting Base",
+    "tileTypes": {
+      "iron": "Iron Mine",
+      "silicon": "Silicon Deposit",
+      "energy": "Energy Source",
+      "empty": "Empty"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "displaySettings": "Display Settings",
+    "numberFormat": "Number Format",
+    "language": "Language",
+    "playerSettings": "Player Settings",
+    "playerName": "Player Name",
+    "updateName": "Update Name",
+    "about": "About",
+    "version": "Version",
+    "formats": {
+      "normal": "Normal (1.23K, 4.56M)",
+      "scientific": "Scientific (1.23e3, 4.56e6)",
+      "engineering": "Engineering (1.23e3, 12.3e3)"
+    },
+    "languages": {
+      "en": "English",
+      "de": "German"
+    }
+  },
+  "common": {
+    "resources": "Resources",
+    "reset": "Hard Reset",
+    "confirmReset": "Are you sure you want to reset all progress? This cannot be undone!",
+    "add100": "Add 100",
+    "debugPanel": "Debug Panel"
+  }
+}

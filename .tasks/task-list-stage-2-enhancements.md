@@ -204,18 +204,18 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 3.2.5 Add formatNumber(num, format) as main function
     - [x] 3.2.6 Handle edge cases (0, negative, very large numbers)
     - [x] 3.2.7 Add tests for all three formats
-  - [ ] 3.3 Create localization system
-    - [ ] 3.3.1 Create `src/locales/` directory
-    - [ ] 3.3.2 Create `src/locales/en.json` with English translations
-    - [ ] 3.3.3 Create `src/locales/de.json` with German translations (AI-generated)
-    - [ ] 3.3.4 Create `src/utils/i18n.js` utility
-    - [ ] 3.3.5 Implement loadTranslations(lang) to fetch JSON
-    - [ ] 3.3.6 Implement t(key, params) function for translation lookup
-    - [ ] 3.3.7 Add dot-notation key support (e.g., 'navigation.map')
-    - [ ] 3.3.8 Add parameter replacement (e.g., {amount})
-    - [ ] 3.3.9 Implement fallback to English for missing keys
-    - [ ] 3.3.10 Add currentLanguage variable
-    - [ ] 3.3.11 Add setLanguage(lang) to switch language
+  - [x] 3.3 Create localization system
+    - [x] 3.3.1 Create `src/locales/` directory
+    - [x] 3.3.2 Create `src/locales/en.json` with English translations
+    - [x] 3.3.3 Create `src/locales/de.json` with German translations (AI-generated)
+    - [x] 3.3.4 Create `src/utils/i18n.js` utility
+    - [x] 3.3.5 Implement loadTranslations(lang) to fetch JSON
+    - [x] 3.3.6 Implement t(key, params) function for translation lookup
+    - [x] 3.3.7 Add dot-notation key support (e.g., 'navigation.map')
+    - [x] 3.3.8 Add parameter replacement (e.g., {amount})
+    - [x] 3.3.9 Implement fallback to English for missing keys
+    - [x] 3.3.10 Add currentLanguage variable
+    - [x] 3.3.11 Add setLanguage(lang) to switch language
   - [ ] 3.4 Build Settings page
     - [ ] 3.4.1 Create `src/scenes/SettingsScene.js`
     - [ ] 3.4.2 Add create() method to initialize UI
