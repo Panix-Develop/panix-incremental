@@ -1,110 +1,10 @@
-/* Panix Incremental - Global Styles */
-
-/* Color Scheme from GDD (REQ-UI-005) */
-:root {
-  --bg-primary: #1a1a2e;
-  --bg-secondary: #16213e;
-  --bg-tertiary: #0f3460;
-  --accent-primary: #e94560;
-  --accent-secondary: #533483;
-  --text-primary: #eaeaea;
-  --text-secondary: #a0a0a0;
-  --border-color: #2a2a3e;
-  
-  /* Resource colors (REQ-UI-006) */
-  --color-iron: #7D7D7D;
-  --color-silicon: #4A90E2;
-  --color-energy: #F5A623;
-  --color-empty: #2A2A3E;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  line-height: 1.6;
-  overflow: hidden;
-  width: 100vw;
-  height: 100vh;
-}
+/* Main Layout Structure - Import modular styles from src/styles/ */
 
 #game-container {
   display: flex;
   width: 100%;
   height: 100%;
   position: relative;
-}
-
-/* Left Sidebar Navigation */
-#sidebar-navigation {
-  width: 200px;
-  min-width: 200px;
-  background-color: var(--bg-secondary);
-  border-right: 2px solid var(--accent-primary);
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  z-index: 100;
-}
-
-.sidebar-header {
-  padding: 1.5rem;
-  background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
-  border-bottom: 2px solid var(--accent-primary);
-  text-align: center;
-}
-
-.sidebar-header h1 {
-  color: var(--accent-primary);
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin: 0;
-  letter-spacing: 0.1em;
-}
-
-#nav-buttons {
-  display: flex;
-  flex-direction: column;
-  padding: 0.5rem 0;
-}
-
-.nav-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  padding: 1rem 1.5rem;
-  text-align: left;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 1rem;
-  border-left: 3px solid transparent;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.nav-btn:hover {
-  background-color: rgba(233, 69, 96, 0.1);
-  color: var(--text-primary);
-}
-
-.nav-btn.active {
-  background-color: rgba(233, 69, 96, 0.2);
-  color: var(--accent-primary);
-  border-left-color: var(--accent-primary);
-  font-weight: bold;
-}
-
-.nav-btn-icon {
-  font-size: 1.2rem;
-  width: 1.5rem;
-  text-align: center;
 }
 
 /* Main Content Area */
@@ -135,139 +35,10 @@ body {
   pointer-events: auto;
 }
 
-/* Panel styling */
-.panel {
-  background-color: rgba(22, 33, 62, 0.95);
-  border: 2px solid var(--accent-primary);
-  border-radius: 8px;
-  padding: 0.75rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-}
-
-/* Resource Panel (top-left) */
-#resource-panel {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  width: 400px;
-  max-width: 600px;
-  min-width: 200px;
-  resize: horizontal;
-  overflow: auto;
-}
-
-.resource-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.resource-item:last-child {
-  border-bottom: none;
-}
-
-.resource-name {
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.resource-value {
-  font-size: 1rem;
-  color: var(--accent-primary);
-  font-weight: bold;
-}
-
-.resource-rate {
-  font-size: 0.85rem;
-  color: var(--color-energy);
-  margin-left: 0.5rem;
-}
-
-/* Tile Info Panel (right side) */
-#tile-info-panel {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 300px;
-  max-height: 80vh;
-  overflow-y: auto;
-}
-
-.tile-info-header {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: var(--accent-primary);
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--accent-primary);
-}
-
-.tile-info-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.tile-info-label {
-  color: var(--text-secondary);
-}
-
-.tile-info-value {
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-/* Buttons */
-.btn {
-  background-color: var(--accent-primary);
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 1rem;
-  width: 100%;
-  font-weight: 600;
-}
-
-.btn:hover:not(:disabled) {
-  background-color: #d63651;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(233, 69, 96, 0.3);
-}
-
-.btn:disabled {
-  background-color: var(--border-color);
-  color: var(--text-secondary);
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-.btn:active:not(:disabled) {
-  transform: translateY(0);
-}
-
 /* Tab Navigation (deprecated - keeping for compatibility) */
 #tab-navigation {
   display: none;
 }
-
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-tertiary);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--accent-primary);
 
 /* Crafting Panel */
 #crafting-panel {
@@ -283,15 +54,6 @@ body {
   display: none;
   padding: 2rem;
   box-sizing: border-box;
-}
-
-.craft-card {
-  transition: all 0.3s ease;
-}
-
-.craft-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 16px rgba(233, 69, 96, 0.3);
 }
 
 .craft-btn {
@@ -335,10 +97,4 @@ body {
     transform: translateX(-50%) translateY(-100%);
     opacity: 0;
   }
-}
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #d63651;
 }
