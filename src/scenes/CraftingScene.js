@@ -60,8 +60,7 @@ export class CraftingScene extends Phaser.Scene {
     const componentTypes = Object.keys(recipes.components);
 
     let html = `
-      <div style="padding: 2rem;">
-        <h2 style="color: var(--accent-primary); margin-bottom: 2rem;">Crafting Station</h2>
+      <h2 style="color: var(--accent-primary); margin-bottom: 2rem;">Crafting Station</h2>
         
         <div style="margin-bottom: 2rem;">
           <h3 style="color: var(--text-primary); margin-bottom: 1rem;">Component Inventory</h3>
@@ -135,7 +134,6 @@ export class CraftingScene extends Phaser.Scene {
 
     html += `
         </div>
-      </div>
     `;
 
     this.uiContainer.innerHTML = html;

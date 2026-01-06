@@ -278,6 +278,7 @@ body {
   z-index: 5;
   display: none;
   padding: 2rem;
+  box-sizing: border-box;
 }
 
 .craft-card {
@@ -306,6 +307,7 @@ body {
   z-index: 5;
   display: none;
   padding: 2rem;
+  box-sizing: border-box;
 }
 
 /* Notification animations */

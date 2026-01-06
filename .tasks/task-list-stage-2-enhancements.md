@@ -95,23 +95,17 @@ Update the file after completing each sub-task, not just after completing an ent
 
 ## Tasks
 
-- [ ] 0.0 Create feature branch
-  - [ ] 0.1 Create and checkout new branch: `git checkout -b feature/stage-2-enhancements`
-  - [ ] 0.2 Verify branch is created: `git branch`
-
----
-
 ### ⚠️ PHASE 1: CRITICAL BUGFIXES (MUST COMPLETE 100% BEFORE PHASE 2)
 
 - [ ] 1.0 Fix Critical Bugs
-  - [ ] 1.1 Fix scrolling issues in Crafting and Drones pages
-    - [ ] 1.1.1 Read `src/scenes/CraftingScene.js` and check updateUI() method
-    - [ ] 1.1.2 Read `src/scenes/DronesScene.js` and check updateUI() method
-    - [ ] 1.1.3 Read `style.css` and check #crafting-panel and #drones-panel rules
-    - [ ] 1.1.4 Verify panels have `height: 100%` and proper box-sizing
-    - [ ] 1.1.5 Ensure panels are NOT wrapped in extra divs that prevent scrolling
-    - [ ] 1.1.6 Test scrolling in both pages with enough content
-    - [ ] 1.1.7 Add webkit-scrollbar styling if not present
+  - [x] 1.1 Fix scrolling issues in Crafting and Drones pages
+    - [x] 1.1.1 Read `src/scenes/CraftingScene.js` and check updateUI() method
+    - [x] 1.1.2 Read `src/scenes/DronesScene.js` and check updateUI() method
+    - [x] 1.1.3 Read `style.css` and check #crafting-panel and #drones-panel rules
+    - [x] 1.1.4 Verify panels have `height: 100%` and proper box-sizing
+    - [x] 1.1.5 Ensure panels are NOT wrapped in extra divs that prevent scrolling
+    - [x] 1.1.6 Test scrolling in both pages with enough content
+    - [x] 1.1.7 Add webkit-scrollbar styling if not present
   - [ ] 1.2 Fix drone deployment functionality
     - [ ] 1.2.1 Read `src/ui/TileInfoPanel.js` and verify deployDrone event is dispatched
     - [ ] 1.2.2 Read `src/scenes/MapScene.js` and check deployDrone event listener
