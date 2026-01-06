@@ -114,10 +114,8 @@ export class TileInfoPanel {
     // Set up deploy button click handler (only if not already set)
     const deployBtn = document.getElementById('deploy-drone-btn');
     if (deployBtn && deployBtn !== this.deployBtn) {
-      console.log('[TileInfoPanel] Setting up new deploy button listener');
       this.deployBtn = deployBtn;
       deployBtn.addEventListener('click', () => {
-        console.log('[TileInfoPanel] Deploy button CLICKED!');
         this.onDeployDrone();
       });
     }
@@ -125,10 +123,8 @@ export class TileInfoPanel {
     // Set up remove button click handler (only if not already set)
     const removeBtn = document.getElementById('remove-drone-btn');
     if (removeBtn && removeBtn !== this.removeBtn) {
-      console.log('[TileInfoPanel] Setting up new remove button listener');
       this.removeBtn = removeBtn;
       removeBtn.addEventListener('click', () => {
-        console.log('[TileInfoPanel] Remove button CLICKED!');
         this.onRemoveDrone();
       });
     }
@@ -163,13 +159,11 @@ export class TileInfoPanel {
    * This will be connected to DroneManager later
    */
   onDeployDrone() {
-    console.log('[TileInfoPanel] Deploy drone button clicked for tile:', this.currentTile);
     // Emit custom event that will be handled by main game logic
     const event = new CustomEvent('deployDrone', {
       detail: { tile: this.currentTile }
     });
     window.dispatchEvent(event);
-    console.log('[TileInfoPanel] deployDrone event dispatched');
   }
 
   /**

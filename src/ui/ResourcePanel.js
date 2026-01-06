@@ -10,23 +10,19 @@ export class ResourcePanel {
       return;
     }
 
-    console.log('[ResourcePanel] Initializing resource panel');
     this.createPanelContent();
     
     // Load saved width
     const savedWidth = localStorage.getItem('resourcePanelWidth');
     if (savedWidth) {
       this.panel.style.width = savedWidth + 'px';
-      console.log('[ResourcePanel] Loaded saved width:', savedWidth);
     }
-    console.log('[ResourcePanel] Panel width:', this.panel.offsetWidth);
     
     // Save width on resize
     const resizeObserver = new ResizeObserver(entries => {
       for (let entry of entries) {
         const width = entry.contentRect.width;
         localStorage.setItem('resourcePanelWidth', width);
-        console.log('[ResourcePanel] Width resized and saved:', width);
       }
     });
     resizeObserver.observe(this.panel);
@@ -148,13 +144,9 @@ export class ResourcePanel {
    * Debug function to perform hard reset
    */
   onDebugHardReset() {
-    console.log('[ResourcePanel] Hard reset button clicked');
     if (confirm('Hard reset will delete all progress. Are you sure?')) {
-      console.log('[ResourcePanel] User confirmed hard reset');
       const event = new CustomEvent('debugHardReset');
       window.dispatchEvent(event);
-    } else {
-      console.log('[ResourcePanel] User cancelled hard reset');
     }
   }
 

@@ -115,11 +115,9 @@ game.events.once('ready', () => {
 
       // Listen for debug hard reset
       window.addEventListener('debugHardReset', () => {
-        console.log('[Main] Hard reset event received');
         if (managers) {
           // Clear save data
           localStorage.clear();
-          console.log('[Main] localStorage cleared');
           
           // Reset all managers
           managers.resourceManager.resources = { iron: 0, silicon: 0, energy: 0 };
@@ -135,7 +133,6 @@ game.events.once('ready', () => {
             }
           });
           
-          console.log('[Main] All managers reset');
           showNotification('Hard reset complete!');
           
           // Refresh all UI

@@ -67,10 +67,8 @@ export class DroneManager {
    * @returns {object} - {success: boolean, error?: string}
    */
   deployDrone(q, r) {
-    console.log('[DroneManager] deployDrone called:', { q, r, availableDrones: this.availableDrones });
     // Check if player has available drones
     if (this.availableDrones <= 0) {
-      console.log('[DroneManager] No drones available');
       return {
         success: false,
         error: 'No drones available'
@@ -80,7 +78,6 @@ export class DroneManager {
     // Get tile
     const tile = this.hexGrid.getTile(q, r);
     if (!tile) {
-      console.log('[DroneManager] Invalid tile');
       return {
         success: false,
         error: 'Invalid tile'
@@ -89,7 +86,6 @@ export class DroneManager {
 
     // REQ-DEPLOY-004: Cannot deploy to starting tile
     if (tile.isStarting) {
-      console.log('[DroneManager] Cannot deploy to starting tile');
       return {
         success: false,
         error: 'Cannot deploy to starting tile'
@@ -98,7 +94,6 @@ export class DroneManager {
 
     // REQ-DEPLOY-001: Cannot deploy to empty tiles
     if (tile.type === 'empty') {
-      console.log('[DroneManager] Cannot deploy to empty tile');
       return {
         success: false,
         error: 'Cannot deploy to empty tile'
@@ -107,7 +102,6 @@ export class DroneManager {
 
     // Check if tile has capacity
     if (!this.hexGrid.canDeployDrone(q, r)) {
-      console.log('[DroneManager] Tile at maximum capacity');
       return {
         success: false,
         error: 'Tile at maximum capacity'
@@ -116,7 +110,6 @@ export class DroneManager {
 
     // Deploy drone
     if (!this.hexGrid.addDroneToTile(q, r)) {
-      console.log('[DroneManager] Failed to add drone to tile');
       return {
         success: false,
         error: 'Failed to deploy drone'
@@ -125,7 +118,6 @@ export class DroneManager {
 
     // Deduct from available
     this.availableDrones--;
-    console.log('[DroneManager] Drone deployed successfully, availableDrones now:', this.availableDrones);
 
     // Track deployment
     this.deployments.push({

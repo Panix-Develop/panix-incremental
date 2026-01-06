@@ -56,7 +56,6 @@ export class CraftingScene extends Phaser.Scene {
   updateUI() {
     if (!this.uiContainer) return;
 
-    console.log('[CraftingScene] Updating UI');
     const components = this.craftingManager.getAllComponents();
     const componentTypes = Object.keys(recipes.components);
 
