@@ -2,7 +2,7 @@
 // REQ-DRONE-002: Display drone building UI
 
 import Phaser from 'phaser';
-import { recipes, getDroneRecipe } from '../config/recipes.js';
+import { recipes, getDroneRecipe, getAllDroneRecipes } from '../config/recipes.js';
 
 export class DronesScene extends Phaser.Scene {
   constructor() {
@@ -104,14 +104,20 @@ export class DronesScene extends Phaser.Scene {
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem;">
     `;
 
-    // Add build card for basic gatherer drone
-    const droneType = 'basicGatherer';
-    const recipe = getDroneRecipe(droneType);
-    const canBuild = this.droneManager.canBuildDrone(droneType);
+    // Get all drone recipes (including custom ones)
+    const allDrones = getAllDroneRecipes();
+    
+    // Add build card for each drone type
+    Object.entries(allDrones).forEach(([droneType, recipe]) => {
+      const canBuild = this.droneManager.canBuildDrone(droneType);
+      const isCustom = droneType.startsWith('custom_');
     
     html += `
       <div class="craft-card ${canBuild ? 'craftable' : 'not-craftable'}">
-        <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">${recipe.name}</h4>
+        <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">
+          ${recipe.name}
+          ${isCustom ? '<span style="color: var(--accent-primary); font-size: 0.75rem; margin-left: 0.5rem;">CUSTOM</span>' : ''}
+        </h4>
         <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">${recipe.description}</p>
         
         <div style="margin-bottom: 1rem;">
@@ -150,6 +156,7 @@ export class DronesScene extends Phaser.Scene {
         </button>
       </div>
     `;
+    }); // End forEach
 
     html += `
         </div>

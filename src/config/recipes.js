@@ -82,8 +82,48 @@ export function getComponentRecipe(componentType) {
 }
 
 // Helper function to get drone recipe
+// Includes custom drones from localStorage in dev mode
 export function getDroneRecipe(droneType) {
+  // Check if it's a custom drone
+  if (droneType.startsWith('custom_')) {
+    const customDrones = localStorage.getItem('dev_drones_override');
+    if (customDrones) {
+      try {
+        const overrides = JSON.parse(customDrones);
+        if (overrides[droneType]) {
+          return overrides[droneType];
+        }
+      } catch (error) {
+        console.warn('Failed to load custom drone:', error);
+      }
+    }
+    return null;
+  }
+  
   return droneRecipes[droneType];
+}
+
+// Helper function to get all drone recipes (including custom)
+export function getAllDroneRecipes() {
+  const allRecipes = { ...droneRecipes };
+  
+  // Add custom drones from localStorage (dev mode)
+  const customDrones = localStorage.getItem('dev_drones_override');
+  if (customDrones) {
+    try {
+      const overrides = JSON.parse(customDrones);
+      // Add custom drones (those starting with 'custom_')
+      Object.entries(overrides).forEach(([id, recipe]) => {
+        if (id.startsWith('custom_')) {
+          allRecipes[id] = recipe;
+        }
+      });
+    } catch (error) {
+      console.warn('Failed to load custom drones:', error);
+    }
+  }
+  
+  return allRecipes;
 }
 
 // Export as default object for convenience

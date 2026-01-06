@@ -41,10 +41,27 @@ export const STRUCTURES = {
 
 /**
  * Get structure definition by ID
+ * Checks localStorage for custom structures in dev mode
  * @param {string} structureId - Structure type identifier
  * @returns {object|null} Structure definition or null if not found
  */
 export function getStructure(structureId) {
+  // Check if it's a custom structure
+  if (structureId.startsWith('custom_')) {
+    const customStructures = localStorage.getItem('dev_structures_override');
+    if (customStructures) {
+      try {
+        const overrides = JSON.parse(customStructures);
+        if (overrides[structureId]) {
+          return { id: structureId, ...overrides[structureId] };
+        }
+      } catch (error) {
+        console.warn('Failed to load custom structure:', error);
+      }
+    }
+    return null;
+  }
+  
   return STRUCTURES[structureId] || null;
 }
 
@@ -59,10 +76,29 @@ export function getStructuresByCategory(category) {
 
 /**
  * Get all buildable structures (for UI)
+ * Includes custom structures from localStorage in dev mode
  * @returns {Array<object>} Array of all structure definitions
  */
 export function getAllStructures() {
-  return Object.values(STRUCTURES);
+  const baseStructures = Object.values(STRUCTURES);
+  
+  // Add custom structures from localStorage (dev mode)
+  const customStructures = localStorage.getItem('dev_structures_override');
+  if (customStructures) {
+    try {
+      const overrides = JSON.parse(customStructures);
+      // Add custom structures (those starting with 'custom_')
+      Object.entries(overrides).forEach(([id, structure]) => {
+        if (id.startsWith('custom_')) {
+          baseStructures.push({ id, ...structure });
+        }
+      });
+    } catch (error) {
+      console.warn('Failed to load custom structures:', error);
+    }
+  }
+  
+  return baseStructures;
 }
 
 /**

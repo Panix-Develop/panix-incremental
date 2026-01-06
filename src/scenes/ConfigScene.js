@@ -4,7 +4,7 @@
 import Phaser from 'phaser';
 import { isDevMode } from '../utils/devMode.js';
 import { getAllStructures, STRUCTURES } from '../config/structures.js';
-import { droneRecipes } from '../config/recipes.js';
+import { getAllDroneRecipes } from '../config/recipes.js';
 
 export class ConfigScene extends Phaser.Scene {
   constructor() {
@@ -161,9 +161,10 @@ export class ConfigScene extends Phaser.Scene {
       entities = getAllStructures();
     } else if (this.selectedType === 'drones') {
       // Convert droneRecipes object to array of entities
-      entities = Object.keys(droneRecipes).map(key => ({
+      const allDrones = getAllDroneRecipes();
+      entities = Object.keys(allDrones).map(key => ({
         id: key,
-        ...droneRecipes[key]
+        ...allDrones[key]
       }));
     }
 
@@ -235,7 +236,8 @@ export class ConfigScene extends Phaser.Scene {
       if (this.selectedType === 'structures') {
         this.selectedEntity = getAllStructures().find(s => s.id === id);
       } else if (this.selectedType === 'drones') {
-        this.selectedEntity = { id, ...droneRecipes[id] };
+        const allDrones = getAllDroneRecipes();
+        this.selectedEntity = { id, ...allDrones[id] };
       }
     }
 
@@ -322,7 +324,7 @@ export class ConfigScene extends Phaser.Scene {
       data = { structures: STRUCTURES };
       filename = 'structures-config.json';
     } else if (this.selectedType === 'drones') {
-      data = { droneRecipes: droneRecipes };
+      data = { droneRecipes: getAllDroneRecipes() };
       filename = 'drones-config.json';
     }
 
@@ -438,7 +440,8 @@ export class ConfigScene extends Phaser.Scene {
         this.selectedEntity = defaultEntity;
       }
     } else if (this.selectedType === 'drones') {
-      this.selectedEntity = { id: this.selectedEntity.id, ...droneRecipes[this.selectedEntity.id] };
+      const allDrones = getAllDroneRecipes();
+      this.selectedEntity = { id: this.selectedEntity.id, ...allDrones[this.selectedEntity.id] };
     }
     
     this.updateEditor();
