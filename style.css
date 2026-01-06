@@ -140,7 +140,7 @@ body {
   background-color: rgba(22, 33, 62, 0.95);
   border: 2px solid var(--accent-primary);
   border-radius: 8px;
-  padding: 1rem;
+  padding: 0.75rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
@@ -149,7 +149,7 @@ body {
   position: absolute;
   top: 20px;
   left: 20px;
-  min-width: 250px;
+  min-width: 180px;
 }
 
 .resource-item {
@@ -170,13 +170,13 @@ body {
 }
 
 .resource-value {
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: var(--accent-primary);
   font-weight: bold;
 }
 
 .resource-rate {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--color-energy);
   margin-left: 0.5rem;
 }
