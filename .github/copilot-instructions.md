@@ -15,6 +15,26 @@ Before starting any work, check for these files and follow their instructions:
 - When I say "create prd" → Read `.ai/create-prd.md` and follow it, the generated prd should be saved to `.tasks/prd-[feature-name].md`
 - When I say "generate tasks from prd" → Read `.ai/generate-tasks.md` and follow it, the generated task list should be saved to `.tasks/task-list-[feature-name].md`
 
+### Git Branch Strategy
+- **Create a new branch for every completed task** using format: `task/[task-id]-[short-description]`
+  - Example: `task/1.1-fix-scrolling`, `task/3.2-number-formatting`
+- **Before committing and pushing:**
+  1. Run `npm run test` or equivalent to verify NO ERRORS in code
+  2. Verify at least 70% of tests pass (if tests exist)
+  3. Check with `get_errors` tool to ensure no linting/compilation errors
+  4. Only commit when code is error-free and tests pass
+- **Commit message format:** Follow conventional commits
+  - `feat(scope): description` for features
+  - `fix(scope): description` for bugfixes
+  - `test(scope): description` for tests
+  - `refactor(scope): description` for refactoring
+- **After completing a full phase (e.g., Phase 1, Phase 2):**
+  1. Merge all task branches into feature branch
+  2. Create release version branch: `release/v[X.Y.Z]`
+  3. Push release branch to trigger deployment
+  4. Tag the release: `git tag v[X.Y.Z]`
+- **Never push broken code** - always verify tests and error-free status first
+
 ## About This Project
 [Describe what your project does]
 
