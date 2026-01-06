@@ -123,31 +123,31 @@ Update the file after completing each sub-task, not just after completing an ent
     - [ ] 1.2.8 Verify tile visual updates immediately after deployment
     - [ ] 1.2.9 Test remove drone functionality as well
     - [ ] 1.2.10 Remove debug console.log statements
-  - [ ] 1.3 Fix hard reset button
-    - [ ] 1.3.1 Read `src/ui/ResourcePanel.js` and find hard reset button code
-    - [ ] 1.3.2 Verify event listener is attached in createPanelContent()
-    - [ ] 1.3.3 Check onDebugHardReset() method dispatches event correctly
-    - [ ] 1.3.4 Read `src/main.js` and verify debugHardReset event listener exists
-    - [ ] 1.3.5 Ensure localStorage.clear() is called in event handler
-    - [ ] 1.3.6 Add 1 second delay before window.location.reload()
-    - [ ] 1.3.7 Test hard reset button with confirmation dialog
-    - [ ] 1.3.8 Verify all localStorage is cleared and game reloads fresh
-  - [ ] 1.4 Resolve starting base confusion
-    - [ ] 1.4.1 Read `src/config/mapConfig.js` layout array
-    - [ ] 1.4.2 Verify only ONE 'start' tile exists in layout
-    - [ ] 1.4.3 Read `src/systems/HexGrid.js` initializeTiles() method
-    - [ ] 1.4.4 Ensure start tile type converts to 'iron' for generation
-    - [ ] 1.4.5 Verify isStarting flag is set correctly
-    - [ ] 1.4.6 Read `src/scenes/MapScene.js` and check start tile rendering
-    - [ ] 1.4.7 Ensure starting tile has red border (COLORS.start)
-    - [ ] 1.4.8 Verify starting base generates 1 iron/sec
-    - [ ] 1.4.9 Test that drones cannot be deployed to starting base
-    - [ ] 1.4.10 Update all comments to use "Starting Base" terminology
-  - [ ] 1.5 Resize resource panel
-    - [ ] 1.5.1 Read `style.css` and find #resource-panel rules
-    - [ ] 1.5.2 Change width from 250px to 180px
-    - [ ] 1.5.3 Reduce padding from 1rem to 0.75rem
-    - [ ] 1.5.4 Reduce font sizes slightly (test readability)
+  - [x] 1.3 Fix hard reset button
+    - [x] 1.3.1 Read `src/ui/ResourcePanel.js` and find hard reset button code
+    - [x] 1.3.2 Verify event listener is attached in createPanelContent()
+    - [x] 1.3.3 Check onDebugHardReset() method dispatches event correctly
+    - [x] 1.3.4 Read `src/main.js` and verify debugHardReset event listener exists
+    - [x] 1.3.5 Ensure localStorage.clear() is called in event handler
+    - [x] 1.3.6 Add 1 second delay before window.location.reload()
+    - [x] 1.3.7 Test hard reset button with confirmation dialog
+    - [x] 1.3.8 Verify all localStorage is cleared and game reloads fresh
+  - [x] 1.4 Resolve starting base confusion
+    - [x] 1.4.1 Read `src/config/mapConfig.js` layout array
+    - [x] 1.4.2 Verify only ONE 'start' tile exists in layout
+    - [x] 1.4.3 Read `src/systems/HexGrid.js` initializeTiles() method
+    - [x] 1.4.4 Ensure start tile type converts to 'iron' for generation
+    - [x] 1.4.5 Verify isStarting flag is set correctly
+    - [x] 1.4.6 Read `src/scenes/MapScene.js` and check start tile rendering
+    - [x] 1.4.7 Ensure starting tile has red border (COLORS.start)
+    - [x] 1.4.8 Verify starting base generates 1 iron/sec
+    - [x] 1.4.9 Test that drones cannot be deployed to starting base
+    - [x] 1.4.10 Update all comments to use "Starting Base" terminology
+  - [x] 1.5 Resize resource panel
+    - [x] 1.5.1 Read `style.css` and find #resource-panel rules
+    - [x] 1.5.2 Change width from 250px to 180px
+    - [x] 1.5.3 Reduce padding from 1rem to 0.75rem
+    - [x] 1.5.4 Reduce font sizes slightly (test readability)
     - [ ] 1.5.5 Ensure all resources still visible
     - [ ] 1.5.6 Ensure generation rates still visible
     - [ ] 1.5.7 Ensure debug buttons still functional
