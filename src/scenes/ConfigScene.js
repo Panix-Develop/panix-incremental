@@ -4,7 +4,7 @@
 import Phaser from 'phaser';
 import { isDevMode } from '../utils/devMode.js';
 import { getAllStructures, STRUCTURES } from '../config/structures.js';
-import { DRONE_RECIPE } from '../config/recipes.js';
+import { droneRecipes } from '../config/recipes.js';
 
 export class ConfigScene extends Phaser.Scene {
   constructor() {
@@ -155,7 +155,11 @@ export class ConfigScene extends Phaser.Scene {
     if (this.selectedType === 'structures') {
       entities = getAllStructures();
     } else if (this.selectedType === 'drones') {
-      entities = [{ id: 'drone', ...DRONE_RECIPE }];
+      // Convert droneRecipes object to array of entities
+      entities = Object.keys(droneRecipes).map(key => ({
+        id: key,
+        ...droneRecipes[key]
+      }));
     }
 
     listEl.innerHTML = entities.map(entity => `
@@ -189,7 +193,7 @@ export class ConfigScene extends Phaser.Scene {
     if (this.selectedType === 'structures') {
       this.selectedEntity = getAllStructures().find(s => s.id === id);
     } else if (this.selectedType === 'drones') {
-      this.selectedEntity = { id: 'drone', ...DRONE_RECIPE };
+      this.selectedEntity = { id, ...droneRecipes[id] };
     }
 
     this.updateEntityList();
@@ -247,7 +251,7 @@ export class ConfigScene extends Phaser.Scene {
       data = { structures: STRUCTURES };
       filename = 'structures-config.json';
     } else if (this.selectedType === 'drones') {
-      data = { droneRecipe: DRONE_RECIPE };
+      data = { droneRecipes: droneRecipes };
       filename = 'drones-config.json';
     }
 
