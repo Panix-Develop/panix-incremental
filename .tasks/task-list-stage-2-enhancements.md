@@ -182,7 +182,7 @@ Update the file after completing each sub-task, not just after completing an ent
 
 ### PHASE 3: SETTINGS SYSTEM
 
-- [ ] 3.0 Implement Settings System with Localization
+- [x] 3.0 Implement Settings System with Localization
   - [x] 3.1 Create SettingsManager
     - [x] 3.1.1 Create `src/systems/SettingsManager.js`
     - [x] 3.1.2 Add constructor with default settings object
@@ -232,15 +232,15 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 3.4.13 Connect rename to SettingsManager
     - [x] 3.4.14 Emit 'settingsUpdated' event on changes
     - [x] 3.4.15 Test settings persistence across page reloads
-  - [ ] 3.5 Integrate settings into main game
-    - [ ] 3.5.1 Update `src/main.js` to initialize SettingsManager
-    - [ ] 3.5.2 Load settings on game start
-    - [ ] 3.5.3 Pass SettingsManager to SettingsScene
-    - [ ] 3.5.4 Update ResourcePanel to use formatNumber()
-    - [ ] 3.5.5 Listen for 'languageChanged' event to update UI
-    - [ ] 3.5.6 Update sidebar header to show player name
-    - [ ] 3.5.7 Test number format switching updates all numbers
-    - [ ] 3.5.8 Test language switching updates all text
+  - [x] 3.5 Integrate settings into main game
+    - [x] 3.5.1 Update `src/main.js` to initialize SettingsManager
+    - [x] 3.5.2 Load settings on game start
+    - [x] 3.5.3 Pass SettingsManager to SettingsScene
+    - [x] 3.5.4 Update ResourcePanel to use formatNumber()
+    - [x] 3.5.5 Listen for 'languageChanged' event to update UI
+    - [x] 3.5.6 Update sidebar header to show player name
+    - [x] 3.5.7 Test number format switching updates all numbers
+    - [x] 3.5.8 Test language switching updates all text
 
 ---
 

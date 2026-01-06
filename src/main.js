@@ -67,6 +67,10 @@ game.events.once('ready', () => {
       mapScene.resourceManager = resourceManager;
       mapScene.craftingManager = craftingManager;
       mapScene.droneManager = droneManager;
+      mapScene.settingsManager = settingsManager;
+      
+      // Recreate ResourcePanel with settingsManager
+      mapScene.resourcePanel = new (await import('./ui/ResourcePanel.js')).ResourcePanel(settingsManager);
 
       // Initialize CraftingScene with managers
       game.scene.start('CraftingScene', {

@@ -1,9 +1,12 @@
 // ResourcePanel.js - Resource display component
 // REQ-RES-002: Display resources in panel
 
+import { formatNumber } from '../utils/formatNumber.js';
+
 export class ResourcePanel {
-  constructor() {
+  constructor(settingsManager = null) {
     this.panel = document.getElementById('resource-panel');
+    this.settingsManager = settingsManager;
     
     if (!this.panel) {
       console.error('Resource panel element not found!');
@@ -26,6 +29,14 @@ export class ResourcePanel {
       }
     });
     resizeObserver.observe(this.panel);
+    
+    // Listen for settings changes to update number format
+    window.addEventListener('settingsUpdated', (e) => {
+      if (e.detail.setting === 'numberFormat') {
+        // Trigger a refresh of the display
+        this.lastResources = null;
+      }
+    });
   }
 
   /**
@@ -165,15 +176,17 @@ export class ResourcePanel {
    * @param {object} rates - Generation rates per second
    */
   update(resources, rates) {
-    // Update values
-    this.updateElement('resource-iron', resources.iron);
-    this.updateElement('resource-silicon', resources.silicon);
-    this.updateElement('resource-energy', resources.energy);
+    const format = this.settingsManager ? this.settingsManager.getNumberFormat() : 'normal';
+    
+    // Update values with formatted numbers
+    this.updateElement('resource-iron', formatNumber(resources.iron, format));
+    this.updateElement('resource-silicon', formatNumber(resources.silicon, format));
+    this.updateElement('resource-energy', formatNumber(resources.energy, format));
 
     // Update rates
-    this.updateElement('rate-iron', this.formatRate(rates.iron));
-    this.updateElement('rate-silicon', this.formatRate(rates.silicon));
-    this.updateElement('rate-energy', this.formatRate(rates.energy));
+    this.updateElement('rate-iron', this.formatRate(rates.iron, format));
+    this.updateElement('rate-silicon', this.formatRate(rates.silicon, format));
+    this.updateElement('rate-energy', this.formatRate(rates.energy, format));
   }
 
   /**
@@ -191,27 +204,14 @@ export class ResourcePanel {
   /**
    * Format generation rate for display
    * @param {number} rate - Resources per second
+   * @param {string} format - Number format
    * @returns {string} - Formatted rate string
    */
-  formatRate(rate) {
+  formatRate(rate, format = 'normal') {
     if (rate === 0) return '+0.0/s';
-    return `+${rate.toFixed(1)}/s`;
-  }
-
-  /**
-   * Format large numbers with abbreviations
-   * @param {number} num - Number to format
-   * @returns {string} - Formatted number
-   */
-  formatNumber(num) {
-    if (num < 1000) {
-      return Math.floor(num).toString();
-    } else if (num < 1000000) {
-      return (num / 1000).toFixed(1) + 'K';
-    } else if (num < 1000000000) {
-      return (num / 1000000).toFixed(1) + 'M';
-    } else {
-      return (num / 1000000000).toFixed(1) + 'B';
+    if (rate < 1) {
+      return `+${rate.toFixed(2)}/s`;
     }
+    return `+${formatNumber(rate, format)}/s`;
   }
 }
