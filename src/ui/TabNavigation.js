@@ -1,6 +1,8 @@
 // TabNavigation.js - Tab system for scene switching
 // REQ-UI-001: Tab navigation between Map, Crafting, Drones
 
+import { isDevMode } from '../utils/devMode.js';
+
 export class TabNavigation {
   constructor(game) {
     this.game = game;
@@ -14,6 +16,11 @@ export class TabNavigation {
       { id: 'research', label: 'Research', icon: '🔬', locked: true },
       { id: 'settings', label: 'Settings', icon: '⚙️', locked: false }
     ];
+
+    // Add config tab only in dev mode
+    if (isDevMode()) {
+      this.tabs.push({ id: 'config', label: 'Config', icon: '🛠️', locked: false });
+    }
     
     this.setupTabs();
   }
@@ -87,6 +94,7 @@ export class TabNavigation {
     const researchPanel = document.getElementById('research-panel');
     const galaxyPanel = document.getElementById('galaxy-panel');
     const settingsPanel = document.getElementById('settings-panel');
+    const configPanel = document.getElementById('config-panel');
 
     // Hide all content first
     if (phaserGame) phaserGame.style.display = 'none';
@@ -97,6 +105,7 @@ export class TabNavigation {
     if (researchPanel) researchPanel.style.display = 'none';
     if (galaxyPanel) galaxyPanel.style.display = 'none';
     if (settingsPanel) settingsPanel.style.display = 'none';
+    if (configPanel) configPanel.style.display = 'none';
 
     // Show appropriate content
     switch (tabName) {
@@ -154,6 +163,12 @@ export class TabNavigation {
           if (settingsScene) {
             settingsScene.updateUI();
           }
+        }
+        break;
+
+      case 'config':
+        if (configPanel) {
+          configPanel.style.display = 'block';
         }
         break;
     }

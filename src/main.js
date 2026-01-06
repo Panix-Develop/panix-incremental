@@ -16,6 +16,7 @@ import { StructuresScene } from './scenes/StructuresScene.js';
 import { ResearchScene } from './scenes/ResearchScene.js';
 import { GalaxyScene } from './scenes/GalaxyScene.js';
 import { SettingsScene } from './scenes/SettingsScene.js';
+import { ConfigScene } from './scenes/ConfigScene.js';
 import { ResourceManager } from './systems/ResourceManager.js';
 import { SettingsManager } from './systems/SettingsManager.js';
 import { CraftingManager } from './systems/CraftingManager.js';
@@ -24,9 +25,18 @@ import { StructureManager } from './systems/StructureManager.js';
 import { TabNavigation } from './ui/TabNavigation.js';
 import { ResourcePanel } from './ui/ResourcePanel.js';
 import { saveGame, loadGame, hasSaveData } from './utils/saveLoad.js';
+import { isDevMode } from './utils/devMode.js';
 
 // Add scenes to config
-gameConfig.scene = [MapScene, CraftingScene, DronesScene, StructuresScene, ResearchScene, GalaxyScene, SettingsScene];
+const scenes = [MapScene, CraftingScene, DronesScene, StructuresScene, ResearchScene, GalaxyScene, SettingsScene];
+
+// Add ConfigScene only in dev mode
+if (isDevMode()) {
+  scenes.push(ConfigScene);
+  console.log('🛠️ Dev mode enabled - Config editor available');
+}
+
+gameConfig.scene = scenes;
 
 // Create Phaser game instance
 const game = new Phaser.Game(gameConfig);
@@ -108,6 +118,12 @@ game.events.once('ready', () => {
 
       // Initialize GalaxyScene (locked)
       game.scene.start('GalaxyScene');
+
+      // Initialize ConfigScene (dev mode only)
+      if (isDevMode()) {
+        game.scene.start('ConfigScene');
+        game.scene.sleep('ConfigScene');
+      }
 
       // Initialize SettingsScene with managers
       game.scene.start('SettingsScene', {
