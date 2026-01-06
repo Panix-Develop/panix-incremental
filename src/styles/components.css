@@ -265,3 +265,54 @@
   margin: 0;
   letter-spacing: 0.1em;
 }
+
+/* Locked Page Overlay */
+.locked-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+
+.locked-overlay-content {
+  text-align: center;
+  padding: 2rem;
+  max-width: 400px;
+}
+
+.locked-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: lockPulse 2s ease-in-out infinite;
+}
+
+.locked-message {
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.locked-hint {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+@keyframes lockPulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}

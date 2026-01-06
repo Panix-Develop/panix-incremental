@@ -13,6 +13,8 @@ import { MapScene } from './scenes/MapScene.js';
 import { CraftingScene } from './scenes/CraftingScene.js';
 import { DronesScene } from './scenes/DronesScene.js';
 import { StructuresScene } from './scenes/StructuresScene.js';
+import { ResearchScene } from './scenes/ResearchScene.js';
+import { GalaxyScene } from './scenes/GalaxyScene.js';
 import { SettingsScene } from './scenes/SettingsScene.js';
 import { ResourceManager } from './systems/ResourceManager.js';
 import { SettingsManager } from './systems/SettingsManager.js';
@@ -24,7 +26,7 @@ import { ResourcePanel } from './ui/ResourcePanel.js';
 import { saveGame, loadGame, hasSaveData } from './utils/saveLoad.js';
 
 // Add scenes to config
-gameConfig.scene = [MapScene, CraftingScene, DronesScene, StructuresScene, SettingsScene];
+gameConfig.scene = [MapScene, CraftingScene, DronesScene, StructuresScene, ResearchScene, GalaxyScene, SettingsScene];
 
 // Create Phaser game instance
 const game = new Phaser.Game(gameConfig);
@@ -101,6 +103,12 @@ game.events.once('ready', () => {
         resourceManager: resourceManager
       });
 
+      // Initialize ResearchScene (locked)
+      game.scene.start('ResearchScene');
+
+      // Initialize GalaxyScene (locked)
+      game.scene.start('GalaxyScene');
+
       // Initialize SettingsScene with managers
       game.scene.start('SettingsScene', {
         settingsManager: settingsManager
@@ -110,6 +118,8 @@ game.events.once('ready', () => {
       game.scene.sleep('CraftingScene');
       game.scene.sleep('DronesScene');
       game.scene.sleep('StructuresScene');
+      game.scene.sleep('ResearchScene');
+      game.scene.sleep('GalaxyScene');
 
       // Initialize tab navigation
       const tabNavigation = new TabNavigation(game);

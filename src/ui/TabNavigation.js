@@ -6,11 +6,13 @@ export class TabNavigation {
     this.game = game;
     this.currentTab = 'map';
     this.tabs = [
-      { id: 'map', label: 'Map', icon: '🗺️' },
-      { id: 'crafting', label: 'Crafting', icon: '🔧' },
-      { id: 'drones', label: 'Drones', icon: '🤖' },
-      { id: 'structures', label: 'Structures', icon: '🏗️' },
-      { id: 'settings', label: 'Settings', icon: '⚙️' }
+      { id: 'map', label: 'Map', icon: '🗺️', locked: false },
+      { id: 'galaxy', label: 'Galaxy', icon: '🌌', locked: true },
+      { id: 'crafting', label: 'Crafting', icon: '🔧', locked: false },
+      { id: 'drones', label: 'Drones', icon: '🤖', locked: false },
+      { id: 'structures', label: 'Structures', icon: '🏗️', locked: false },
+      { id: 'research', label: 'Research', icon: '🔬', locked: true },
+      { id: 'settings', label: 'Settings', icon: '⚙️', locked: false }
     ];
     
     this.setupTabs();
@@ -29,9 +31,11 @@ export class TabNavigation {
 
     // Create navigation buttons
     navButtons.innerHTML = this.tabs.map(tab => `
-      <button class="nav-btn ${tab.id === 'map' ? 'active' : ''}" data-tab="${tab.id}">
+      <button class="nav-btn ${tab.id === 'map' ? 'active' : ''} ${tab.locked ? 'locked' : ''}" 
+              data-tab="${tab.id}"
+              ${tab.locked ? 'title="This feature is locked"' : ''}>
         <span class="nav-btn-icon">${tab.icon}</span>
-        <span>${tab.label}</span>
+        <span>${tab.label}${tab.locked ? ' 🔒' : ''}</span>
       </button>
     `).join('');
 
@@ -47,11 +51,18 @@ export class TabNavigation {
 
   /**
    * Switch to a different tab
-   * @param {string} tabName - 'map', 'crafting', or 'drones'
+   * @param {string} tabName - Tab id to switch to
    */
   switchTab(tabName) {
-    if (!this.tabs.find(t => t.id === tabName)) {
+    const tab = this.tabs.find(t => t.id === tabName);
+    if (!tab) {
       console.error('Invalid tab:', tabName);
+      return;
+    }
+
+    // Don't switch to locked tabs
+    if (tab.locked) {
+      console.log('Tab is locked:', tabName);
       return;
     }
 
@@ -73,6 +84,8 @@ export class TabNavigation {
     const craftingPanel = document.getElementById('crafting-panel');
     const dronesPanel = document.getElementById('drones-panel');
     const structuresPanel = document.getElementById('structures-panel');
+    const researchPanel = document.getElementById('research-panel');
+    const galaxyPanel = document.getElementById('galaxy-panel');
     const settingsPanel = document.getElementById('settings-panel');
 
     // Hide all content first
@@ -81,6 +94,8 @@ export class TabNavigation {
     if (craftingPanel) craftingPanel.style.display = 'none';
     if (dronesPanel) dronesPanel.style.display = 'none';
     if (structuresPanel) structuresPanel.style.display = 'none';
+    if (researchPanel) researchPanel.style.display = 'none';
+    if (galaxyPanel) galaxyPanel.style.display = 'none';
     if (settingsPanel) settingsPanel.style.display = 'none';
 
     // Show appropriate content
@@ -117,6 +132,18 @@ export class TabNavigation {
           if (structuresScene) {
             structuresScene.updatePanel();
           }
+        }
+        break;
+
+      case 'research':
+        if (researchPanel) {
+          researchPanel.style.display = 'block';
+        }
+        break;
+
+      case 'galaxy':
+        if (galaxyPanel) {
+          galaxyPanel.style.display = 'block';
         }
         break;
 

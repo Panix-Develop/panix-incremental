@@ -41,6 +41,15 @@
   }
 }
 
+@keyframes planetFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
 .animate-pulse {
   animation: pulse 2s ease-in-out infinite;
 }

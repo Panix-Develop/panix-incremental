@@ -18,6 +18,17 @@
   padding: 0.5rem 0;
 }
 
+/* Navigation Button Locked State */
+.nav-btn.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nav-btn.locked:hover {
+  background-color: var(--bg-tertiary);
+  transform: none;
+}
+
 /* Main Content Area */
 #main-content {
   flex: 1;
