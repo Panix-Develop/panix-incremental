@@ -55,6 +55,20 @@
       "empty": "Leer"
     }
   },
+  "structures": {
+    "title": "Gebäude",
+    "solarPanel": {
+      "name": "Solarpanel",
+      "description": "Erzeugt Energie aus Sonnenlicht. Bietet stetige Energieversorgung für deine Operationen."
+    },
+    "build": "Bauen",
+    "demolish": "Abreißen",
+    "cost": "Kosten",
+    "stats": "Statistiken",
+    "energyPerSecond": "Energie: {amount}/Sek",
+    "cannotBuild": "Kann hier nicht gebaut werden",
+    "insufficientResources": "Unzureichende Ressourcen"
+  },
   "settings": {
     "title": "Einstellungen",
     "displaySettings": "Anzeigeeinstellungen",

@@ -55,6 +55,20 @@
       "empty": "Empty"
     }
   },
+  "structures": {
+    "title": "Structures",
+    "solarPanel": {
+      "name": "Solar Panel",
+      "description": "Generates energy from sunlight. Provides steady power for your operations."
+    },
+    "build": "Build",
+    "demolish": "Demolish",
+    "cost": "Cost",
+    "stats": "Stats",
+    "energyPerSecond": "Energy: {amount}/sec",
+    "cannotBuild": "Cannot build here",
+    "insufficientResources": "Insufficient resources"
+  },
   "settings": {
     "title": "Settings",
     "displaySettings": "Display Settings",
