@@ -410,11 +410,6 @@ export class MapScene extends Phaser.Scene {
       if (this.tileInfoPanel && this.droneManager) {
         const availableDrones = this.droneManager.getAvailableDrones();
         this.tileInfoPanel.updateDeployButton(availableDrones);
-        
-        // Refresh tile info panel if a tile is selected
-        if (this.selectedTile) {
-          this.tileInfoPanel.refresh(this.selectedTile, this.hexGrid);
-        }
       }
     }
   }

@@ -11,6 +11,8 @@ export class TileInfoPanel {
     }
 
     this.currentTile = null;
+    this.deployBtn = null;
+    this.removeBtn = null;
   }
 
   /**
@@ -109,23 +111,24 @@ export class TileInfoPanel {
 
     this.panel.innerHTML = content;
 
-    // Set up deploy button click handler
+    // Set up deploy button click handler (only if not already set)
     const deployBtn = document.getElementById('deploy-drone-btn');
-    console.log('[TileInfoPanel] Deploy button element:', deployBtn);
-    if (deployBtn) {
-      console.log('[TileInfoPanel] Adding click listener to deploy button');
+    if (deployBtn && deployBtn !== this.deployBtn) {
+      console.log('[TileInfoPanel] Setting up new deploy button listener');
+      this.deployBtn = deployBtn;
       deployBtn.addEventListener('click', () => {
         console.log('[TileInfoPanel] Deploy button CLICKED!');
         this.onDeployDrone();
       });
-    } else {
-      console.log('[TileInfoPanel] Deploy button not found - tile type:', tile.type, 'isStarting:', tile.isStarting);
     }
 
-    // Set up remove button click handler
+    // Set up remove button click handler (only if not already set)
     const removeBtn = document.getElementById('remove-drone-btn');
-    if (removeBtn) {
+    if (removeBtn && removeBtn !== this.removeBtn) {
+      console.log('[TileInfoPanel] Setting up new remove button listener');
+      this.removeBtn = removeBtn;
       removeBtn.addEventListener('click', () => {
+        console.log('[TileInfoPanel] Remove button CLICKED!');
         this.onRemoveDrone();
       });
     }
