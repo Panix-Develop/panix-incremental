@@ -34,10 +34,14 @@ export class StructuresScene extends Phaser.Scene {
    * Create the structures panel UI
    */
   createPanel() {
-    const panel = document.getElementById('structures-panel');
+    let panel = document.getElementById('structures-panel');
+    
+    // Create panel if it doesn't exist
     if (!panel) {
-      console.error('Structures panel element not found!');
-      return;
+      panel = document.createElement('div');
+      panel.id = 'structures-panel';
+      panel.style.display = 'none';
+      document.getElementById('main-content').appendChild(panel);
     }
 
     panel.innerHTML = `
