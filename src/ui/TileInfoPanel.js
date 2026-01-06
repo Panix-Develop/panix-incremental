@@ -145,7 +145,15 @@ export class TileInfoPanel {
                   </div>
                   <div style="font-size: 0.85rem; margin-bottom: 0.5rem;">
                     <strong>${t('structures.stats')}:</strong>
-                    ${t('structures.energyPerSecond', { amount: structure.stats.energyPerSecond.toFixed(1) })}
+              `;
+
+              if (structure.stats && structure.stats.energyPerSecond !== undefined) {
+                content += ` ${t('structures.energyPerSecond', { amount: structure.stats.energyPerSecond.toFixed(1) })}`;
+              } else {
+                content += ` <span style="color: var(--text-secondary);">${t('structures.noStats')}</span>`;
+              }
+
+              content += `
                   </div>
                   <button class="btn build-structure-btn" 
                           data-structure-id="${structure.id}"
