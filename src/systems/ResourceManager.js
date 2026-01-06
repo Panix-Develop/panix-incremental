@@ -103,6 +103,8 @@ export class ResourceManager {
    * @returns {boolean} - True if affordable
    */
   canAfford(cost) {
+    if (!cost) return true; // No cost means free
+    
     for (const [resource, amount] of Object.entries(cost)) {
       if (this.getResource(resource) < amount) {
         return false;

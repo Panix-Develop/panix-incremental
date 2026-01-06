@@ -130,11 +130,15 @@ export class TileInfoPanel {
                     <strong>${t('structures.cost')}:</strong>
               `;
 
-              for (const [resource, amount] of Object.entries(structure.costs)) {
-                const current = this.resourceManager.getResource(resource);
-                const hasEnough = current >= amount;
-                const color = hasEnough ? 'var(--success)' : 'var(--danger)';
-                content += ` <span style="color: ${color};">${resource}: ${amount}</span>`;
+              if (structure.costs) {
+                for (const [resource, amount] of Object.entries(structure.costs)) {
+                  const current = this.resourceManager.getResource(resource);
+                  const hasEnough = current >= amount;
+                  const color = hasEnough ? 'var(--success)' : 'var(--danger)';
+                  content += ` <span style="color: ${color};">${resource}: ${amount}</span>`;
+                }
+              } else {
+                content += ` <span style="color: var(--text-secondary);">${t('structures.free')}</span>`;
               }
 
               content += `
