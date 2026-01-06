@@ -71,9 +71,12 @@ export class MapScene extends Phaser.Scene {
     
     // Listen for drone deployment
     window.addEventListener('deployDrone', (e) => {
+      console.log('[MapScene] Deploy drone event received', e.detail);
       const tile = e.detail.tile;
       if (this.droneManager && tile) {
+        console.log('[MapScene] Attempting to deploy to tile:', tile.q, tile.r);
         const result = this.droneManager.deployDrone(tile.q, tile.r);
+        console.log('[MapScene] Deployment result:', result);
         
         if (result.success) {
           // Refresh tile visuals
@@ -85,7 +88,7 @@ export class MapScene extends Phaser.Scene {
             this.tileInfoPanel.refresh(updatedTile, this.hexGrid);
           }
         } else {
-          console.error('Failed to deploy drone:', result.error);
+          console.error('[MapScene] Failed to deploy drone:', result.error);
         }
       }
     });

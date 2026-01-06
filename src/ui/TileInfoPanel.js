@@ -155,11 +155,13 @@ export class TileInfoPanel {
    * This will be connected to DroneManager later
    */
   onDeployDrone() {
+    console.log('[TileInfoPanel] Deploy drone button clicked for tile:', this.currentTile);
     // Emit custom event that will be handled by main game logic
     const event = new CustomEvent('deployDrone', {
       detail: { tile: this.currentTile }
     });
     window.dispatchEvent(event);
+    console.log('[TileInfoPanel] deployDrone event dispatched');
   }
 
   /**

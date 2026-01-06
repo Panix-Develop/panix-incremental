@@ -115,13 +115,34 @@ game.events.once('ready', () => {
 
       // Listen for debug hard reset
       window.addEventListener('debugHardReset', () => {
+        console.log('[Main] Hard reset event received');
         if (managers) {
           // Clear save data
           localStorage.clear();
-          showNotification('Hard reset complete. Reloading...');
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
+          console.log('[Main] localStorage cleared');
+          
+          // Reset all managers
+          managers.resourceManager.resources = { iron: 0, silicon: 0, energy: 0 };
+          managers.craftingManager.components = { chassis: 0, circuit: 0, powerCore: 0 };
+          managers.droneManager.availableDrones = 0;
+          managers.droneManager.totalBuilt = 0;
+          managers.droneManager.deployments = [];
+          
+          // Reset all drones from tiles
+          managers.hexGrid.getAllTiles().forEach(tile => {
+            if (tile.drones > 0) {
+              managers.hexGrid.setTileDrones(tile.q, tile.r, 0);
+            }
+          });
+          
+          console.log('[Main] All managers reset');
+          showNotification('Hard reset complete!');
+          
+          // Refresh all UI
+          const mapScene = game.scene.getScene('MapScene');
+          if (mapScene) {
+            mapScene.updateTileVisuals();
+          }
         }
       });
 

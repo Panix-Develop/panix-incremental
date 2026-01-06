@@ -131,9 +131,13 @@ export class ResourcePanel {
    * Debug function to perform hard reset
    */
   onDebugHardReset() {
+    console.log('[ResourcePanel] Hard reset button clicked');
     if (confirm('Hard reset will delete all progress. Are you sure?')) {
+      console.log('[ResourcePanel] User confirmed hard reset');
       const event = new CustomEvent('debugHardReset');
       window.dispatchEvent(event);
+    } else {
+      console.log('[ResourcePanel] User cancelled hard reset');
     }
   }
 

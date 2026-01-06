@@ -149,8 +149,11 @@ body {
   position: absolute;
   top: 20px;
   left: 20px;
-  width: 200px;
-  max-width: 200px;
+  width: 400px;
+  max-width: 600px;
+  min-width: 200px;
+  resize: horizontal;
+  overflow: auto;
 }
 
 .resource-item {
