@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panix Incremental</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div id="game-container">
+      <!-- Left sidebar navigation -->
+      <nav id="sidebar-navigation">
+        <div class="sidebar-header">
+          <h1>PANIX</h1>
+        </div>
+        <div id="nav-buttons"></div>
+      </nav>
+      
+      <!-- Main content area -->
+      <div id="main-content">
+        <!-- Phaser game canvas for map -->
+        <div id="phaser-game"></div>
+        
+        <!-- UI overlays -->
+        <div id="ui-overlay">
+          <div id="resource-panel" class="panel"></div>
+          <div id="tile-info-panel" class="panel" style="display: none;"></div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

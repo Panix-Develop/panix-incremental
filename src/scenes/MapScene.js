@@ -1,0 +1,419 @@
+// MapScene.js - Main map view scene
+// REQ-MAP-005: Map rendered using Phaser.js
+
+import Phaser from 'phaser';
+import { HexGrid } from '../systems/HexGrid.js';
+import { ResourceManager } from '../systems/ResourceManager.js';
+import { ResourcePanel } from '../ui/ResourcePanel.js';
+import { TileInfoPanel } from '../ui/TileInfoPanel.js';
+import { hexToPixel, pixelToHex, getHexVertices } from '../utils/hexMath.js';
+import { balance } from '../config/balance.js';
+
+// Resource tile colors (REQ-UI-006)
+const COLORS = {
+  iron: 0x7D7D7D,
+  silicon: 0x4A90E2,
+  energy: 0xF5A623,
+  empty: 0x2A2A3E,
+  start: 0xe94560,
+  hover: 0xFFFFFF,
+  selected: 0xe94560
+};
+
+export class MapScene extends Phaser.Scene {
+  constructor() {
+    super({ key: 'MapScene' });
+    this.hexGrid = null;
+    this.resourceManager = null;
+    this.resourcePanel = null;
+    this.tileInfoPanel = null;
+    this.hexSize = balance.map.hexSize;
+    this.hexGraphics = new Map(); // Map of "q,r" -> graphics object
+    this.selectedTile = null;
+    this.hoveredTile = null;
+  }
+
+  create() {
+    // Initialize hex grid
+    this.hexGrid = new HexGrid();
+    
+    // Initialize UI panels (managers are set from main.js)
+    this.resourcePanel = new ResourcePanel();
+    this.tileInfoPanel = new TileInfoPanel();
+    
+    // Set up camera
+    this.setupCamera();
+    
+    // Render all hexagons
+    this.renderHexGrid();
+    
+    // Enable input
+    this.setupInput();
+    
+    // Listen for tile selection
+    this.events.on('tileSelected', (tile) => {
+      if (tile) {
+        this.tileInfoPanel.show(tile, this.hexGrid);
+      } else {
+        this.tileInfoPanel.hide();
+      }
+    });
+    
+    // Listen for debug resource addition
+    window.addEventListener('debugAddResources', (e) => {
+      const amount = e.detail.amount || 100;
+      if (this.resourceManager) {
+        this.resourceManager.addResource('iron', amount);
+        this.resourceManager.addResource('silicon', amount);
+        this.resourceManager.addResource('energy', amount);
+      }
+    });
+    
+    // Listen for drone deployment
+    window.addEventListener('deployDrone', (e) => {
+      const tile = e.detail.tile;
+      if (this.droneManager && tile) {
+        const result = this.droneManager.deployDrone(tile.q, tile.r);
+        
+        if (result.success) {
+          // Refresh tile visuals
+          this.refreshTile(tile.q, tile.r);
+          
+          // Refresh tile info panel
+          const updatedTile = this.hexGrid.getTile(tile.q, tile.r);
+          if (this.tileInfoPanel) {
+            this.tileInfoPanel.refresh(updatedTile, this.hexGrid);
+          }
+        } else {
+          console.error('Failed to deploy drone:', result.error);
+        }
+      }
+    });
+
+    // Listen for drone removal
+    window.addEventListener('removeDrone', (e) => {
+      const tile = e.detail.tile;
+      if (this.droneManager && tile) {
+        const result = this.droneManager.removeDrone(tile.q, tile.r);
+        
+        if (result.success) {
+          // Refresh tile visuals
+          this.refreshTile(tile.q, tile.r);
+          
+          // Refresh tile info panel
+          const updatedTile = this.hexGrid.getTile(tile.q, tile.r);
+          if (this.tileInfoPanel) {
+            this.tileInfoPanel.refresh(updatedTile, this.hexGrid);
+          }
+        } else {
+          console.error('Failed to remove drone:', result.error);
+        }
+      }
+    });
+    
+    console.log('MapScene created with', this.hexGrid.getAllTiles().length, 'tiles');
+  }
+
+  /**
+   * Setup camera positioning
+   */
+  setupCamera() {
+    // Calculate grid bounds to center it
+    const tiles = this.hexGrid.getAllTiles();
+    let minX = Infinity, maxX = -Infinity;
+    let minY = Infinity, maxY = -Infinity;
+    
+    tiles.forEach(tile => {
+      const pos = hexToPixel(tile.q, tile.r, this.hexSize);
+      minX = Math.min(minX, pos.x);
+      maxX = Math.max(maxX, pos.x);
+      minY = Math.min(minY, pos.y);
+      maxY = Math.max(maxY, pos.y);
+    });
+    
+    // Center the grid
+    const offsetX = (this.cameras.main.width - (maxX - minX)) / 2 - minX;
+    const offsetY = (this.cameras.main.height - (maxY - minY)) / 2 - minY;
+    
+    this.cameras.main.scrollX = -offsetX;
+    this.cameras.main.scrollY = -offsetY;
+  }
+
+  /**
+   * Render all hexagonal tiles
+   * REQ-MAP-001, REQ-UI-006: Render 10×10 grid with color coding
+   */
+  renderHexGrid() {
+    const tiles = this.hexGrid.getAllTiles();
+    
+    tiles.forEach(tile => {
+      const graphics = this.add.graphics();
+      const pos = hexToPixel(tile.q, tile.r, this.hexSize);
+      
+      // Draw hexagon
+      this.drawHexagon(graphics, pos.x, pos.y, tile, false, false);
+      
+      // Make interactive
+      const vertices = getHexVertices(pos.x, pos.y, this.hexSize);
+      const hitArea = new Phaser.Geom.Polygon(vertices.map(v => new Phaser.Geom.Point(v.x, v.y)));
+      
+      graphics.setInteractive(hitArea, Phaser.Geom.Polygon.Contains);
+      graphics.on('pointerdown', () => this.onTileClick(tile));
+      graphics.on('pointerover', () => this.onTileHover(tile));
+      graphics.on('pointerout', () => this.onTileOut(tile));
+      
+      // Store reference
+      this.hexGraphics.set(`${tile.q},${tile.r}`, {
+        graphics,
+        pos,
+        tile
+      });
+    });
+  }
+
+  /**
+   * Draw a single hexagon
+   * @param {Phaser.GameObjects.Graphics} graphics - Graphics object
+   * @param {number} x - Center x position
+   * @param {number} y - Center y position
+   * @param {object} tile - Tile data
+   * @param {boolean} isHovered - Is tile hovered
+   * @param {boolean} isSelected - Is tile selected
+   */
+  drawHexagon(graphics, x, y, tile, isHovered, isSelected) {
+    graphics.clear();
+    
+    // Get vertices
+    const vertices = getHexVertices(x, y, this.hexSize);
+    
+    // Determine fill color
+    let fillColor = COLORS[tile.type] || COLORS.empty;
+    
+    // Fill hexagon
+    graphics.fillStyle(fillColor, 1.0);
+    graphics.beginPath();
+    graphics.moveTo(vertices[0].x, vertices[0].y);
+    for (let i = 1; i < vertices.length; i++) {
+      graphics.lineTo(vertices[i].x, vertices[i].y);
+    }
+    graphics.closePath();
+    graphics.fillPath();
+    
+    // Draw border
+    let borderColor = 0x000000;
+    let borderWidth = 2;
+    
+    // REQ-MAP-003: Highlight starting tile
+    if (tile.isStarting) {
+      borderColor = COLORS.start;
+      borderWidth = 4;
+    }
+    
+    // REQ-MAP-004: Selected tile highlight
+    if (isSelected) {
+      borderColor = COLORS.selected;
+      borderWidth = 3;
+    }
+    
+    // Hover effect (Section 6.1)
+    if (isHovered && !isSelected) {
+      borderColor = COLORS.hover;
+      borderWidth = 2;
+    }
+    
+    graphics.lineStyle(borderWidth, borderColor, 1.0);
+    graphics.beginPath();
+    graphics.moveTo(vertices[0].x, vertices[0].y);
+    for (let i = 1; i < vertices.length; i++) {
+      graphics.lineTo(vertices[i].x, vertices[i].y);
+    }
+    graphics.closePath();
+    graphics.strokePath();
+    
+      // REQ-DEPLOY-002: Draw drone count if any
+      if (tile.drones > 0) {
+        // Draw a small circle with drone count
+        const circleRadius = this.hexSize * 0.3;
+        const circleX = x + this.hexSize * 0.5;
+        const circleY = y - this.hexSize * 0.5;
+        
+        // Background circle
+        graphics.fillStyle(0x16213e, 1.0);
+        graphics.fillCircle(circleX, circleY, circleRadius);
+        
+        // Border
+        graphics.lineStyle(2, COLORS.hover, 1.0);
+        graphics.strokeCircle(circleX, circleY, circleRadius);
+      }
+    }
+
+    /**
+     * Update drone count text for a tile
+     * @param {number} q - Tile q coordinate
+     * @param {number} r - Tile r coordinate
+     */
+    updateDroneCountText(q, r) {
+      const key = `${q},${r}`;
+      const data = this.hexGraphics.get(key);
+      if (!data) return;
+
+      const tile = data.tile;
+      const pos = data.pos;
+      
+      // Remove existing text if any
+      const existingText = this.hexTexts.get(key);
+      if (existingText) {
+        existingText.destroy();
+        this.hexTexts.delete(key);
+      }
+
+      // Add new text if drones present
+      if (tile.drones > 0) {
+        const circleX = pos.x + this.hexSize * 0.5;
+        const circleY = pos.y - this.hexSize * 0.5;
+        
+        const text = this.add.text(circleX, circleY, tile.drones.toString(), {
+          fontSize: '16px',
+          fontFamily: 'Arial',
+          color: '#ffffff',
+          fontStyle: 'bold'
+        });
+        text.setOrigin(0.5, 0.5);
+        this.hexTexts.set(key, text);
+      }
+    }
+
+    /**
+     * Handle tile click
+   * REQ-MAP-004: Click tile to select
+   */
+  onTileClick(tile) {
+    // If clicking same tile, deselect
+    if (this.selectedTile && 
+        this.selectedTile.q === tile.q && 
+        this.selectedTile.r === tile.r) {
+      this.selectedTile = null;
+    } else {
+      this.selectedTile = tile;
+    }
+    
+    this.updateTileVisuals();
+    this.events.emit('tileSelected', this.selectedTile);
+  }
+
+  /**
+   * Handle tile hover
+   */
+  onTileHover(tile) {
+    this.hoveredTile = tile;
+    this.updateTileVisuals();
+  }
+
+  /**
+   * Handle tile hover out
+   */
+  onTileOut(tile) {
+    if (this.hoveredTile && 
+        this.hoveredTile.q === tile.q && 
+        this.hoveredTile.r === tile.r) {
+      this.hoveredTile = null;
+      this.updateTileVisuals();
+    }
+  }
+
+  /**
+   * Update visual state of tiles
+   */
+  updateTileVisuals() {
+    this.hexGraphics.forEach((data, key) => {
+      const { graphics, pos, tile } = data;
+      const isHovered = this.hoveredTile && 
+                       this.hoveredTile.q === tile.q && 
+                       this.hoveredTile.r === tile.r;
+      const isSelected = this.selectedTile && 
+                        this.selectedTile.q === tile.q && 
+                        this.selectedTile.r === tile.r;
+      
+      this.drawHexagon(graphics, pos.x, pos.y, tile, isHovered, isSelected);
+    });
+  }
+
+  /**
+   * Setup input handling
+   */
+  setupInput() {
+    // Click on empty space to deselect
+    this.input.on('pointerdown', (pointer) => {
+      // Check if we clicked on a hex
+      const worldPoint = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+      const hex = pixelToHex(worldPoint.x, worldPoint.y, this.hexSize);
+      const tile = this.hexGrid.getTile(hex.q, hex.r);
+      
+      // If no tile at this location, deselect
+      this.updateDroneCountText(q, r);
+      if (!tile) {
+        this.selectedTile = null;
+        this.updateTileVisuals();
+        this.events.emit('tileSelected', null);
+      }
+    });
+  }
+
+  /**
+   * Get currently selected tile
+   * @returns {object|null} - Selected tile or null
+   */
+  getSelectedTile() {
+    return this.selectedTile;
+  }
+
+  /**
+   * Update tile visuals after drone deployment
+   * Called from external systems
+   */
+  refreshTile(q, r) {
+    const key = `${q},${r}`;
+    const data = this.hexGraphics.get(key);
+    if (data) {
+      const { graphics, pos, tile } = data;
+      const isHovered = this.hoveredTile && 
+                       this.hoveredTile.q === tile.q && 
+                       this.hoveredTile.r === tile.r;
+      const isSelected = this.selectedTile && 
+                        this.selectedTile.q === tile.q && 
+                        this.selectedTile.r === tile.r;
+      
+      this.drawHexagon(graphics, pos.x, pos.y, tile, isHovered, isSelected);
+    }
+  }
+
+  update(time, delta) {
+    // Update resource generation
+    if (this.resourceManager && this.hexGrid) {
+      this.resourceManager.update(delta, this.hexGrid);
+      
+      // Update resource panel
+      if (this.resourcePanel) {
+        this.resourcePanel.update(
+          this.resourceManager.getAllResources(),
+          {
+            iron: this.resourceManager.getGenerationRate('iron'),
+            silicon: this.resourceManager.getGenerationRate('silicon'),
+            energy: this.resourceManager.getGenerationRate('energy')
+          }
+        );
+      }
+      
+      // Update tile info panel with available drones count
+      if (this.tileInfoPanel && this.droneManager) {
+        const availableDrones = this.droneManager.getAvailableDrones();
+        this.tileInfoPanel.updateDeployButton(availableDrones);
+        
+        // Refresh tile info panel if a tile is selected
+        if (this.selectedTile) {
+          this.tileInfoPanel.refresh(this.selectedTile, this.hexGrid);
+        }
+      }
+    }
+  }
+}
