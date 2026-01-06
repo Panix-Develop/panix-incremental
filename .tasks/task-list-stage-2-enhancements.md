@@ -151,7 +151,7 @@ Update the file after completing each sub-task, not just after completing an ent
 
 ### PHASE 2: UI/UX CONSISTENCY
 
-- [ ] 2.0 Establish UI/UX Consistency System
+- [x] 2.0 Establish UI/UX Consistency System
   - [x] 2.1 Create modular CSS architecture
     - [x] 2.1.1 Create `src/styles/` directory
     - [x] 2.1.2 Create `src/styles/base.css` with CSS variables and resets
@@ -172,11 +172,11 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 2.3.2 Update crafting cards to use standard class
     - [x] 2.3.3 Update drone cards to use standard class
     - [x] 2.3.4 Ensure consistent border, border-radius, padding
-  - [ ] 2.4 Verify button consistency
-    - [ ] 2.4.1 Check all `.btn` elements have consistent styling
-    - [ ] 2.4.2 Verify hover states work correctly
-    - [ ] 2.4.3 Verify disabled states are clear
-    - [ ] 2.4.4 Test button interactions across all pages
+  - [x] 2.4 Verify button consistency
+    - [x] 2.4.1 Check all `.btn` elements have consistent styling
+    - [x] 2.4.2 Verify hover states work correctly
+    - [x] 2.4.3 Verify disabled states are clear
+    - [x] 2.4.4 Test button interactions across all pages
 
 ---
 

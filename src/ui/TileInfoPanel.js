@@ -97,7 +97,7 @@ export class TileInfoPanel {
             <button id="deploy-drone-btn" class="btn" ${!canDeploy ? 'disabled' : ''} style="flex: 1;">
               ${canDeploy ? 'Deploy Drone' : 'At Capacity'}
             </button>
-            <button id="remove-drone-btn" class="btn" ${!canRemove ? 'disabled' : ''} style="flex: 1; background: var(--accent-secondary);">
+            <button id="remove-drone-btn" class="btn secondary" ${!canRemove ? 'disabled' : ''} style="flex: 1;">
               ${canRemove ? 'Remove Drone' : 'No Drones'}
             </button>
           </div>

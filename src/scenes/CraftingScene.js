@@ -124,7 +124,6 @@ export class CraftingScene extends Phaser.Scene {
             class="btn craft-btn" 
             data-component="${componentType}"
             ${!canCraft ? 'disabled' : ''}
-            style="${canCraft ? '' : 'opacity: 0.5; cursor: not-allowed;'}"
           >
             ${canCraft ? 'Craft' : 'Insufficient Resources'}
           </button>

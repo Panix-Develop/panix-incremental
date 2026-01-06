@@ -145,7 +145,6 @@ export class DronesScene extends Phaser.Scene {
           class="btn build-drone-btn" 
           data-drone="${droneType}"
           ${!canBuild ? 'disabled' : ''}
-          style="${canBuild ? '' : 'opacity: 0.5; cursor: not-allowed;'}"
         >
           ${canBuild ? 'Build Drone' : 'Insufficient Components'}
         </button>

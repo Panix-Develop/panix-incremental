@@ -73,6 +73,15 @@
   transform: translateY(0);
 }
 
+.btn.secondary {
+  background-color: var(--accent-secondary);
+}
+
+.btn.secondary:hover:not(:disabled) {
+  background-color: #6843a8;
+  box-shadow: 0 4px 8px rgba(83, 52, 131, 0.3);
+}
+
 /* Card Components */
 .info-card {
   background: var(--bg-secondary);
