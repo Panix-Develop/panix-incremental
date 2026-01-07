@@ -459,14 +459,14 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 7.2.6 Test generation rates calculation
     - [x] 7.2.7 Test getSaveData() and loadSaveData()
     - [x] 7.2.8 Run tests: `npm run test ResourceManager`
-  - [ ] 7.3 Write CraftingManager tests
-    - [ ] 7.3.1 Create `src/systems/CraftingManager.test.js`
-    - [ ] 7.3.2 Test craftComponent() method
-    - [ ] 7.3.3 Test hasComponents() method
-    - [ ] 7.3.4 Test consumeComponents() method
-    - [ ] 7.3.5 Test canCraft() validation
-    - [ ] 7.3.6 Test getSaveData() and loadSaveData()
-    - [ ] 7.3.7 Run tests: `npm run test CraftingManager`
+  - [x] 7.3 Write CraftingManager tests
+    - [x] 7.3.1 Create `src/systems/CraftingManager.test.js`
+    - [x] 7.3.2 Test craftComponent() method
+    - [x] 7.3.3 Test hasComponents() method
+    - [x] 7.3.4 Test consumeComponents() method
+    - [x] 7.3.5 Test canCraft() validation
+    - [x] 7.3.6 Test getSaveData() and loadSaveData()
+    - [x] 7.3.7 Run tests: `npm run test CraftingManager`
   - [ ] 7.4 Write DroneManager tests
     - [ ] 7.4.1 Create `src/systems/DroneManager.test.js`
     - [ ] 7.4.2 Test buildDrone() method
