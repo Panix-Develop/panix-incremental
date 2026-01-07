@@ -185,11 +185,11 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 2.4.7 Keep solarPanel and basicGatherer as defaults in hard reset
     - [x] 2.4.8 Test: All entities should look the same in UI
     - [x] 2.4.9 Test: Hard reset should keep default entities
-  - [ ] 2.5 Commit visual enhancements
-    - [ ] 2.5.1 Run all tests: `npm run test:run`
-    - [ ] 2.5.2 Verify no errors or warnings
-    - [ ] 2.5.3 Git add changes: `git add .`
-    - [ ] 2.5.4 Commit: `git commit -m "feat: add structure indicators, live updates, and drone capacity colors"`
+  - [x] 2.5 Commit visual enhancements
+    - [x] 2.5.1 Run all tests: `npm run test:run`
+    - [x] 2.5.2 Verify no errors or warnings
+    - [x] 2.5.3 Git add changes: `git add .`
+    - [x] 2.5.4 Commit: `git commit -m "feat: add structure indicators, live updates, and drone capacity colors"`
 
 ---
 

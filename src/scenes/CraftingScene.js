@@ -119,7 +119,7 @@ export class CraftingScene extends Phaser.Scene {
         html += `
           <div style="color: ${color}; margin-left: 1rem;">
             ${resource.charAt(0).toUpperCase() + resource.slice(1)}: ${amount}
-            <span style="color: var(--text-secondary);">(${current})</span>
+            <span style="color: var(--text-secondary);">(${Math.floor(current)})</span>
           </div>
         `;
       }
