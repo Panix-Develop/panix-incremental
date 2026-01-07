@@ -221,7 +221,6 @@ export class ConfigScene extends Phaser.Scene {
       ">
         <div style="font-weight: 600;">
           ${entity.icon || '⚙️'} ${entity.name || entity.id}
-          ${isCustom ? '<span style="color: var(--accent-primary); font-size: 0.75rem; margin-left: 0.25rem;">CUSTOM</span>' : ''}
         </div>
         <div style="font-size: 0.85rem; color: var(--text-secondary);">${entity.id}</div>
       </div>

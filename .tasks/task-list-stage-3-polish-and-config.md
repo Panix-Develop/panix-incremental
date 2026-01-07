@@ -175,16 +175,16 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 2.3.9 Test: Partial fill (2-3 drones), should be yellow
     - [x] 2.3.10 Test: Low fill (1 drone), should be gray
     - [x] 2.3.11 Verify color contrast is sufficient (accessibility)
-  - [ ] 2.4 Remove "custom" labels (REQ-VIS-004)
-    - [ ] 2.4.1 Grep search for "custom" in src/ directory
-    - [ ] 2.4.2 Read `src/scenes/ConfigScene.js` for "custom" references
-    - [ ] 2.4.3 Remove any "Custom" badges or labels from entity list
-    - [ ] 2.4.4 Read `src/scenes/StructuresScene.js` for "custom" styling
-    - [ ] 2.4.5 Remove special styling for custom entities
-    - [ ] 2.4.6 Verify all structures/drones shown equally
-    - [ ] 2.4.7 Keep solarPanel and basicGatherer as defaults in hard reset
-    - [ ] 2.4.8 Test: All entities should look the same in UI
-    - [ ] 2.4.9 Test: Hard reset should keep default entities
+  - [x] 2.4 Remove "custom" labels (REQ-VIS-004)
+    - [x] 2.4.1 Grep search for "custom" in src/ directory
+    - [x] 2.4.2 Read `src/scenes/ConfigScene.js` for "custom" references
+    - [x] 2.4.3 Remove any "Custom" badges or labels from entity list
+    - [x] 2.4.4 Read `src/scenes/StructuresScene.js` for "custom" styling
+    - [x] 2.4.5 Remove special styling for custom entities
+    - [x] 2.4.6 Verify all structures/drones shown equally
+    - [x] 2.4.7 Keep solarPanel and basicGatherer as defaults in hard reset
+    - [x] 2.4.8 Test: All entities should look the same in UI
+    - [x] 2.4.9 Test: Hard reset should keep default entities
   - [ ] 2.5 Commit visual enhancements
     - [ ] 2.5.1 Run all tests: `npm run test:run`
     - [ ] 2.5.2 Verify no errors or warnings
