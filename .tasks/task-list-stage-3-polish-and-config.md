@@ -287,15 +287,15 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 3.5.15 Apply configs and refresh UI
     - [x] 3.5.16 Test: Export configs, modify, import back
     - [x] 3.5.17 Test: Import invalid config shows clear errors
-  - [ ] 3.6 Commit config foundation
-    - [ ] 3.6.1 Run all tests: `npm run test:run`
-    - [ ] 3.6.2 Write ConfigManager.test.js with validation tests
-    - [ ] 3.6.3 Test resource validation (valid, duplicate ID, missing fields)
-    - [ ] 3.6.4 Test tile type validation
-    - [ ] 3.6.5 Test dependency checking
-    - [ ] 3.6.6 Verify all tests pass
-    - [ ] 3.6.7 Git add changes: `git add .`
-    - [ ] 3.6.8 Commit: `git commit -m "feat: implement config system foundation (resources, tiles, validation, import/export)"`
+  - [x] 3.6 Commit config foundation
+    - [x] 3.6.1 Run all tests: `npm run test:run`
+    - [x] 3.6.2 Write ConfigManager.test.js with validation tests
+    - [x] 3.6.3 Test resource validation (valid, duplicate ID, missing fields)
+    - [x] 3.6.4 Test tile type validation
+    - [x] 3.6.5 Test dependency checking
+    - [x] 3.6.6 Verify all tests pass
+    - [x] 3.6.7 Git add changes: `git add .`
+    - [x] 3.6.8 Commit: `git commit -m "feat: implement config system foundation (resources, tiles, validation, import/export)"`
 
 ---
 
