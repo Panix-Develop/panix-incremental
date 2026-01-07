@@ -269,24 +269,24 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 3.4.15 Test: Create new tile type with resource
     - [x] 3.4.16 Test: Change resource dropdown, see live update
     - [x] 3.4.17 Test: Cannot delete tile type used on map
-  - [ ] 3.5 Implement config import/export (REQ-CFG-008)
-    - [ ] 3.5.1 Add [Export All] button to toolbar
-    - [ ] 3.5.2 Implement exportAllConfigs() method
-    - [ ] 3.5.3 Combine resources, tiles, structures, drones into single JSON
-    - [ ] 3.5.4 Add metadata: version, timestamp, author
-    - [ ] 3.5.5 Create download link with JSON blob
-    - [ ] 3.5.6 Trigger download as "panix-config-YYYY-MM-DD.json"
-    - [ ] 3.5.7 Add [Import] button to toolbar
-    - [ ] 3.5.8 Create file input for JSON upload
-    - [ ] 3.5.9 Implement importAllConfigs(jsonData) method
-    - [ ] 3.5.10 Parse JSON and validate structure
-    - [ ] 3.5.11 Validate each entity using ConfigManager
-    - [ ] 3.5.12 Show summary: X resources, Y tiles, Z structures imported
-    - [ ] 3.5.13 Show errors if validation fails
-    - [ ] 3.5.14 Ask for confirmation before overwriting
-    - [ ] 3.5.15 Apply configs and refresh UI
-    - [ ] 3.5.16 Test: Export configs, modify, import back
-    - [ ] 3.5.17 Test: Import invalid config shows clear errors
+  - [x] 3.5 Implement config import/export (REQ-CFG-008)
+    - [x] 3.5.1 Add [Export All] button to toolbar
+    - [x] 3.5.2 Implement exportAllConfigs() method
+    - [x] 3.5.3 Combine resources, tiles, structures, drones into single JSON
+    - [x] 3.5.4 Add metadata: version, timestamp, author
+    - [x] 3.5.5 Create download link with JSON blob
+    - [x] 3.5.6 Trigger download as "panix-config-YYYY-MM-DD.json"
+    - [x] 3.5.7 Add [Import] button to toolbar
+    - [x] 3.5.8 Create file input for JSON upload
+    - [x] 3.5.9 Implement importAllConfigs(jsonData) method
+    - [x] 3.5.10 Parse JSON and validate structure
+    - [x] 3.5.11 Validate each entity using ConfigManager
+    - [x] 3.5.12 Show summary: X resources, Y tiles, Z structures imported
+    - [x] 3.5.13 Show errors if validation fails
+    - [x] 3.5.14 Ask for confirmation before overwriting
+    - [x] 3.5.15 Apply configs and refresh UI
+    - [x] 3.5.16 Test: Export configs, modify, import back
+    - [x] 3.5.17 Test: Import invalid config shows clear errors
   - [ ] 3.6 Commit config foundation
     - [ ] 3.6.1 Run all tests: `npm run test:run`
     - [ ] 3.6.2 Write ConfigManager.test.js with validation tests

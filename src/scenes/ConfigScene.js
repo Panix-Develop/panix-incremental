@@ -567,20 +567,46 @@ export class ConfigScene extends Phaser.Scene {
   /**
    * Export configuration as JSON
    */
+  /**
+   * Export all configs to JSON file
+   * REQ-CFG-008: Config import/export
+   */
   exportConfig() {
-    let data = {};
-    let filename = '';
+    // Gather all entity types
+    const allResources = getAllResources();
+    const allTiles = getAllTileTypes();
+    const allStructures = getAllStructures();
+    const allDrones = getAllDroneRecipes();
 
-    if (this.selectedType === 'structures') {
-      data = { structures: STRUCTURES };
-      filename = 'structures-config.json';
-    } else if (this.selectedType === 'drones') {
-      data = { droneRecipes: getAllDroneRecipes() };
-      filename = 'drones-config.json';
-    }
+    // Convert to arrays where needed
+    const resourcesArray = Array.isArray(allResources) ? allResources : Object.values(allResources);
+    const tilesArray = Array.isArray(allTiles) ? allTiles : Object.values(allTiles);
+
+    // Build export data with metadata
+    const exportData = {
+      metadata: {
+        version: '1.0.0',
+        timestamp: new Date().toISOString(),
+        exportedFrom: 'PANIX Incremental Dev Config Editor',
+        entityCounts: {
+          resources: resourcesArray.length,
+          tiles: tilesArray.length,
+          structures: allStructures.length,
+          drones: Object.keys(allDrones).length
+        }
+      },
+      resources: resourcesArray,
+      tiles: tilesArray,
+      structures: allStructures,
+      drones: allDrones
+    };
+
+    // Create filename with date
+    const date = new Date().toISOString().split('T')[0];
+    const filename = `panix-config-${date}.json`;
 
     // Create blob and download
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -588,7 +614,8 @@ export class ConfigScene extends Phaser.Scene {
     a.click();
     URL.revokeObjectURL(url);
 
-    console.log(`Exported ${filename}`);
+    console.log(`Exported all configs to ${filename}`);
+    alert(`✅ Config exported successfully!\n\nFile: ${filename}\n\nResources: ${resourcesArray.length}\nTiles: ${tilesArray.length}\nStructures: ${allStructures.length}\nDrones: ${Object.keys(allDrones).length}`);
   }
 
   /**
@@ -1064,6 +1091,10 @@ export class ConfigScene extends Phaser.Scene {
   /**
    * Import configuration from JSON file
    */
+  /**
+   * Import configs from JSON file
+   * REQ-CFG-008: Config import/export with validation
+   */
   importConfig(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -1074,15 +1105,139 @@ export class ConfigScene extends Phaser.Scene {
         const data = JSON.parse(e.target.result);
         console.log('Imported config:', data);
 
-        // Store in localStorage for dev mode
-        const key = `dev_config_${this.selectedType}`;
-        localStorage.setItem(key, JSON.stringify(data));
+        // Validate structure
+        if (!data.resources && !data.tiles && !data.structures && !data.drones) {
+          alert('❌ Invalid config file: No entity data found.\n\nExpected properties: resources, tiles, structures, drones');
+          return;
+        }
 
-        alert(`Configuration imported successfully!\n\nReload the page to apply changes.\n\nNote: This is stored in browser localStorage and won't persist across browsers or devices.`);
+        // Validate each entity type using ConfigManager
+        const validationErrors = [];
+        let validCounts = { resources: 0, tiles: 0, structures: 0, drones: 0 };
+
+        // Validate resources
+        if (data.resources && Array.isArray(data.resources)) {
+          data.resources.forEach((resource, index) => {
+            const validation = this.configManager.validateResource(resource, true);
+            if (!validation.valid) {
+              validationErrors.push(`Resource #${index + 1} (${resource.id || 'unknown'}): ${validation.errors.join(', ')}`);
+            } else {
+              validCounts.resources++;
+            }
+          });
+        }
+
+        // Validate tiles
+        if (data.tiles && Array.isArray(data.tiles)) {
+          data.tiles.forEach((tile, index) => {
+            const validation = this.configManager.validateTileType(tile, true);
+            if (!validation.valid) {
+              validationErrors.push(`Tile #${index + 1} (${tile.id || 'unknown'}): ${validation.errors.join(', ')}`);
+            } else {
+              validCounts.tiles++;
+            }
+          });
+        }
+
+        // Validate structures
+        if (data.structures && Array.isArray(data.structures)) {
+          data.structures.forEach((structure, index) => {
+            const validation = this.configManager.validateStructure(structure, true);
+            if (!validation.valid) {
+              validationErrors.push(`Structure #${index + 1} (${structure.id || 'unknown'}): ${validation.errors.join(', ')}`);
+            } else {
+              validCounts.structures++;
+            }
+          });
+        }
+
+        // Validate drones
+        if (data.drones && typeof data.drones === 'object') {
+          Object.entries(data.drones).forEach(([id, drone], index) => {
+            const droneData = { id, ...drone };
+            const validation = this.configManager.validateDrone(droneData, true);
+            if (!validation.valid) {
+              validationErrors.push(`Drone #${index + 1} (${id}): ${validation.errors.join(', ')}`);
+            } else {
+              validCounts.drones++;
+            }
+          });
+        }
+
+        // Show validation errors if any
+        if (validationErrors.length > 0) {
+          const errorSummary = validationErrors.slice(0, 10).join('\n');
+          const moreErrors = validationErrors.length > 10 ? `\n... and ${validationErrors.length - 10} more errors` : '';
+          alert(`❌ Import failed due to validation errors:\n\n${errorSummary}${moreErrors}\n\nPlease fix these issues and try again.`);
+          return;
+        }
+
+        // Show summary and ask for confirmation
+        const summary = [
+          `📊 Import Summary:`,
+          ``,
+          `✅ Valid entities found:`,
+          `  Resources: ${validCounts.resources}`,
+          `  Tiles: ${validCounts.tiles}`,
+          `  Structures: ${validCounts.structures}`,
+          `  Drones: ${validCounts.drones}`,
+          ``,
+          `⚠️ This will overwrite existing custom configs in localStorage.`,
+          ``,
+          `Do you want to proceed?`
+        ].join('\n');
+
+        if (!confirm(summary)) {
+          console.log('Import cancelled by user');
+          return;
+        }
+
+        // Import resources
+        if (data.resources && validCounts.resources > 0) {
+          const resourceOverrides = {};
+          data.resources.forEach(resource => {
+            resourceOverrides[resource.id] = resource;
+          });
+          localStorage.setItem('dev_resources_override', JSON.stringify(resourceOverrides));
+        }
+
+        // Import tiles
+        if (data.tiles && validCounts.tiles > 0) {
+          const tileOverrides = {};
+          data.tiles.forEach(tile => {
+            tileOverrides[tile.id] = tile;
+          });
+          localStorage.setItem('dev_tiles_override', JSON.stringify(tileOverrides));
+        }
+
+        // Import structures
+        if (data.structures && validCounts.structures > 0) {
+          const structureOverrides = {};
+          data.structures.forEach(structure => {
+            structureOverrides[structure.id] = structure;
+          });
+          localStorage.setItem('dev_structures_override', JSON.stringify(structureOverrides));
+        }
+
+        // Import drones
+        if (data.drones && validCounts.drones > 0) {
+          localStorage.setItem('dev_drones_override', JSON.stringify(data.drones));
+        }
+
+        // Refresh UI
+        this.configManager.refresh();
+        this.updateEntityList();
+
+        alert(`✅ Import successful!\n\nImported:\n  Resources: ${validCounts.resources}\n  Tiles: ${validCounts.tiles}\n  Structures: ${validCounts.structures}\n  Drones: ${validCounts.drones}\n\nReload the page to see all changes take effect.`);
+        
+        console.log('Import completed successfully');
       } catch (error) {
         console.error('Failed to import config:', error);
-        alert('Failed to import configuration. Please check the file format.');
+        alert(`❌ Failed to import configuration:\n\n${error.message}\n\nPlease check the file format and try again.`);
       }
+      
+      // Reset file input
+      event.target.value = '';
     };
     reader.readAsText(file);
   }
