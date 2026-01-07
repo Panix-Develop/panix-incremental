@@ -582,8 +582,8 @@ Update the file after completing each sub-task, not just after completing an ent
 
 - [ ] 9.0 Polish and Documentation
   - [ ] 9.1 Code review and cleanup
-    - [ ] 9.1.1 Remove all console.log debug statements
-    - [ ] 9.1.2 Remove commented-out code
+    - [x] 9.1.1 Remove all console.log debug statements
+    - [x] 9.1.2 Remove commented-out code
     - [ ] 9.1.3 Check all functions have proper JSDoc comments
     - [ ] 9.1.4 Verify consistent code style
     - [ ] 9.1.5 Run linter if configured

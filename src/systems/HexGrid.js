@@ -4,6 +4,10 @@
 import { mapConfig } from '../config/mapConfig.js';
 import { balance } from '../config/balance.js';
 
+/**
+ * Manages hex grid tiles and their data
+ * REQ-MAP-002: Manage tile data structure
+ */
 export class HexGrid {
   constructor() {
     this.tiles = new Map(); // Map of "q,r" -> tile object

@@ -4,6 +4,10 @@
 import { STRUCTURE_TYPES, getStructure, canBuildOnTileType, getStructureCost } from '../config/structures.js';
 import { balance } from '../config/balance.js';
 
+/**
+ * Manages structure building and resource generation
+ * REQ-STRUCT-001: Track built structures on tiles
+ */
 export class StructureManager {
   constructor(resourceManager = null) {
     this.resourceManager = resourceManager;

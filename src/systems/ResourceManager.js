@@ -3,6 +3,10 @@
 
 import { balance } from '../config/balance.js';
 
+/**
+ * Manages game resources (iron, silicon, energy) and their generation rates
+ * REQ-RES-001: Track three basic resources
+ */
 export class ResourceManager {
   constructor() {
     // REQ-RES-001: Track three basic resources

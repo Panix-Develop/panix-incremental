@@ -1,6 +1,10 @@
 // SettingsManager.js - Manages game settings and user preferences
 // Handles number formatting, language selection, and player customization
 
+/**
+ * Manages game settings (language, number format, player name)
+ * Persists settings to localStorage
+ */
 export class SettingsManager {
   constructor() {
     // Default settings
