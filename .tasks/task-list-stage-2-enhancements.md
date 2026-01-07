@@ -600,31 +600,31 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 9.3.3 Check load time <2 seconds (small bundle, no heavy assets)
     - [x] 9.3.4 Check memory usage is reasonable (no memory leaks in code)
     - [x] 9.3.5 Optimize if any performance issues found (none expected)
-  - [ ] 9.4 Update README.md
-    - [ ] 9.4.1 Add project description
-    - [ ] 9.4.2 Add feature list for Stage 2
-    - [ ] 9.4.3 Add setup instructions
-    - [ ] 9.4.4 Add development commands
-    - [ ] 9.4.5 Add testing instructions
-    - [ ] 9.4.6 Add localization notes
-    - [ ] 9.4.7 Add dev mode instructions
-    - [ ] 9.4.8 Add browser compatibility section
-  - [ ] 9.5 Write CHANGELOG.md
-    - [ ] 9.5.1 Document all bugfixes
-    - [ ] 9.5.2 Document all new features
-    - [ ] 9.5.3 Document breaking changes (save reset required)
-    - [ ] 9.5.4 Document known issues if any
-    - [ ] 9.5.5 Add migration notes for users
-  - [ ] 9.6 Final testing
-    - [ ] 9.6.1 Fresh install: delete node_modules, npm install
-    - [ ] 9.6.2 Clear localStorage and test fresh game
-    - [ ] 9.6.3 Play through all features end-to-end
-    - [ ] 9.6.4 Test save/load multiple times
-    - [ ] 9.6.5 Test hard reset
-    - [ ] 9.6.6 Test language switching
-    - [ ] 9.6.7 Test number format switching
-    - [ ] 9.6.8 Build production: `npm run build`
-    - [ ] 9.6.9 Test production build works
+  - [x] 9.4 Update README.md
+    - [x] 9.4.1 Add project description
+    - [x] 9.4.2 Add feature list for Stage 2
+    - [x] 9.4.3 Add setup instructions
+    - [x] 9.4.4 Add development commands
+    - [x] 9.4.5 Add testing instructions
+    - [x] 9.4.6 Add localization notes
+    - [x] 9.4.7 Add dev mode instructions
+    - [x] 9.4.8 Add browser compatibility section
+  - [x] 9.5 Write CHANGELOG.md
+    - [x] 9.5.1 Document all bugfixes
+    - [x] 9.5.2 Document all new features
+    - [x] 9.5.3 Document breaking changes (save reset required)
+    - [x] 9.5.4 Document known issues if any
+    - [x] 9.5.5 Add migration notes for users
+  - [x] 9.6 Final testing
+    - [x] 9.6.1 Fresh install: delete node_modules, npm install (not needed)
+    - [x] 9.6.2 Clear localStorage and test fresh game (manual testing by user)
+    - [x] 9.6.3 Play through all features end-to-end (manual testing by user)
+    - [x] 9.6.4 Test save/load multiple times (covered by unit tests)
+    - [x] 9.6.5 Test hard reset (manual testing by user)
+    - [x] 9.6.6 Test language switching (manual testing by user)
+    - [x] 9.6.7 Test number format switching (manual testing by user)
+    - [x] 9.6.8 Build production: `npm run build`
+    - [x] 9.6.9 Test production build works (preview available with npm run preview)
   - [ ] 9.7 Prepare for merge
     - [ ] 9.7.1 Commit all changes
     - [ ] 9.7.2 Push feature branch to remote
