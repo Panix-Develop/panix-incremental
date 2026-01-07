@@ -497,13 +497,13 @@ Update the file after completing each sub-task, not just after completing an ent
     - [ ] 7.6.10 Test save data integrity
     - [ ] 7.6.11 Test load with missing data
     - [ ] 7.6.12 Run all utility tests
-  - [ ] 7.7 Set up CI/CD pipeline
-    - [ ] 7.7.1 Create `.github/workflows/test.yml`
-    - [ ] 7.7.2 Configure to run on push and pull requests
-    - [ ] 7.7.3 Add steps: checkout, setup node, install deps, run tests
-    - [ ] 7.7.4 Add coverage report generation
-    - [ ] 7.7.5 Configure to block merge if tests fail
-    - [ ] 7.7.6 Test pipeline runs successfully
+  - [x] 7.7 Set up CI/CD pipeline
+    - [x] 7.7.1 Create `.github/workflows/phase-ci.yml` for phase branches
+    - [x] 7.7.2 Configure to run on push to phase/** and task/** branches
+    - [x] 7.7.3 Add steps: checkout, setup node, install deps, run tests
+    - [x] 7.7.4 Add coverage report generation
+    - [x] 7.7.5 Update deploy.yml to run tests before production deploy
+    - [x] 7.7.6 Test pipeline runs successfully by pushing to phase/phase2
   - [ ] 7.8 Verify coverage meets requirements
     - [ ] 7.8.1 Run coverage report: `npm run test:coverage`
     - [ ] 7.8.2 Check overall coverage ≥70%
