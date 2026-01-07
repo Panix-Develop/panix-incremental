@@ -467,15 +467,15 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 7.3.5 Test canCraft() validation
     - [x] 7.3.6 Test getSaveData() and loadSaveData()
     - [x] 7.3.7 Run tests: `npm run test CraftingManager`
-  - [ ] 7.4 Write DroneManager tests
-    - [ ] 7.4.1 Create `src/systems/DroneManager.test.js`
-    - [ ] 7.4.2 Test buildDrone() method
-    - [ ] 7.4.3 Test deployDrone() method
-    - [ ] 7.4.4 Test removeDrone() method
-    - [ ] 7.4.5 Test availability tracking
-    - [ ] 7.4.6 Test canBuildDrone() validation
-    - [ ] 7.4.7 Test getSaveData() and loadSaveData()
-    - [ ] 7.4.8 Run tests: `npm run test DroneManager`
+  - [x] 7.4 Write DroneManager tests
+    - [x] 7.4.1 Create `src/systems/DroneManager.test.js`
+    - [x] 7.4.2 Test buildDrone() method
+    - [x] 7.4.3 Test deployDrone() method
+    - [x] 7.4.4 Test removeDrone() method
+    - [x] 7.4.5 Test availability tracking
+    - [x] 7.4.6 Test canBuildDrone() validation
+    - [x] 7.4.7 Test getSaveData() and loadSaveData()
+    - [x] 7.4.8 Run tests: `npm run test DroneManager`
   - [ ] 7.5 Write StructureManager tests
     - [ ] 7.5.1 Create `src/systems/StructureManager.test.js`
     - [ ] 7.5.2 Test buildStructure() method
