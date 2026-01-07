@@ -44,6 +44,18 @@ export function loadTranslations(lang) {
  * @returns {string} Translated text or key if not found
  */
 export function t(key, params = {}) {
+  // Handle undefined or null keys
+  if (!key) {
+    console.warn('Translation key is undefined or null');
+    return '';
+  }
+  
+  // If key doesn't contain dots and doesn't start with a known namespace,
+  // it might be a plain string (e.g., "New Drone"), return as-is
+  if (!key.includes('.') && !key.match(/^(navigation|map|structures|drones|crafting|resources|tiles|settings|notifications|debug)\./)) {
+    return key;
+  }
+  
   // Split key by dots for nested access
   const keys = key.split('.');
   let value = translations;

@@ -230,7 +230,7 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 3.2.18 Add checkDependencies(entityType, entityId) method
     - [x] 3.2.19 Return list of entities that depend on this one
     - [x] 3.2.20 Prevent deletion if dependencies exist
-  - [ ] 3.3 Implement resource management UI (REQ-CFG-001)
+  - [X] 3.3 Implement resource management UI (REQ-CFG-001)
     - [x] 3.3.1 Read `src/scenes/ConfigScene.js` current structure
     - [x] 3.3.2 Add "Resources" tab to config editor
     - [x] 3.3.3 Create buildResourceListUI() method
