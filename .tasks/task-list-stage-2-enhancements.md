@@ -441,7 +441,7 @@ Update the file after completing each sub-task, not just after completing an ent
 
 ### PHASE 7: TESTING FRAMEWORK
 
-- [ ] 7.0 Implement Testing Framework and Tests
+- [x] 7.0 Implement Testing Framework and Tests
   - [x] 7.1 Set up Vitest
     - [x] 7.1.1 Install Vitest: `npm install -D vitest`
     - [x] 7.1.2 Install @vitest/ui: `npm install -D @vitest/ui`
@@ -476,27 +476,27 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 7.4.6 Test canBuildDrone() validation
     - [x] 7.4.7 Test getSaveData() and loadSaveData()
     - [x] 7.4.8 Run tests: `npm run test DroneManager`
-  - [ ] 7.5 Write StructureManager tests
-    - [ ] 7.5.1 Create `src/systems/StructureManager.test.js`
-    - [ ] 7.5.2 Test buildStructure() method
-    - [ ] 7.5.3 Test canBuildStructure() validation
-    - [ ] 7.5.4 Test energy generation calculation
-    - [ ] 7.5.5 Test structure placement restrictions
-    - [ ] 7.5.6 Test getSaveData() and loadSaveData()
-    - [ ] 7.5.7 Run tests: `npm run test StructureManager`
-  - [ ] 7.6 Write utility tests
-    - [ ] 7.6.1 Create `src/utils/hexMath.test.js`
-    - [ ] 7.6.2 Test coordinate conversion functions
-    - [ ] 7.6.3 Test distance calculations
-    - [ ] 7.6.4 Create `src/utils/formatNumber.test.js`
-    - [ ] 7.6.5 Test all three number formats with edge cases
-    - [ ] 7.6.6 Create `src/utils/i18n.test.js`
-    - [ ] 7.6.7 Test translation lookup and fallback
-    - [ ] 7.6.8 Test parameter replacement
-    - [ ] 7.6.9 Create `src/utils/saveLoad.test.js`
-    - [ ] 7.6.10 Test save data integrity
-    - [ ] 7.6.11 Test load with missing data
-    - [ ] 7.6.12 Run all utility tests
+  - [x] 7.5 Write StructureManager tests
+    - [x] 7.5.1 Create `src/systems/StructureManager.test.js`
+    - [x] 7.5.2 Test buildStructure() method
+    - [x] 7.5.3 Test canBuildStructure() validation
+    - [x] 7.5.4 Test energy generation calculation
+    - [x] 7.5.5 Test structure placement restrictions
+    - [x] 7.5.6 Test getSaveData() and loadSaveData()
+    - [x] 7.5.7 Run tests: `npm run test StructureManager`
+  - [x] 7.6 Write utility tests
+    - [x] 7.6.1 Create `src/utils/hexMath.test.js`
+    - [x] 7.6.2 Test coordinate conversion functions
+    - [x] 7.6.3 Test distance calculations
+    - [x] 7.6.4 Create `src/utils/formatNumber.test.js`
+    - [x] 7.6.5 Test all three number formats with edge cases
+    - [x] 7.6.6 Create `src/utils/i18n.test.js`
+    - [x] 7.6.7 Test translation lookup and fallback
+    - [x] 7.6.8 Test parameter replacement
+    - [x] 7.6.9 Create `src/utils/saveLoad.test.js`
+    - [x] 7.6.10 Test save data integrity
+    - [x] 7.6.11 Test load with missing data
+    - [x] 7.6.12 Run all utility tests
   - [x] 7.7 Set up CI/CD pipeline
     - [x] 7.7.1 Create `.github/workflows/phase-ci.yml` for phase branches
     - [x] 7.7.2 Configure to run on push to phase/** and task/** branches
@@ -504,13 +504,13 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 7.7.4 Add coverage report generation
     - [x] 7.7.5 Update deploy.yml to run tests before production deploy
     - [x] 7.7.6 Test pipeline runs successfully by pushing to phase/phase2
-  - [ ] 7.8 Verify coverage meets requirements
-    - [ ] 7.8.1 Run coverage report: `npm run test:coverage`
-    - [ ] 7.8.2 Check overall coverage ≥70%
-    - [ ] 7.8.3 Check critical paths ≥90% (save/load, resource generation)
-    - [ ] 7.8.4 Add more tests if coverage insufficient
-    - [ ] 7.8.5 Generate HTML coverage report
-    - [ ] 7.8.6 Review uncovered lines and add tests
+  - [x] 7.8 Verify coverage meets requirements
+    - [x] 7.8.1 Run coverage report: `npm run test:coverage`
+    - [x] 7.8.2 Check overall coverage ≥70%
+    - [x] 7.8.3 Check critical paths ≥90% (save/load, resource generation)
+    - [x] 7.8.4 Add more tests if coverage insufficient
+    - [x] 7.8.5 Generate HTML coverage report
+    - [x] 7.8.6 Review uncovered lines and add tests
 
 ---
 
