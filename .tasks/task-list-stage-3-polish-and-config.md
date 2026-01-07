@@ -133,22 +133,22 @@ Update the file after completing each sub-task, not just after completing an ent
 ### PHASE 2: VISUAL ENHANCEMENTS
 
 - [ ] 2.0 Implement Visual Enhancements (REQ-VIS-001 through REQ-VIS-004)
-  - [ ] 2.1 Add structure tier indicators (REQ-VIS-001)
-    - [ ] 2.1.1 Read `src/config/structures.js`
-    - [ ] 2.1.2 Add `tier` field (number) to all structures
-    - [ ] 2.1.3 Add `type` field (string: 'energy', 'production', 'mining') to all structures
-    - [ ] 2.1.4 Set solarPanel: tier=1, type='energy'
-    - [ ] 2.1.5 Set miningFacility: tier=1, type='mining'
-    - [ ] 2.1.6 Read `src/scenes/MapScene.js` drawTile() method
-    - [ ] 2.1.7 Check if tile has structure: `structureManager.getStructure(q, r)`
-    - [ ] 2.1.8 Create getStructureIcon() function with emoji mapping
-    - [ ] 2.1.9 Energy type: ⚡, Production: 🏭, Mining: ⛏️
-    - [ ] 2.1.10 Generate tier bars: '|'.repeat(tier)
-    - [ ] 2.1.11 Draw icon + bars in top-right corner of hex
-    - [ ] 2.1.12 Use small font size (10-12px) to not obscure tile
-    - [ ] 2.1.13 Test: Build solar panel, should show ⚡|
-    - [ ] 2.1.14 Test: Create structure with tier 3, should show correct bars
-    - [ ] 2.1.15 Test: Icon should not cover resource name or drone count
+  - [x] 2.1 Add structure tier indicators (REQ-VIS-001)
+    - [x] 2.1.1 Read `src/config/structures.js`
+    - [x] 2.1.2 Add `tier` field (number) to all structures
+    - [x] 2.1.3 Add `type` field (string: 'energy', 'production', 'mining') to all structures
+    - [x] 2.1.4 Set solarPanel: tier=1, type='energy'
+    - [x] 2.1.5 Set miningFacility: tier=1, type='mining'
+    - [x] 2.1.6 Read `src/scenes/MapScene.js` drawTile() method
+    - [x] 2.1.7 Check if tile has structure: `structureManager.getStructure(q, r)`
+    - [x] 2.1.8 Create getStructureIcon() function with emoji mapping
+    - [x] 2.1.9 Energy type: ⚡, Production: 🏭, Mining: ⛏️
+    - [x] 2.1.10 Generate tier bars: '|'.repeat(tier)
+    - [x] 2.1.11 Draw icon + bars in top-right corner of hex
+    - [x] 2.1.12 Use small font size (10-12px) to not obscure tile
+    - [x] 2.1.13 Test: Build solar panel, should show ⚡|
+    - [x] 2.1.14 Test: Create structure with tier 3, should show correct bars
+    - [x] 2.1.15 Test: Icon should not cover resource name or drone count
   - [ ] 2.2 Implement live resource updates (REQ-VIS-002)
     - [ ] 2.2.1 Read `src/scenes/CraftingScene.js` create() method
     - [ ] 2.2.2 Add game.events listener for 'step' event

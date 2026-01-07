@@ -8,6 +8,7 @@ import { ResourcePanel } from '../ui/ResourcePanel.js';
 import { TileInfoPanel } from '../ui/TileInfoPanel.js';
 import { hexToPixel, pixelToHex, getHexVertices } from '../utils/hexMath.js';
 import { balance } from '../config/balance.js';
+import { getStructure } from '../config/structures.js';
 
 // Resource tile colors (REQ-UI-006)
 const COLORS = {
@@ -292,11 +293,14 @@ export class MapScene extends Phaser.Scene {
         this.structureIndicators.delete(key);
       }
 
-      // Only draw if tile has a structure
-      if (!tile.structure) return;
+      // Check if there's a structure at this location via StructureManager
+      if (!this.structureManager) return;
+      
+      const structure = this.structureManager.getStructureAt(q, r);
+      if (!structure) return;
 
       // Get structure definition to check tier and type
-      const structureDef = this.gameState.getStructureDefinition(tile.structure);
+      const structureDef = getStructure(structure.structureType);
       if (!structureDef) return;
 
       const tier = structureDef.tier || 1;
@@ -468,6 +472,8 @@ export class MapScene extends Phaser.Scene {
                         this.selectedTile.r === tile.r;
       
       this.drawHexagon(graphics, pos.x, pos.y, tile, isHovered, isSelected);
+      // REQ-VIS-001: Update structure tier indicator
+      this.drawStructureIndicator(q, r);
     }
   }
 
