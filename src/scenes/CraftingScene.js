@@ -203,8 +203,8 @@ export class CraftingScene extends Phaser.Scene {
     // Update button states
     const componentTypes = Object.keys(recipes.components);
     componentTypes.forEach(componentType => {
-      const button = this.uiContainer.querySelector(`[data-component="${componentType}"]`);
-      if (button && button.classList.contains('craft-btn')) {
+      const button = this.uiContainer.querySelector(`button.craft-btn[data-component="${componentType}"]`);
+      if (button) {
         const canCraft = this.craftingManager.canCraft(componentType);
         button.disabled = !canCraft;
         button.textContent = canCraft ? t('crafting.craft') : t('crafting.insufficientResources');
