@@ -378,7 +378,7 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 5.6.1 Update `src/ui/TabNavigation.js`
     - [x] 5.6.2 Add config nav button only if isDevMode()
     - [x] 5.6.3 Add 🛠️ Config icon
-    - [ ] 5.6.4 Test config page only visible in dev mode
+    - [x] 5.6.4 Test config page only visible in dev mode
 
 ---
 
