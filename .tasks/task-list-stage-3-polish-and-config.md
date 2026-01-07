@@ -132,7 +132,7 @@ Update the file after completing each sub-task, not just after completing an ent
 
 ### PHASE 2: VISUAL ENHANCEMENTS
 
-- [ ] 2.0 Implement Visual Enhancements (REQ-VIS-001 through REQ-VIS-004)
+- [X] 2.0 Implement Visual Enhancements (REQ-VIS-001 through REQ-VIS-004)
   - [x] 2.1 Add structure tier indicators (REQ-VIS-001)
     - [x] 2.1.1 Read `src/config/structures.js`
     - [x] 2.1.2 Add `tier` field (number) to all structures
