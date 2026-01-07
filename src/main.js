@@ -34,7 +34,6 @@ const scenes = [MapScene, CraftingScene, DronesScene, StructuresScene, ResearchS
 // Add ConfigScene only in dev mode
 if (isDevMode()) {
   scenes.push(ConfigScene);
-  console.log('🛠️ Dev mode enabled - Config editor available');
 }
 
 gameConfig.scene = scenes;
@@ -215,8 +214,6 @@ game.events.once('ready', () => {
       window.droneManager = droneManager;
       window.saveGame = () => saveGame(managers);
       window.loadGame = () => loadGame(managers);
-
-      console.log('Panix Incremental - All systems initialized');
     }
   }, 100);
 });
@@ -252,6 +249,4 @@ function showNotification(message) {
     }, 300);
   }, 3000);
 }
-
-console.log('Panix Incremental - Game initialized');
 

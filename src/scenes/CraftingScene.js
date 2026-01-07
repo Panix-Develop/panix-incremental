@@ -33,8 +33,6 @@ export class CraftingScene extends Phaser.Scene {
         this.updateUI();
       }
     });
-    
-    console.log('CraftingScene created');
   }
 
   /**

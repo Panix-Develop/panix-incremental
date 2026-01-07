@@ -103,7 +103,6 @@ export class TabNavigation {
 
     // Don't switch to locked tabs
     if (tab.locked) {
-      console.log('Tab is locked:', tabName);
       return;
     }
 

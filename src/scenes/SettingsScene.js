@@ -28,8 +28,6 @@ export class SettingsScene extends Phaser.Scene {
         this.updateUI();
       }
     });
-    
-    console.log('SettingsScene created');
   }
 
   /**

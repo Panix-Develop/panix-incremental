@@ -124,8 +124,6 @@ export class MapScene extends Phaser.Scene {
         this.tileInfoPanel.show(updatedTile, this.hexGrid);
       }
     });
-    
-    console.log('MapScene created with', this.hexGrid.getAllTiles().length, 'tiles');
   }
 
   /**

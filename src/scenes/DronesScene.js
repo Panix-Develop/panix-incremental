@@ -33,8 +33,6 @@ export class DronesScene extends Phaser.Scene {
         this.updateUI();
       }
     });
-    
-    console.log('DronesScene created');
   }
 
   /**
