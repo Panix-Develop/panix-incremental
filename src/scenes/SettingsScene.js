@@ -21,6 +21,14 @@ export class SettingsScene extends Phaser.Scene {
 
   create() {
     this.createUI();
+    
+    // Listen for language changes to refresh UI
+    window.addEventListener('settingsUpdated', (e) => {
+      if (e.detail.setting === 'language') {
+        this.updateUI();
+      }
+    });
+    
     console.log('SettingsScene created');
   }
 

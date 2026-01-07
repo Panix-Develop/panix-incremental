@@ -28,6 +28,13 @@ export class StructuresScene extends Phaser.Scene {
     // Listen for structure events to refresh
     window.addEventListener('structureBuilt', () => this.updatePanel());
     window.addEventListener('structureDemolished', () => this.updatePanel());
+    
+    // Listen for language changes to refresh UI
+    window.addEventListener('settingsUpdated', (e) => {
+      if (e.detail.setting === 'language') {
+        this.updatePanel();
+      }
+    });
   }
 
   /**

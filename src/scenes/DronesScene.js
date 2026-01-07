@@ -27,6 +27,13 @@ export class DronesScene extends Phaser.Scene {
     // Create UI container in DOM
     this.createUI();
     
+    // Listen for language changes to refresh UI
+    window.addEventListener('settingsUpdated', (e) => {
+      if (e.detail.setting === 'language') {
+        this.updateUI();
+      }
+    });
+    
     console.log('DronesScene created');
   }
 

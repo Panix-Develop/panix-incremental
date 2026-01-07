@@ -24,6 +24,39 @@ export class TabNavigation {
     }
     
     this.setupTabs();
+    
+    // Listen for language changes and rebuild tabs
+    window.addEventListener('settingsUpdated', (e) => {
+      if (e.detail.setting === 'language') {
+        this.refreshTabs();
+      }
+    });
+  }
+  
+  /**
+   * Refresh tab labels after language change
+   */
+  refreshTabs() {
+    // Update tab labels
+    this.tabs = [
+      { id: 'map', label: t('navigation.map'), icon: '🗺️', locked: false },
+      { id: 'galaxy', label: t('navigation.galaxy'), icon: '🌌', locked: true },
+      { id: 'crafting', label: t('navigation.crafting'), icon: '🔧', locked: false },
+      { id: 'drones', label: t('navigation.drones'), icon: '🤖', locked: false },
+      { id: 'structures', label: t('navigation.structures'), icon: '🏗️', locked: false },
+      { id: 'research', label: t('navigation.research'), icon: '🔬', locked: true },
+      { id: 'settings', label: t('navigation.settings'), icon: '⚙️', locked: false }
+    ];
+    
+    if (isDevMode()) {
+      this.tabs.push({ id: 'config', label: t('navigation.config'), icon: '🛠️', locked: false });
+    }
+    
+    // Rebuild the navigation
+    this.setupTabs();
+    
+    // Restore active state
+    this.switchTab(this.currentTab);
   }
 
   /**

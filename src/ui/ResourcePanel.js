@@ -31,10 +31,14 @@ export class ResourcePanel {
     });
     resizeObserver.observe(this.panel);
     
-    // Listen for settings changes to update number format
+    // Listen for settings changes to update number format and language
     window.addEventListener('settingsUpdated', (e) => {
       if (e.detail.setting === 'numberFormat') {
         // Trigger a refresh of the display
+        this.lastResources = null;
+      } else if (e.detail.setting === 'language') {
+        // Rebuild panel with new translations
+        this.createPanelContent();
         this.lastResources = null;
       }
     });
