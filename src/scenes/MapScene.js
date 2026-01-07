@@ -203,6 +203,11 @@ export class MapScene extends Phaser.Scene {
     // Determine fill color
     let fillColor = COLORS[tile.type] || COLORS.empty;
     
+    // REQ-MAP-003: Highlight starting tile with red fill
+    if (tile.isStarting) {
+      fillColor = COLORS.start;
+    }
+    
     // Fill hexagon
     graphics.fillStyle(fillColor, 1.0);
     graphics.beginPath();
@@ -216,12 +221,6 @@ export class MapScene extends Phaser.Scene {
     // Draw border
     let borderColor = 0x000000;
     let borderWidth = 2;
-    
-    // REQ-MAP-003: Highlight starting tile
-    if (tile.isStarting) {
-      borderColor = COLORS.start;
-      borderWidth = 4;
-    }
     
     // REQ-MAP-004: Selected tile highlight
     if (isSelected) {

@@ -141,7 +141,7 @@
       "title": "Display Settings",
       "numberFormat": "Number Format",
       "formatNormal": "Normal (1.23K, 4.56M)",
-      "formatScientific": "Scientific (1.23e3, 4.56e6)",
+      "formatScientific": "Scientific (1.23e3, 4.56e4)",
       "formatEngineering": "Engineering (1.23e3, 12.3e3)",
       "language": "Language",
       "langEnglish": "English",

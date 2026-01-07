@@ -126,9 +126,9 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 1.3.6 Add 1 second delay before window.location.reload()
     - [x] 1.3.7 Test hard reset button with confirmation dialog
     - [x] 1.3.8 Verify all localStorage is cleared and game reloads fresh
-  - [ ] 1.4 Resolve starting base confusion (INCOMPLETE - both tiles still on map)
+  - [x] 1.4 Resolve starting base confusion
     - [x] 1.4.1 Read `src/config/mapConfig.js` layout array
-    - [ ] 1.4.2 Verify only ONE 'start' tile exists in layout
+    - [x] 1.4.2 Verify only ONE 'start' tile exists in layout
     - [x] 1.4.3 Read `src/systems/HexGrid.js` initializeTiles() method
     - [x] 1.4.4 Ensure start tile type converts to 'iron' for generation
     - [x] 1.4.5 Verify isStarting flag is set correctly
