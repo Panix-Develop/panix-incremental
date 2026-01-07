@@ -33,6 +33,8 @@ export const STRUCTURES = {
     },
     buildableOn: ['empty'],  // Can only build on empty tiles
     category: 'energy',
+    tier: 1,  // Structure tier (1-5+, unlimited)
+    type: 'energy',  // Structure type: 'energy', 'production', 'mining', 'research', 'storage'
     // Visual properties (for future rendering)
     color: 0xF5A623,
     icon: '☀️'

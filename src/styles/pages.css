@@ -44,7 +44,7 @@
   left: 20px;
   width: 400px;
   max-width: 600px;
-  min-width: 200px;
+  min-width: 250px;
   resize: horizontal;
   overflow: auto;
 }

@@ -259,6 +259,78 @@ export class MapScene extends Phaser.Scene {
     }
 
     /**
+     * Get emoji icon for structure type
+     * REQ-VIS-001: Structure tier indicators
+     */
+    getStructureIcon(structureType) {
+      const icons = {
+        'energy': '⚡',
+        'production': '🏭',
+        'mining': '⛏️',
+        'research': '🔬',
+        'storage': '📦'
+      };
+      return icons[structureType] || '🏗️';
+    }
+
+    /**
+     * Draw structure tier indicator on tile
+     * REQ-VIS-001: Show icon + tier bars on map tiles
+     */
+    drawStructureIndicator(q, r) {
+      const key = `${q},${r}`;
+      const data = this.hexGraphics.get(key);
+      if (!data) return;
+
+      const tile = data.tile;
+      const pos = data.pos;
+
+      // Remove existing structure indicator if any
+      const existingIndicator = this.structureIndicators?.get(key);
+      if (existingIndicator) {
+        existingIndicator.destroy();
+        this.structureIndicators.delete(key);
+      }
+
+      // Only draw if tile has a structure
+      if (!tile.structure) return;
+
+      // Get structure definition to check tier and type
+      const structureDef = this.gameState.getStructureDefinition(tile.structure);
+      if (!structureDef) return;
+
+      const tier = structureDef.tier || 1;
+      const type = structureDef.type || 'production';
+      const icon = this.getStructureIcon(type);
+
+      // Generate tier bars (repeated '|' characters)
+      const tierBars = '|'.repeat(Math.min(tier, 5)); // Cap at 5 bars for display
+
+      // Create text: icon + tier bars
+      const indicatorText = `${icon}${tierBars}`;
+
+      // Position in upper-left area of hex
+      const textX = pos.x - this.hexSize * 0.4;
+      const textY = pos.y - this.hexSize * 0.3;
+
+      const text = this.add.text(textX, textY, indicatorText, {
+        fontSize: '14px',
+        fontFamily: 'Arial',
+        color: '#ffffff',
+        fontStyle: 'bold',
+        stroke: '#000000',
+        strokeThickness: 2
+      });
+      text.setOrigin(0, 0.5);
+
+      // Store for later updates
+      if (!this.structureIndicators) {
+        this.structureIndicators = new Map();
+      }
+      this.structureIndicators.set(key, text);
+    }
+
+    /**
      * Update drone count text for a tile
      * @param {number} q - Tile q coordinate
      * @param {number} r - Tile r coordinate
@@ -346,6 +418,8 @@ export class MapScene extends Phaser.Scene {
                         this.selectedTile.r === tile.r;
       
       this.drawHexagon(graphics, pos.x, pos.y, tile, isHovered, isSelected);
+      // REQ-VIS-001: Draw structure tier indicator
+      this.drawStructureIndicator(tile.q, tile.r);
     });
   }
 
