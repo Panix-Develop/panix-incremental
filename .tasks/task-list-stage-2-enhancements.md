@@ -547,8 +547,8 @@ Update the file after completing each sub-task, not just after completing an ent
   - [ ] 8.4 Update all scenes to use t()
     - [x] 8.4.1 Update TabNavigation.js to use t() for labels
     - [ ] 8.4.2 Update MapScene.js for any displayed text
-    - [ ] 8.4.3 Update CraftingScene.js to use t() throughout
-    - [ ] 8.4.4 Update DronesScene.js to use t() throughout
+    - [x] 8.4.3 Update CraftingScene.js to use t() throughout
+    - [x] 8.4.4 Update DronesScene.js to use t() throughout
     - [ ] 8.4.5 Update StructuresScene.js to use t() throughout
     - [x] 8.4.6 Update ResearchScene.js placeholder text
     - [x] 8.4.7 Update GalaxyScene.js placeholder text

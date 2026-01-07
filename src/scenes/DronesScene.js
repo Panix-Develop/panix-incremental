@@ -3,6 +3,7 @@
 
 import Phaser from 'phaser';
 import { recipes, getDroneRecipe, getAllDroneRecipes } from '../config/recipes.js';
+import { t } from '../utils/i18n.js';
 
 export class DronesScene extends Phaser.Scene {
   constructor() {
@@ -61,46 +62,46 @@ export class DronesScene extends Phaser.Scene {
     const totalBuilt = this.droneManager.getTotalBuilt();
 
     let html = `
-      <h1>Drone Assembly Bay</h1>
+      <h1>${t('drones.title')}</h1>
         
         <div style="margin-bottom: 2rem;">
-          <h3>Drone Inventory</h3>
+          <h3>${t('drones.droneInventory')}</h3>
           <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 1rem;">
             <div class="stat-card">
-              <div class="stat-card-label">Available Drones</div>
+              <div class="stat-card-label">${t('drones.availableDrones')}</div>
               <div class="stat-card-value">${availableDrones}</div>
             </div>
             <div class="stat-card secondary">
-              <div class="stat-card-label">Total Built</div>
+              <div class="stat-card-label">${t('drones.totalBuilt')}</div>
               <div class="stat-card-value">${totalBuilt}</div>
             </div>
           </div>
           <div class="info-box">
             <div style="color: var(--text-secondary); font-size: 0.9rem;">
-              💡 <strong>Tip:</strong> Build drones here, then deploy them to resource tiles in the Map tab to generate resources.
+              ${t('drones.tip')}
             </div>
           </div>
         </div>
 
         <div style="margin-bottom: 2rem;">
-          <h3>Component Inventory</h3>
+          <h3>${t('drones.componentInventory')}</h3>
           <div style="display: flex; gap: 2rem;">
             <div>
-              <span style="color: var(--text-secondary);">Chassis:</span>
+              <span style="color: var(--text-secondary);">${t('crafting.chassis')}:</span>
               <span style="color: var(--text-primary); margin-left: 0.5rem; font-weight: bold;">${components.chassis}</span>
             </div>
             <div>
-              <span style="color: var(--text-secondary);">Circuits:</span>
+              <span style="color: var(--text-secondary);">${t('crafting.circuits')}:</span>
               <span style="color: var(--text-primary); margin-left: 0.5rem; font-weight: bold;">${components.circuit}</span>
             </div>
             <div>
-              <span style="color: var(--text-secondary);">Power Cores:</span>
+              <span style="color: var(--text-secondary);">${t('crafting.powerCores')}:</span>
               <span style="color: var(--text-primary); margin-left: 0.5rem; font-weight: bold;">${components.powerCore}</span>
             </div>
           </div>
         </div>
 
-        <h3>Build Drones</h3>
+        <h3>${t('drones.buildDrones')}</h3>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem;">
     `;
 
@@ -121,7 +122,7 @@ export class DronesScene extends Phaser.Scene {
         <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">${recipe.description}</p>
         
         <div style="margin-bottom: 1rem;">
-          <div style="color: var(--text-secondary); margin-bottom: 0.5rem; font-weight: 600;">Required Components:</div>
+          <div style="color: var(--text-secondary); margin-bottom: 0.5rem; font-weight: 600;">${t('drones.description')}:</div>
     `;
 
     // Display component requirements
@@ -143,8 +144,8 @@ export class DronesScene extends Phaser.Scene {
         </div>
         
         <div style="margin-bottom: 1rem; padding: 0.75rem; background: rgba(74, 144, 226, 0.1); border-radius: 4px;">
-          <div style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.3rem;">Generation Rate:</div>
-          <div style="color: var(--color-silicon); font-weight: 600;">${recipe.stats.gatherRate} resources/sec per drone</div>
+          <div style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.3rem;">${t('drones.gatherRate')}:</div>
+          <div style="color: var(--color-silicon); font-weight: 600;">${t('drones.gatherRateValue', { rate: recipe.stats.gatherRate })}</div>
         </div>
 
         <button 
@@ -152,7 +153,7 @@ export class DronesScene extends Phaser.Scene {
           data-drone="${droneType}"
           ${!canBuild ? 'disabled' : ''}
         >
-          ${canBuild ? 'Build Drone' : 'Insufficient Components'}
+          ${canBuild ? t('drones.buildDrone') : t('drones.insufficientComponents')}
         </button>
       </div>
     `;
