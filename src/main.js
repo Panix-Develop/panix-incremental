@@ -26,6 +26,7 @@ import { TabNavigation } from './ui/TabNavigation.js';
 import { ResourcePanel } from './ui/ResourcePanel.js';
 import { saveGame, loadGame, hasSaveData } from './utils/saveLoad.js';
 import { isDevMode } from './utils/devMode.js';
+import { t } from './utils/i18n.js';
 
 // Add scenes to config
 const scenes = [MapScene, CraftingScene, DronesScene, StructuresScene, ResearchScene, GalaxyScene, SettingsScene];
@@ -72,7 +73,7 @@ game.events.once('ready', () => {
       // REQ-STATE-004: Load game on startup
       const wasLoaded = loadGame(managers);
       if (wasLoaded) {
-        showNotification('Game loaded successfully!');
+        showNotification(t('messages.gameLoaded'));
         
         // Refresh all tile visuals after loading drones
         managers.droneManager.getDeployments().forEach(deployment => {
@@ -159,9 +160,9 @@ game.events.once('ready', () => {
         if (managers) {
           const success = saveGame(managers);
           if (success) {
-            showNotification('Game saved!');
+            showNotification(t('messages.gameSaved'));
           } else {
-            showNotification('Failed to save game');
+            showNotification(t('messages.saveFailed'));
           }
         }
       });
@@ -172,7 +173,7 @@ game.events.once('ready', () => {
           managers.resourceManager.resources.iron = 0;
           managers.resourceManager.resources.silicon = 0;
           managers.resourceManager.resources.energy = 0;
-          showNotification('Resources reset to 0');
+          showNotification(t('messages.resourcesReset'));
         }
       });
 
@@ -197,7 +198,7 @@ game.events.once('ready', () => {
             }
           });
           
-          showNotification('Hard reset complete!');
+          showNotification(t('messages.hardResetComplete'));
           
           // Refresh all UI
           const mapScene = game.scene.getScene('MapScene');

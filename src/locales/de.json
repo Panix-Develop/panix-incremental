@@ -189,8 +189,11 @@
     "settingsSaved": "Einstellungen gespeichert",
     "nameTooShort": "Name muss mindestens 2 Zeichen lang sein",
     "nameTooLong": "Name darf maximal 20 Zeichen lang sein",
-    "gameLoaded": "Spiel erfolgreich geladen",
-    "gameSaved": "Spiel erfolgreich gespeichert",
+    "gameLoaded": "Spiel erfolgreich geladen!",
+    "gameSaved": "Spiel gespeichert!",
+    "saveFailed": "Speichern fehlgeschlagen",
+    "resourcesReset": "Ressourcen auf 0 zurückgesetzt",
+    "hardResetComplete": "Harter Reset abgeschlossen!",
     "saveDeleted": "Spielstand gelöscht",
     "errorLoading": "Fehler beim Laden des Spiels",
     "errorSaving": "Fehler beim Speichern des Spiels"

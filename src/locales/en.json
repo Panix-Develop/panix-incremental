@@ -189,8 +189,11 @@
     "settingsSaved": "Settings saved",
     "nameTooShort": "Name must be at least 2 characters",
     "nameTooLong": "Name must be less than 20 characters",
-    "gameLoaded": "Game loaded successfully",
-    "gameSaved": "Game saved successfully",
+    "gameLoaded": "Game loaded successfully!",
+    "gameSaved": "Game saved!",
+    "saveFailed": "Failed to save game",
+    "resourcesReset": "Resources reset to 0",
+    "hardResetComplete": "Hard reset complete!",
     "saveDeleted": "Save deleted",
     "errorLoading": "Error loading game",
     "errorSaving": "Error saving game"
