@@ -196,61 +196,61 @@ Update the file after completing each sub-task, not just after completing an ent
 ### PHASE 3: CONFIG SYSTEM FOUNDATION
 
 - [ ] 3.0 Build Config System Foundation (REQ-CFG-001, REQ-CFG-002, REQ-CFG-007, REQ-CFG-008)
-  - [ ] 3.1 Create base config infrastructure
-    - [ ] 3.1.1 Create `src/config/resources.js` with default resources
-    - [ ] 3.1.2 Define resource structure: {id, name, icon, baseRate}
-    - [ ] 3.1.3 Add iron: {id:'iron', name:'resources.iron', icon:'🔩', baseRate:1}
-    - [ ] 3.1.4 Add silicon: {id:'silicon', name:'resources.silicon', icon:'💎', baseRate:1}
-    - [ ] 3.1.5 Add energy: {id:'energy', name:'resources.energy', icon:'⚡', baseRate:0}
-    - [ ] 3.1.6 Export resources object and getter functions
-    - [ ] 3.1.7 Create `src/config/tiles.js` with tile type definitions
-    - [ ] 3.1.8 Define tile type structure: {id, name, resourceProduced, baseRate, allowedDrones}
-    - [ ] 3.1.9 Add 'iron' tile type
-    - [ ] 3.1.10 Add 'silicon' tile type
-    - [ ] 3.1.11 Add 'empty' tile type
-    - [ ] 3.1.12 Export tile types and getter functions
-  - [ ] 3.2 Create ConfigManager system (REQ-CFG-007)
-    - [ ] 3.2.1 Create `src/systems/ConfigManager.js`
-    - [ ] 3.2.2 Add JSDoc class documentation
-    - [ ] 3.2.3 Constructor: Initialize with references to resources, tiles, structures, drones
-    - [ ] 3.2.4 Implement validateResource(resourceData) method
-    - [ ] 3.2.5 Check required fields: id, name, icon
-    - [ ] 3.2.6 Check id is unique (not already in use)
-    - [ ] 3.2.7 Check id format: alphanumeric + hyphen/underscore only
-    - [ ] 3.2.8 Return {valid: boolean, errors: string[]}
-    - [ ] 3.2.9 Implement validateTileType(tileData) method
-    - [ ] 3.2.10 Check required fields and uniqueness
-    - [ ] 3.2.11 Verify resourceProduced exists in resources
-    - [ ] 3.2.12 Implement validateStructure(structureData) method
-    - [ ] 3.2.13 Verify all cost resources exist
-    - [ ] 3.2.14 Verify production resource exists
-    - [ ] 3.2.15 Implement validateDrone(droneData) method
-    - [ ] 3.2.16 Verify all cost resources exist
-    - [ ] 3.2.17 Verify all required components exist
-    - [ ] 3.2.18 Add checkDependencies(entityType, entityId) method
-    - [ ] 3.2.19 Return list of entities that depend on this one
-    - [ ] 3.2.20 Prevent deletion if dependencies exist
+  - [x] 3.1 Create base config infrastructure
+    - [x] 3.1.1 Create `src/config/resources.js` with default resources
+    - [x] 3.1.2 Define resource structure: {id, name, icon, baseRate}
+    - [x] 3.1.3 Add iron: {id:'iron', name:'resources.iron', icon:'🔩', baseRate:1}
+    - [x] 3.1.4 Add silicon: {id:'silicon', name:'resources.silicon', icon:'💎', baseRate:1}
+    - [x] 3.1.5 Add energy: {id:'energy', name:'resources.energy', icon:'⚡', baseRate:0}
+    - [x] 3.1.6 Export resources object and getter functions
+    - [x] 3.1.7 Create `src/config/tiles.js` with tile type definitions
+    - [x] 3.1.8 Define tile type structure: {id, name, resourceProduced, baseRate, allowedDrones}
+    - [x] 3.1.9 Add 'iron' tile type
+    - [x] 3.1.10 Add 'silicon' tile type
+    - [x] 3.1.11 Add 'empty' tile type
+    - [x] 3.1.12 Export tile types and getter functions
+  - [x] 3.2 Create ConfigManager system (REQ-CFG-007)
+    - [x] 3.2.1 Create `src/systems/ConfigManager.js`
+    - [x] 3.2.2 Add JSDoc class documentation
+    - [x] 3.2.3 Constructor: Initialize with references to resources, tiles, structures, drones
+    - [x] 3.2.4 Implement validateResource(resourceData) method
+    - [x] 3.2.5 Check required fields: id, name, icon
+    - [x] 3.2.6 Check id is unique (not already in use)
+    - [x] 3.2.7 Check id format: alphanumeric + hyphen/underscore only
+    - [x] 3.2.8 Return {valid: boolean, errors: string[]}
+    - [x] 3.2.9 Implement validateTileType(tileData) method
+    - [x] 3.2.10 Check required fields and uniqueness
+    - [x] 3.2.11 Verify resourceProduced exists in resources
+    - [x] 3.2.12 Implement validateStructure(structureData) method
+    - [x] 3.2.13 Verify all cost resources exist
+    - [x] 3.2.14 Verify production resource exists
+    - [x] 3.2.15 Implement validateDrone(droneData) method
+    - [x] 3.2.16 Verify all cost resources exist
+    - [x] 3.2.17 Verify all required components exist
+    - [x] 3.2.18 Add checkDependencies(entityType, entityId) method
+    - [x] 3.2.19 Return list of entities that depend on this one
+    - [x] 3.2.20 Prevent deletion if dependencies exist
   - [ ] 3.3 Implement resource management UI (REQ-CFG-001)
-    - [ ] 3.3.1 Read `src/scenes/ConfigScene.js` current structure
-    - [ ] 3.3.2 Add "Resources" tab to config editor
-    - [ ] 3.3.3 Create buildResourceListUI() method
-    - [ ] 3.3.4 Display list of all resources (iron, silicon, energy + custom)
-    - [ ] 3.3.5 Each resource shows: icon, name, id, base rate
-    - [ ] 3.3.6 Add [+ New Resource] button
-    - [ ] 3.3.7 Create buildResourceEditorUI(resourceId) method
-    - [ ] 3.3.8 Form fields: ID (text), Name (i18n key), Icon (text), Base Rate (number)
-    - [ ] 3.3.9 Add [Save] and [Delete] buttons
-    - [ ] 3.3.10 Implement onSaveResource() handler
-    - [ ] 3.3.11 Validate using ConfigManager.validateResource()
-    - [ ] 3.3.12 Show error messages if validation fails
-    - [ ] 3.3.13 Save to config on success
-    - [ ] 3.3.14 Implement onDeleteResource() handler
-    - [ ] 3.3.15 Check dependencies before deleting
-    - [ ] 3.3.16 Show warning if resource is in use
-    - [ ] 3.3.17 Update resource list after save/delete
-    - [ ] 3.3.18 Test: Create new resource, verify it appears in list
-    - [ ] 3.3.19 Test: Delete unused resource successfully
-    - [ ] 3.3.20 Test: Cannot delete resource in use by structure
+    - [x] 3.3.1 Read `src/scenes/ConfigScene.js` current structure
+    - [x] 3.3.2 Add "Resources" tab to config editor
+    - [x] 3.3.3 Create buildResourceListUI() method
+    - [x] 3.3.4 Display list of all resources (iron, silicon, energy + custom)
+    - [x] 3.3.5 Each resource shows: icon, name, id, base rate
+    - [x] 3.3.6 Add [+ New Resource] button
+    - [x] 3.3.7 Create buildResourceEditorUI(resourceId) method
+    - [x] 3.3.8 Form fields: ID (text), Name (i18n key), Icon (text), Base Rate (number)
+    - [x] 3.3.9 Add [Save] and [Delete] buttons
+    - [x] 3.3.10 Implement onSaveResource() handler
+    - [x] 3.3.11 Validate using ConfigManager.validateResource()
+    - [x] 3.3.12 Show error messages if validation fails
+    - [x] 3.3.13 Save to config on success
+    - [x] 3.3.14 Implement onDeleteResource() handler
+    - [x] 3.3.15 Check dependencies before deleting
+    - [x] 3.3.16 Show warning if resource is in use
+    - [x] 3.3.17 Update resource list after save/delete
+    - [x] 3.3.18 Test: Create new resource, verify it appears in list
+    - [x] 3.3.19 Test: Delete unused resource successfully
+    - [x] 3.3.20 Test: Cannot delete resource in use by structure
   - [ ] 3.4 Implement tile type management UI (REQ-CFG-002)
     - [ ] 3.4.1 Add "Tile Types" tab to config editor
     - [ ] 3.4.2 Create buildTileTypeListUI() method

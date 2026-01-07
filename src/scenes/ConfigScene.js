@@ -5,12 +5,16 @@ import Phaser from 'phaser';
 import { isDevMode } from '../utils/devMode.js';
 import { getAllStructures, STRUCTURES } from '../config/structures.js';
 import { getAllDroneRecipes } from '../config/recipes.js';
+import { getAllResources } from '../config/resources.js';
+import { getAllTileTypes } from '../config/tiles.js';
+import { ConfigManager } from '../systems/ConfigManager.js';
 
 export class ConfigScene extends Phaser.Scene {
   constructor() {
     super({ key: 'ConfigScene' });
     this.selectedType = 'structures';
     this.selectedEntity = null;
+    this.configManager = new ConfigManager();
   }
 
   create() {
@@ -53,6 +57,8 @@ export class ConfigScene extends Phaser.Scene {
         <div style="margin-top: 2rem;">
           <h3>Entity Type</h3>
           <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+            <button id="config-type-resources" class="btn secondary">Resources</button>
+            <button id="config-type-tiles" class="btn secondary">Tile Types</button>
             <button id="config-type-structures" class="btn">Structures</button>
             <button id="config-type-drones" class="btn secondary">Drones</button>
           </div>
@@ -112,6 +118,24 @@ export class ConfigScene extends Phaser.Scene {
     }
 
     // Type selector buttons
+    const resourcesBtn = document.getElementById('config-type-resources');
+    if (resourcesBtn) {
+      const newResourcesBtn = resourcesBtn.cloneNode(true);
+      resourcesBtn.parentNode.replaceChild(newResourcesBtn, resourcesBtn);
+      newResourcesBtn.addEventListener('click', () => {
+        this.selectType('resources');
+      });
+    }
+
+    const tilesBtn = document.getElementById('config-type-tiles');
+    if (tilesBtn) {
+      const newTilesBtn = tilesBtn.cloneNode(true);
+      tilesBtn.parentNode.replaceChild(newTilesBtn, tilesBtn);
+      newTilesBtn.addEventListener('click', () => {
+        this.selectType('tiles');
+      });
+    }
+
     const structuresBtn = document.getElementById('config-type-structures');
     if (structuresBtn) {
       const newStructuresBtn = structuresBtn.cloneNode(true);
@@ -168,18 +192,15 @@ export class ConfigScene extends Phaser.Scene {
     this.selectedEntity = null;
 
     // Update button states
+    const resourcesBtn = document.getElementById('config-type-resources');
+    const tilesBtn = document.getElementById('config-type-tiles');
     const structuresBtn = document.getElementById('config-type-structures');
     const dronesBtn = document.getElementById('config-type-drones');
 
-    if (structuresBtn && dronesBtn) {
-      if (type === 'structures') {
-        structuresBtn.className = 'btn';
-        dronesBtn.className = 'btn secondary';
-      } else {
-        structuresBtn.className = 'btn secondary';
-        dronesBtn.className = 'btn';
-      }
-    }
+    if (resourcesBtn) resourcesBtn.className = type === 'resources' ? 'btn' : 'btn secondary';
+    if (tilesBtn) tilesBtn.className = type === 'tiles' ? 'btn' : 'btn secondary';
+    if (structuresBtn) structuresBtn.className = type === 'structures' ? 'btn' : 'btn secondary';
+    if (dronesBtn) dronesBtn.className = type === 'drones' ? 'btn' : 'btn secondary';
 
     this.updateEntityList();
     this.updateEditor();
@@ -193,7 +214,21 @@ export class ConfigScene extends Phaser.Scene {
     if (!listEl) return;
 
     let entities = [];
-    if (this.selectedType === 'structures') {
+    if (this.selectedType === 'resources') {
+      // Convert resources object to array
+      const allResources = getAllResources();
+      entities = Object.keys(allResources).map(key => ({
+        id: key,
+        ...allResources[key]
+      }));
+    } else if (this.selectedType === 'tiles') {
+      // Convert tile types object to array
+      const allTileTypes = getAllTileTypes();
+      entities = Object.keys(allTileTypes).map(key => ({
+        id: key,
+        ...allTileTypes[key]
+      }));
+    } else if (this.selectedType === 'structures') {
       entities = getAllStructures();
     } else if (this.selectedType === 'drones') {
       // Convert droneRecipes object to array of entities
@@ -242,9 +277,11 @@ export class ConfigScene extends Phaser.Scene {
   selectEntity(id) {
     // Check if it's a custom entity in localStorage
     if (id.startsWith('custom_')) {
-      const storageKey = this.selectedType === 'structures' 
-        ? 'dev_structures_override' 
-        : 'dev_drones_override';
+      let storageKey;
+      if (this.selectedType === 'resources') storageKey = 'dev_resources_override';
+      else if (this.selectedType === 'tiles') storageKey = 'dev_tiles_override';
+      else if (this.selectedType === 'structures') storageKey = 'dev_structures_override';
+      else if (this.selectedType === 'drones') storageKey = 'dev_drones_override';
       
       const existing = localStorage.getItem(storageKey);
       if (existing) {
@@ -255,7 +292,13 @@ export class ConfigScene extends Phaser.Scene {
       }
     } else {
       // Load from defaults
-      if (this.selectedType === 'structures') {
+      if (this.selectedType === 'resources') {
+        const allResources = getAllResources();
+        this.selectedEntity = { id, ...allResources[id] };
+      } else if (this.selectedType === 'tiles') {
+        const allTileTypes = getAllTileTypes();
+        this.selectedEntity = { id, ...allTileTypes[id] };
+      } else if (this.selectedType === 'structures') {
         this.selectedEntity = getAllStructures().find(s => s.id === id);
       } else if (this.selectedType === 'drones') {
         const allDrones = getAllDroneRecipes();
@@ -285,6 +328,165 @@ export class ConfigScene extends Phaser.Scene {
       toolbarEl.innerHTML = '';
       return;
     }
+
+    // Use form-based editor for resources and tiles, JSON editor for structures/drones
+    if (this.selectedType === 'resources') {
+      this.buildResourceEditor(editorEl, toolbarEl);
+    } else if (this.selectedType === 'tiles') {
+      this.buildTileTypeEditor(editorEl, toolbarEl);
+    } else {
+      this.buildJSONEditor(editorEl, toolbarEl);
+    }
+  }
+
+  /**
+   * Build form-based resource editor UI
+   * REQ-CFG-001: Resource management UI
+   */
+  buildResourceEditor(editorEl, toolbarEl) {
+    // Update toolbar with action buttons
+    toolbarEl.innerHTML = `
+      <button id="config-save-changes" class="btn" style="padding: 0.5rem 1rem;">💾 Save</button>
+      <button id="config-reset-entity" class="btn secondary" style="padding: 0.5rem 1rem;">🔄 Reset</button>
+      ${this.selectedEntity.id.startsWith('custom_') ? '<button id="config-delete-entity" class="btn secondary" style="padding: 0.5rem 1rem; background: rgba(233, 69, 96, 0.2);">🗑️ Delete</button>' : ''}
+    `;
+
+    // Build form-based editor
+    editorEl.innerHTML = `
+      <div style="margin-bottom: 1rem;">
+        <h4 style="margin-bottom: 0.5rem;">${this.selectedEntity.icon || '⚙️'} Edit Resource</h4>
+      </div>
+
+      <div id="config-validation-errors" style="display: none; margin-bottom: 1rem;"></div>
+
+      <form id="resource-editor-form" style="display: flex; flex-direction: column; gap: 1rem;">
+        <div>
+          <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">ID</label>
+          <input type="text" id="resource-id" value="${this.selectedEntity.id}" 
+            ${!this.selectedEntity.id.startsWith('custom_') ? 'disabled' : ''}
+            style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+          <small style="color: var(--text-secondary);">Alphanumeric, hyphens, and underscores only</small>
+        </div>
+
+        <div>
+          <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">Name (i18n key)</label>
+          <input type="text" id="resource-name" value="${this.selectedEntity.name || ''}" 
+            style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+          <small style="color: var(--text-secondary);">e.g., resources.myResource</small>
+        </div>
+
+        <div>
+          <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">Icon (emoji)</label>
+          <input type="text" id="resource-icon" value="${this.selectedEntity.icon || ''}" 
+            style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+          <small style="color: var(--text-secondary);">Single emoji character</small>
+        </div>
+
+        <div>
+          <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">Base Rate</label>
+          <input type="number" id="resource-baseRate" value="${this.selectedEntity.baseRate || 0}" step="0.1"
+            style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+          <small style="color: var(--text-secondary);">Base generation rate multiplier</small>
+        </div>
+      </form>
+    `;
+
+    // Add event listeners
+    document.getElementById('config-save-changes')?.addEventListener('click', () => {
+      this.saveResourceChanges();
+    });
+
+    document.getElementById('config-reset-entity')?.addEventListener('click', () => {
+      this.resetEntity();
+    });
+
+    if (this.selectedEntity.id.startsWith('custom_')) {
+      document.getElementById('config-delete-entity')?.addEventListener('click', () => {
+        this.deleteEntity();
+      });
+    }
+  }
+
+  /**
+   * Build form-based tile type editor UI
+   * REQ-CFG-002: Tile type management UI
+   */
+  buildTileTypeEditor(editorEl, toolbarEl) {
+    // Update toolbar with action buttons
+    toolbarEl.innerHTML = `
+      <button id="config-save-changes" class="btn" style="padding: 0.5rem 1rem;">💾 Save</button>
+      <button id="config-reset-entity" class="btn secondary" style="padding: 0.5rem 1rem;">🔄 Reset</button>
+      ${this.selectedEntity.id.startsWith('custom_') ? '<button id="config-delete-entity" class="btn secondary" style="padding: 0.5rem 1rem; background: rgba(233, 69, 96, 0.2);">🗑️ Delete</button>' : ''}
+    `;
+
+    // Get all resources for dropdown
+    const allResources = getAllResources();
+    const resourceOptions = Object.keys(allResources).map(resId => 
+      `<option value="${resId}" ${this.selectedEntity.resourceProduced === resId ? 'selected' : ''}>${allResources[resId].icon} ${resId}</option>`
+    ).join('');
+
+    // Build form-based editor
+    editorEl.innerHTML = `
+      <div style="margin-bottom: 1rem;">
+        <h4 style="margin-bottom: 0.5rem;">🗺️ Edit Tile Type</h4>
+      </div>
+
+      <div id="config-validation-errors" style="display: none; margin-bottom: 1rem;"></div>
+
+      <form id="tile-editor-form" style="display: flex; flex-direction: column; gap: 1rem;">
+        <div>
+          <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">ID</label>
+          <input type="text" id="tile-id" value="${this.selectedEntity.id}" 
+            ${!this.selectedEntity.id.startsWith('custom_') ? 'disabled' : ''}
+            style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+          <small style="color: var(--text-secondary);">Alphanumeric, hyphens, and underscores only</small>
+        </div>
+
+        <div>
+          <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">Name (i18n key)</label>
+          <input type="text" id="tile-name" value="${this.selectedEntity.name || ''}" 
+            style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+          <small style="color: var(--text-secondary);">e.g., tiles.myTileType</small>
+        </div>
+
+        <div>
+          <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">Resource Produced</label>
+          <select id="tile-resourceProduced" style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+            <option value="">None</option>
+            ${resourceOptions}
+          </select>
+          <small style="color: var(--text-secondary);">Resource generated by drones on this tile</small>
+        </div>
+
+        <div>
+          <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">Base Rate</label>
+          <input type="number" id="tile-baseRate" value="${this.selectedEntity.baseRate || 0}" step="0.1"
+            style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+          <small style="color: var(--text-secondary);">Base production rate per drone</small>
+        </div>
+      </form>
+    `;
+
+    // Add event listeners
+    document.getElementById('config-save-changes')?.addEventListener('click', () => {
+      this.saveTileTypeChanges();
+    });
+
+    document.getElementById('config-reset-entity')?.addEventListener('click', () => {
+      this.resetEntity();
+    });
+
+    if (this.selectedEntity.id.startsWith('custom_')) {
+      document.getElementById('config-delete-entity')?.addEventListener('click', () => {
+        this.deleteEntity();
+      });
+    }
+  }
+
+  /**
+   * Build JSON-based editor for structures and drones
+   */
+  buildJSONEditor(editorEl, toolbarEl) {
 
     // Update toolbar with action buttons
     toolbarEl.innerHTML = `
@@ -440,12 +642,185 @@ export class ConfigScene extends Phaser.Scene {
   }
 
   /**
+   * Save changes to a resource (form-based editor)
+   */
+  saveResourceChanges() {
+    const errorDiv = document.getElementById('config-validation-errors');
+    
+    // Read form values
+    const id = document.getElementById('resource-id').value.trim();
+    const name = document.getElementById('resource-name').value.trim();
+    const icon = document.getElementById('resource-icon').value.trim();
+    const baseRate = parseFloat(document.getElementById('resource-baseRate').value);
+    
+    // Build resource data
+    const resourceData = { id, name, icon, baseRate };
+    
+    // Check if this is editing an existing resource or creating new
+    const isCustom = id.startsWith('custom_');
+    
+    // Validate using ConfigManager
+    const validation = this.configManager.validateResource(resourceData, isCustom);
+    
+    if (!validation.valid) {
+      // Show validation errors
+      errorDiv.style.display = 'block';
+      errorDiv.innerHTML = `
+        <strong>⚠️ Validation Errors:</strong>
+        <ul>
+          ${validation.errors.map(err => `<li>${err}</li>`).join('')}
+        </ul>
+      `;
+      return;
+    }
+    
+    // Clear errors
+    errorDiv.style.display = 'none';
+    errorDiv.innerHTML = '';
+    
+    // Save to localStorage
+    let overrides = {};
+    const existing = localStorage.getItem('dev_resources_override');
+    if (existing) {
+      overrides = JSON.parse(existing);
+    }
+    
+    overrides[id] = resourceData;
+    localStorage.setItem('dev_resources_override', JSON.stringify(overrides));
+    
+    // Update selected entity
+    this.selectedEntity = { id, ...resourceData };
+    
+    // Show success message
+    const infoBox = document.querySelector('#config-editor .info-box');
+    if (infoBox) {
+      infoBox.style.background = 'rgba(126, 211, 33, 0.2)';
+      infoBox.style.borderColor = '#7ED321';
+      infoBox.innerHTML = `
+        <p style="margin: 0; font-size: 0.9rem;">
+          <strong>✅ Saved!</strong><br>
+          Resource saved to localStorage. Reload the page to see changes take effect.
+        </p>
+      `;
+      
+      setTimeout(() => {
+        infoBox.style.background = 'rgba(126, 211, 33, 0.1)';
+        infoBox.innerHTML = `
+          <p style="margin: 0; font-size: 0.9rem;">
+            <strong>💡 Live Editing</strong><br>
+            Edit the form below and click "Save Changes" to update localStorage. 
+            The game will use your changes on next page load. Click "Reset" to restore defaults.
+          </p>
+        `;
+      }, 3000);
+    }
+    
+    // Refresh the entity list to show changes
+    this.updateEntityList();
+    
+    console.log(`Saved resource ${id} to localStorage`);
+  }
+
+  /**
+   * Save changes to a tile type (form-based editor)
+   */
+  saveTileTypeChanges() {
+    const errorDiv = document.getElementById('config-validation-errors');
+    
+    // Read form values
+    const id = document.getElementById('tile-id').value.trim();
+    const name = document.getElementById('tile-name').value.trim();
+    const resourceProduced = document.getElementById('tile-resourceProduced').value;
+    const baseRate = parseFloat(document.getElementById('tile-baseRate').value);
+    
+    // Build tile data (simplified for now, can extend with allowedDrones later)
+    const tileData = { 
+      id, 
+      name, 
+      resourceProduced: resourceProduced || null, 
+      baseRate,
+      allowedDrones: ['basic', 'advanced', 'elite'] // Default allowed drones
+    };
+    
+    // Check if this is editing an existing tile or creating new
+    const isCustom = id.startsWith('custom_');
+    
+    // Validate using ConfigManager
+    const validation = this.configManager.validateTileType(tileData, isCustom);
+    
+    if (!validation.valid) {
+      // Show validation errors
+      errorDiv.style.display = 'block';
+      errorDiv.innerHTML = `
+        <strong>⚠️ Validation Errors:</strong>
+        <ul>
+          ${validation.errors.map(err => `<li>${err}</li>`).join('')}
+        </ul>
+      `;
+      return;
+    }
+    
+    // Clear errors
+    errorDiv.style.display = 'none';
+    errorDiv.innerHTML = '';
+    
+    // Save to localStorage
+    let overrides = {};
+    const existing = localStorage.getItem('dev_tiles_override');
+    if (existing) {
+      overrides = JSON.parse(existing);
+    }
+    
+    overrides[id] = tileData;
+    localStorage.setItem('dev_tiles_override', JSON.stringify(overrides));
+    
+    // Update selected entity
+    this.selectedEntity = { id, ...tileData };
+    
+    // Show success message
+    const infoBox = document.querySelector('#config-editor .info-box');
+    if (infoBox) {
+      infoBox.style.background = 'rgba(126, 211, 33, 0.2)';
+      infoBox.style.borderColor = '#7ED321';
+      infoBox.innerHTML = `
+        <p style="margin: 0; font-size: 0.9rem;">
+          <strong>✅ Saved!</strong><br>
+          Tile type saved to localStorage. Reload the page to see changes take effect.
+        </p>
+      `;
+      
+      setTimeout(() => {
+        infoBox.style.background = 'rgba(126, 211, 33, 0.1)';
+        infoBox.innerHTML = `
+          <p style="margin: 0; font-size: 0.9rem;">
+            <strong>💡 Live Editing</strong><br>
+            Edit the form below and click "Save Changes" to update localStorage. 
+            The game will use your changes on next page load. Click "Reset" to restore defaults.
+          </p>
+        `;
+      }, 3000);
+    }
+    
+    // Refresh the entity list to show changes
+    this.updateEntityList();
+    
+    console.log(`Saved tile type ${id} to localStorage`);
+  }
+
+  /**
    * Reset entity to default (remove localStorage override)
    */
   resetEntity() {
-    const storageKey = this.selectedType === 'structures' 
-      ? 'dev_structures_override' 
-      : 'dev_drones_override';
+    let storageKey;
+    if (this.selectedType === 'structures') {
+      storageKey = 'dev_structures_override';
+    } else if (this.selectedType === 'drones') {
+      storageKey = 'dev_drones_override';
+    } else if (this.selectedType === 'resources') {
+      storageKey = 'dev_resources_override';
+    } else if (this.selectedType === 'tiles') {
+      storageKey = 'dev_tiles_override';
+    }
     
     // Get existing overrides
     const existing = localStorage.getItem(storageKey);
@@ -469,6 +844,18 @@ export class ConfigScene extends Phaser.Scene {
     } else if (this.selectedType === 'drones') {
       const allDrones = getAllDroneRecipes();
       this.selectedEntity = { id: this.selectedEntity.id, ...allDrones[this.selectedEntity.id] };
+    } else if (this.selectedType === 'resources') {
+      const allResources = getAllResources();
+      const defaultResource = allResources.find(r => r.id === this.selectedEntity.id);
+      if (defaultResource) {
+        this.selectedEntity = defaultResource;
+      }
+    } else if (this.selectedType === 'tiles') {
+      const allTiles = getAllTileTypes();
+      const defaultTile = allTiles.find(t => t.id === this.selectedEntity.id);
+      if (defaultTile) {
+        this.selectedEntity = defaultTile;
+      }
     }
     
     this.updateEditor();
@@ -493,8 +880,10 @@ export class ConfigScene extends Phaser.Scene {
     
     // Create template based on type
     let template = {};
+    let storageKey;
     
     if (this.selectedType === 'structures') {
+      storageKey = 'dev_structures_override';
       template = {
         id: newId,
         name: 'New Structure',
@@ -514,6 +903,7 @@ export class ConfigScene extends Phaser.Scene {
         buildable: true
       };
     } else if (this.selectedType === 'drones') {
+      storageKey = 'dev_drones_override';
       template = {
         id: newId,
         name: 'New Drone',
@@ -529,12 +919,26 @@ export class ConfigScene extends Phaser.Scene {
           durability: Infinity
         }
       };
+    } else if (this.selectedType === 'resources') {
+      storageKey = 'dev_resources_override';
+      template = {
+        id: newId,
+        name: 'resources.custom_resource',
+        icon: '🔹',
+        baseRate: 1
+      };
+    } else if (this.selectedType === 'tiles') {
+      storageKey = 'dev_tiles_override';
+      template = {
+        id: newId,
+        name: 'tiles.custom_tile',
+        resourceProduced: null,
+        baseRate: 1,
+        allowedDrones: ['basic', 'advanced', 'elite']
+      };
     }
     
     // Save to localStorage
-    const storageKey = this.selectedType === 'structures' 
-      ? 'dev_structures_override' 
-      : 'dev_drones_override';
     
     let overrides = {};
     const existing = localStorage.getItem(storageKey);
@@ -569,13 +973,31 @@ export class ConfigScene extends Phaser.Scene {
       return;
     }
 
+    // Check dependencies before deleting
+    const dependencies = this.configManager.checkDependencies(
+      this.selectedType.slice(0, -1), // Remove 's' from type
+      this.selectedEntity.id
+    );
+
+    if (dependencies.length > 0) {
+      alert(`Cannot delete ${this.selectedEntity.name || this.selectedEntity.id} because it is used by:\n\n${dependencies.join('\n')}\n\nRemove these dependencies first.`);
+      return;
+    }
+
     if (!confirm(`Delete ${this.selectedEntity.name || this.selectedEntity.id}? This cannot be undone.`)) {
       return;
     }
 
-    const storageKey = this.selectedType === 'structures' 
-      ? 'dev_structures_override' 
-      : 'dev_drones_override';
+    let storageKey;
+    if (this.selectedType === 'structures') {
+      storageKey = 'dev_structures_override';
+    } else if (this.selectedType === 'drones') {
+      storageKey = 'dev_drones_override';
+    } else if (this.selectedType === 'resources') {
+      storageKey = 'dev_resources_override';
+    } else if (this.selectedType === 'tiles') {
+      storageKey = 'dev_tiles_override';
+    }
     
     const existing = localStorage.getItem(storageKey);
     if (existing) {
