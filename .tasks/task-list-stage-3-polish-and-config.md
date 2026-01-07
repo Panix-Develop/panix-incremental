@@ -195,7 +195,7 @@ Update the file after completing each sub-task, not just after completing an ent
 
 ### PHASE 3: CONFIG SYSTEM FOUNDATION
 
-- [ ] 3.0 Build Config System Foundation (REQ-CFG-001, REQ-CFG-002, REQ-CFG-007, REQ-CFG-008)
+- [x] 3.0 Build Config System Foundation (REQ-CFG-001, REQ-CFG-002, REQ-CFG-007, REQ-CFG-008)
   - [x] 3.1 Create base config infrastructure
     - [x] 3.1.1 Create `src/config/resources.js` with default resources
     - [x] 3.1.2 Define resource structure: {id, name, icon, baseRate}
@@ -302,24 +302,24 @@ Update the file after completing each sub-task, not just after completing an ent
 ### PHASE 4: CONFIG SYSTEM ADVANCED
 
 - [ ] 4.0 Enhance Config System (REQ-CFG-003, REQ-CFG-004, REQ-CFG-005, REQ-CFG-006, REQ-CFG-009)
-  - [ ] 4.1 Enhance structure management (REQ-CFG-003)
-    - [ ] 4.1.1 Read current structure editor in ConfigScene.js
-    - [ ] 4.1.2 Replace JSON textarea with form-based UI
-    - [ ] 4.1.3 Form fields: ID, Name (i18n), Description (i18n)
-    - [ ] 4.1.4 Add Tier number input (unlimited)
-    - [ ] 4.1.5 Add Type dropdown: energy, production, mining, research, storage
-    - [ ] 4.1.6 Create costs editor: [+ Add Cost] button
-    - [ ] 4.1.7 Each cost: Resource dropdown + Amount input + [Remove] button
-    - [ ] 4.1.8 Populate resource dropdown from all defined resources
-    - [ ] 4.1.9 Create production editor: Resource dropdown + Amount/sec input
-    - [ ] 4.1.10 Add tile type restrictions multi-select
-    - [ ] 4.1.11 Implement onSaveStructure() handler
-    - [ ] 4.1.12 Validate using ConfigManager.validateStructure()
-    - [ ] 4.1.13 Convert form data to structure object
-    - [ ] 4.1.14 Save and refresh structure list
-    - [ ] 4.1.15 Test: Create structure with multiple costs
-    - [ ] 4.1.16 Test: Change resource in dropdown, cost updates
-    - [ ] 4.1.17 Test: Add/remove costs dynamically
+  - [x] 4.1 Enhance structure management (REQ-CFG-003)
+    - [x] 4.1.1 Read current structure editor in ConfigScene.js
+    - [x] 4.1.2 Replace JSON textarea with form-based UI
+    - [x] 4.1.3 Form fields: ID, Name (i18n), Description (i18n)
+    - [x] 4.1.4 Add Tier number input (unlimited)
+    - [x] 4.1.5 Add Type dropdown: energy, production, mining, research, storage
+    - [x] 4.1.6 Create costs editor: [+ Add Cost] button
+    - [x] 4.1.7 Each cost: Resource dropdown + Amount input + [Remove] button
+    - [x] 4.1.8 Populate resource dropdown from all defined resources
+    - [x] 4.1.9 Create production editor: Resource dropdown + Amount/sec input
+    - [x] 4.1.10 Add tile type restrictions multi-select
+    - [x] 4.1.11 Implement onSaveStructure() handler
+    - [x] 4.1.12 Validate using ConfigManager.validateStructure()
+    - [x] 4.1.13 Convert form data to structure object
+    - [x] 4.1.14 Save and refresh structure list
+    - [x] 4.1.15 Test: Create structure with multiple costs
+    - [x] 4.1.16 Test: Change resource in dropdown, cost updates
+    - [x] 4.1.17 Test: Add/remove costs dynamically
   - [ ] 4.2 Enhance drone management (REQ-CFG-004)
     - [ ] 4.2.1 Read current drone editor in ConfigScene.js
     - [ ] 4.2.2 Replace JSON textarea with form-based UI

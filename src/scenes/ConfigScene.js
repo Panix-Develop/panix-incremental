@@ -329,11 +329,13 @@ export class ConfigScene extends Phaser.Scene {
       return;
     }
 
-    // Use form-based editor for resources and tiles, JSON editor for structures/drones
+    // Use form-based editor for resources, tiles, and structures; JSON editor for drones
     if (this.selectedType === 'resources') {
       this.buildResourceEditor(editorEl, toolbarEl);
     } else if (this.selectedType === 'tiles') {
       this.buildTileTypeEditor(editorEl, toolbarEl);
+    } else if (this.selectedType === 'structures') {
+      this.buildStructureEditor(editorEl, toolbarEl);
     } else {
       this.buildJSONEditor(editorEl, toolbarEl);
     }
@@ -503,6 +505,213 @@ export class ConfigScene extends Phaser.Scene {
         this.deleteEntity();
       });
     }
+  }
+
+  /**
+   * Build form-based structure editor UI
+   * REQ-CFG-003: Enhanced structure management
+   */
+  buildStructureEditor(editorEl, toolbarEl) {
+    // Update toolbar with action buttons
+    toolbarEl.innerHTML = `
+      <button id="config-save-changes" class="btn" style="padding: 0.5rem 1rem;">💾 Save</button>
+      <button id="config-reset-entity" class="btn secondary" style="padding: 0.5rem 1rem;">🔄 Reset</button>
+      ${this.selectedEntity.id.startsWith('custom_') ? '<button id="config-delete-entity" class="btn secondary" style="padding: 0.5rem 1rem; background: rgba(233, 69, 96, 0.2);">🗑️ Delete</button>' : ''}
+    `;
+
+    // Get available resources for dropdowns
+    const allResources = getAllResources();
+    const resourceIds = Array.isArray(allResources) ? allResources.map(r => r.id) : Object.values(allResources).map(r => r.id);
+
+    // Get available tile types for restrictions
+    const allTileTypes = getAllTileTypes();
+    const tileTypeIds = Array.isArray(allTileTypes) ? allTileTypes.map(t => t.id) : Object.values(allTileTypes).map(t => t.id);
+
+    // Prepare costs array for rendering
+    const costs = this.selectedEntity.costs || {};
+    const costsArray = Object.entries(costs);
+
+    // Prepare buildableOn array
+    const buildableOn = this.selectedEntity.buildableOn || [];
+
+    // Build form-based editor
+    editorEl.innerHTML = `
+      <div style="margin-bottom: 1rem;">
+        <h4 style="margin-bottom: 0.5rem;">${this.selectedEntity.icon || '🏗️'} Edit Structure</h4>
+      </div>
+
+      <div id="config-validation-errors" style="display: none; margin-bottom: 1rem;"></div>
+
+      <form id="structure-editor-form" style="display: flex; flex-direction: column; gap: 1rem;">
+        <div>
+          <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">ID</label>
+          <input type="text" id="structure-id" value="${this.selectedEntity.id}" 
+            ${!this.selectedEntity.id.startsWith('custom_') ? 'disabled' : ''}
+            style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+          <small style="color: var(--text-secondary);">Alphanumeric, hyphens, and underscores only</small>
+        </div>
+
+        <div>
+          <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">Name (i18n key)</label>
+          <input type="text" id="structure-name" value="${this.selectedEntity.name || ''}" 
+            style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+          <small style="color: var(--text-secondary);">e.g., structures.myStructure.name</small>
+        </div>
+
+        <div>
+          <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">Description (i18n key)</label>
+          <input type="text" id="structure-description" value="${this.selectedEntity.description || ''}" 
+            style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+          <small style="color: var(--text-secondary);">e.g., structures.myStructure.description</small>
+        </div>
+
+        <div>
+          <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">Icon (emoji)</label>
+          <input type="text" id="structure-icon" value="${this.selectedEntity.icon || ''}" 
+            style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+          <small style="color: var(--text-secondary);">Single emoji character</small>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">Tier</label>
+            <input type="number" id="structure-tier" value="${this.selectedEntity.tier || 1}" min="1"
+              style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+            <small style="color: var(--text-secondary);">Structure tier (1-5+, unlimited)</small>
+          </div>
+
+          <div>
+            <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">Type</label>
+            <select id="structure-type" 
+              style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+              <option value="energy" ${this.selectedEntity.type === 'energy' ? 'selected' : ''}>Energy</option>
+              <option value="production" ${this.selectedEntity.type === 'production' ? 'selected' : ''}>Production</option>
+              <option value="mining" ${this.selectedEntity.type === 'mining' ? 'selected' : ''}>Mining</option>
+              <option value="research" ${this.selectedEntity.type === 'research' ? 'selected' : ''}>Research</option>
+              <option value="storage" ${this.selectedEntity.type === 'storage' ? 'selected' : ''}>Storage</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Build Costs</label>
+          <div id="structure-costs-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            ${costsArray.map(([resource, amount], index) => `
+              <div class="cost-entry" data-index="${index}" style="display: flex; gap: 0.5rem; align-items: center;">
+                <select class="cost-resource" data-index="${index}" 
+                  style="flex: 1; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+                  ${resourceIds.map(id => `<option value="${id}" ${id === resource ? 'selected' : ''}>${id}</option>`).join('')}
+                </select>
+                <input type="number" class="cost-amount" data-index="${index}" value="${amount}" min="0" 
+                  style="width: 120px; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+                <button type="button" class="btn secondary remove-cost" data-index="${index}" style="padding: 0.5rem;">❌</button>
+              </div>
+            `).join('')}
+          </div>
+          <button type="button" id="add-cost-btn" class="btn secondary" style="margin-top: 0.5rem; padding: 0.5rem;">+ Add Cost</button>
+        </div>
+
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Production</label>
+          <div style="display: grid; grid-template-columns: 1fr 120px; gap: 0.5rem;">
+            <select id="structure-production-resource" 
+              style="padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+              <option value="">None</option>
+              ${resourceIds.map(id => {
+                const productionResource = this.selectedEntity.stats?.energyPerSecond ? 'energy' : 
+                                          this.selectedEntity.stats?.productionRate ? Object.keys(this.selectedEntity.stats.productionRate || {})[0] : '';
+                return `<option value="${id}" ${id === productionResource ? 'selected' : ''}>${id}</option>`;
+              }).join('')}
+            </select>
+            <input type="number" id="structure-production-amount" 
+              value="${this.selectedEntity.stats?.energyPerSecond || this.selectedEntity.stats?.productionRate?.[Object.keys(this.selectedEntity.stats?.productionRate || {})[0]] || 0}" 
+              step="0.1" min="0"
+              style="padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+          </div>
+          <small style="color: var(--text-secondary);">Amount per second</small>
+        </div>
+
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Buildable On (Tile Types)</label>
+          <div id="structure-buildable-on" style="display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.5rem; background: rgba(0,0,0,0.2); border-radius: 4px; min-height: 50px;">
+            ${tileTypeIds.map(id => `
+              <label style="display: flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.5rem; background: var(--bg-secondary); border-radius: 4px; cursor: pointer;">
+                <input type="checkbox" class="buildable-on-checkbox" value="${id}" ${buildableOn.includes(id) ? 'checked' : ''}
+                  style="cursor: pointer;">
+                <span style="font-size: 0.9rem;">${id}</span>
+              </label>
+            `).join('')}
+          </div>
+          <small style="color: var(--text-secondary);">Select tile types where this structure can be built</small>
+        </div>
+      </form>
+    `;
+
+    // Add event listeners for dynamic cost management
+    this.attachCostEventListeners();
+
+    // Add event listeners for save/reset/delete
+    document.getElementById('config-save-changes')?.addEventListener('click', () => {
+      this.saveStructureChanges();
+    });
+
+    document.getElementById('config-reset-entity')?.addEventListener('click', () => {
+      this.resetEntity();
+    });
+
+    if (this.selectedEntity.id.startsWith('custom_')) {
+      document.getElementById('config-delete-entity')?.addEventListener('click', () => {
+        this.deleteEntity();
+      });
+    }
+  }
+
+  /**
+   * Attach event listeners for cost entries
+   */
+  attachCostEventListeners() {
+    // Add cost button
+    document.getElementById('add-cost-btn')?.addEventListener('click', () => {
+      const costsList = document.getElementById('structure-costs-list');
+      if (!costsList) return;
+
+      const allResources = getAllResources();
+      const resourceIds = Array.isArray(allResources) ? allResources.map(r => r.id) : Object.values(allResources).map(r => r.id);
+      const defaultResource = resourceIds[0] || 'iron';
+      const currentIndex = costsList.querySelectorAll('.cost-entry').length;
+
+      const costEntryHTML = `
+        <div class="cost-entry" data-index="${currentIndex}" style="display: flex; gap: 0.5rem; align-items: center;">
+          <select class="cost-resource" data-index="${currentIndex}" 
+            style="flex: 1; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+            ${resourceIds.map(id => `<option value="${id}" ${id === defaultResource ? 'selected' : ''}>${id}</option>`).join('')}
+          </select>
+          <input type="number" class="cost-amount" data-index="${currentIndex}" value="10" min="0" 
+            style="width: 120px; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+          <button type="button" class="btn secondary remove-cost" data-index="${currentIndex}" style="padding: 0.5rem;">❌</button>
+        </div>
+      `;
+
+      costsList.insertAdjacentHTML('beforeend', costEntryHTML);
+      this.attachRemoveCostListeners();
+    });
+
+    // Remove cost buttons
+    this.attachRemoveCostListeners();
+  }
+
+  /**
+   * Attach event listeners to remove cost buttons
+   */
+  attachRemoveCostListeners() {
+    document.querySelectorAll('.remove-cost').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const entry = e.target.closest('.cost-entry');
+        if (entry) {
+          entry.remove();
+        }
+      });
+    });
   }
 
   /**
@@ -860,6 +1069,131 @@ export class ConfigScene extends Phaser.Scene {
     this.updateEntityList();
     
     console.log(`Saved tile type ${id} to localStorage`);
+  }
+
+  /**
+   * Save changes to a structure (form-based editor)
+   * REQ-CFG-003: Enhanced structure management
+   */
+  saveStructureChanges() {
+    const errorDiv = document.getElementById('config-validation-errors');
+    
+    // Read form values
+    const id = document.getElementById('structure-id').value.trim();
+    const name = document.getElementById('structure-name').value.trim();
+    const description = document.getElementById('structure-description').value.trim();
+    const icon = document.getElementById('structure-icon').value.trim();
+    const tier = parseInt(document.getElementById('structure-tier').value);
+    const type = document.getElementById('structure-type').value;
+    
+    // Read costs
+    const costs = {};
+    document.querySelectorAll('.cost-entry').forEach(entry => {
+      const resource = entry.querySelector('.cost-resource').value;
+      const amount = parseFloat(entry.querySelector('.cost-amount').value);
+      if (resource && amount > 0) {
+        costs[resource] = amount;
+      }
+    });
+    
+    // Read production
+    const productionResource = document.getElementById('structure-production-resource').value;
+    const productionAmount = parseFloat(document.getElementById('structure-production-amount').value);
+    
+    // Build stats object based on production
+    const stats = {};
+    if (productionResource && productionAmount > 0) {
+      if (productionResource === 'energy') {
+        stats.energyPerSecond = productionAmount;
+      } else {
+        stats.productionRate = {
+          [productionResource]: productionAmount
+        };
+      }
+    }
+    
+    // Read buildable on checkboxes
+    const buildableOn = [];
+    document.querySelectorAll('.buildable-on-checkbox:checked').forEach(checkbox => {
+      buildableOn.push(checkbox.value);
+    });
+    
+    // Build structure data
+    const structureData = {
+      id,
+      name,
+      description,
+      icon,
+      tier,
+      type,
+      costs,
+      stats,
+      buildableOn,
+      category: type, // Category matches type for now
+      color: this.selectedEntity.color || 0xF5A623 // Keep existing color or default
+    };
+    
+    // Check if this is editing an existing structure or creating new
+    const isEdit = !id.startsWith('custom_') || (this.selectedEntity && this.selectedEntity.id === id);
+    
+    // Validate using ConfigManager
+    const validation = this.configManager.validateStructure(structureData, isEdit);
+    
+    if (!validation.valid) {
+      // Show validation errors
+      errorDiv.style.display = 'block';
+      errorDiv.innerHTML = `
+        <div class="info-box" style="background: rgba(233, 69, 96, 0.2); border-color: var(--accent-primary);">
+          <strong>⚠️ Validation Errors:</strong>
+          <ul style="margin: 0.5rem 0 0 1.5rem;">
+            ${validation.errors.map(err => `<li>${err}</li>`).join('')}
+          </ul>
+        </div>
+      `;
+      return;
+    }
+    
+    // Clear errors
+    errorDiv.style.display = 'none';
+    errorDiv.innerHTML = '';
+    
+    // Save to localStorage
+    let overrides = {};
+    const existing = localStorage.getItem('dev_structures_override');
+    if (existing) {
+      overrides = JSON.parse(existing);
+    }
+    
+    overrides[id] = structureData;
+    localStorage.setItem('dev_structures_override', JSON.stringify(overrides));
+    
+    // Update selected entity
+    this.selectedEntity = { ...structureData };
+    
+    // Show success message by temporarily updating the first info box or creating one
+    let successMsg = document.createElement('div');
+    successMsg.className = 'info-box';
+    successMsg.style.cssText = 'background: rgba(126, 211, 33, 0.2); border-color: #7ED321; margin-bottom: 1rem;';
+    successMsg.innerHTML = `
+      <p style="margin: 0; font-size: 0.9rem;">
+        <strong>✅ Saved!</strong><br>
+        Structure saved to localStorage. Reload the page to see changes take effect.
+      </p>
+    `;
+    
+    const form = document.getElementById('structure-editor-form');
+    if (form) {
+      form.insertBefore(successMsg, form.firstChild);
+      
+      setTimeout(() => {
+        successMsg.remove();
+      }, 3000);
+    }
+    
+    // Refresh the entity list to show changes
+    this.updateEntityList();
+    
+    console.log(`Saved structure ${id} to localStorage`);
   }
 
   /**
