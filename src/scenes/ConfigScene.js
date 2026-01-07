@@ -464,6 +464,28 @@ export class ConfigScene extends Phaser.Scene {
             style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
           <small style="color: var(--text-secondary);">Base production rate per drone</small>
         </div>
+
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Allowed Drones</label>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; padding: 0.5rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+              <input type="checkbox" id="tile-drone-basic" value="basic" 
+                ${(this.selectedEntity.allowedDrones || []).includes('basic') ? 'checked' : ''}>
+              <span>Basic Gatherer</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+              <input type="checkbox" id="tile-drone-advanced" value="advanced" 
+                ${(this.selectedEntity.allowedDrones || []).includes('advanced') ? 'checked' : ''}>
+              <span>Advanced Gatherer</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+              <input type="checkbox" id="tile-drone-elite" value="elite" 
+                ${(this.selectedEntity.allowedDrones || []).includes('elite') ? 'checked' : ''}>
+              <span>Elite Gatherer</span>
+            </label>
+          </div>
+          <small style="color: var(--text-secondary);">Which drone types can work on this tile</small>
+        </div>
       </form>
     `;
 
@@ -733,13 +755,19 @@ export class ConfigScene extends Phaser.Scene {
     const resourceProduced = document.getElementById('tile-resourceProduced').value;
     const baseRate = parseFloat(document.getElementById('tile-baseRate').value);
     
-    // Build tile data (simplified for now, can extend with allowedDrones later)
+    // Read allowed drones checkboxes
+    const allowedDrones = [];
+    if (document.getElementById('tile-drone-basic')?.checked) allowedDrones.push('basic');
+    if (document.getElementById('tile-drone-advanced')?.checked) allowedDrones.push('advanced');
+    if (document.getElementById('tile-drone-elite')?.checked) allowedDrones.push('elite');
+    
+    // Build tile data
     const tileData = { 
       id, 
       name, 
       resourceProduced: resourceProduced || null, 
       baseRate,
-      allowedDrones: ['basic', 'advanced', 'elite'] // Default allowed drones
+      allowedDrones
     };
     
     // Check if this is editing an existing tile or creating new
@@ -971,6 +999,20 @@ export class ConfigScene extends Phaser.Scene {
     if (!this.selectedEntity || !this.selectedEntity.id.startsWith('custom_')) {
       console.warn('Can only delete custom entities');
       return;
+    }
+
+    // Special check for tile types - verify no map tiles use this type
+    if (this.selectedType === 'tiles') {
+      const mapScene = this.scene.get('MapScene');
+      if (mapScene && mapScene.hexGrid) {
+        const allTiles = mapScene.hexGrid.getAllTiles();
+        const tilesUsingType = allTiles.filter(t => t.type === this.selectedEntity.id);
+        
+        if (tilesUsingType.length > 0) {
+          alert(`Cannot delete tile type "${this.selectedEntity.id}" because ${tilesUsingType.length} tile(s) on the map are using it.\n\nChange those tiles to a different type first.`);
+          return;
+        }
+      }
     }
 
     // Check dependencies before deleting

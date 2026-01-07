@@ -251,24 +251,24 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 3.3.18 Test: Create new resource, verify it appears in list
     - [x] 3.3.19 Test: Delete unused resource successfully
     - [x] 3.3.20 Test: Cannot delete resource in use by structure
-  - [ ] 3.4 Implement tile type management UI (REQ-CFG-002)
-    - [ ] 3.4.1 Add "Tile Types" tab to config editor
-    - [ ] 3.4.2 Create buildTileTypeListUI() method
-    - [ ] 3.4.3 Display all tile types with resource info
-    - [ ] 3.4.4 Add [+ New Tile Type] button
-    - [ ] 3.4.5 Create buildTileTypeEditorUI(tileTypeId) method
-    - [ ] 3.4.6 Form fields: ID, Name (i18n), Resource Produced (dropdown), Base Rate
-    - [ ] 3.4.7 Populate resource dropdown from resources.js
-    - [ ] 3.4.8 Add multi-select for allowed drones
-    - [ ] 3.4.9 Implement onSaveTileType() handler
-    - [ ] 3.4.10 Validate using ConfigManager.validateTileType()
-    - [ ] 3.4.11 Save to config on success
-    - [ ] 3.4.12 Implement onDeleteTileType() handler
-    - [ ] 3.4.13 Check if any map tiles use this type
-    - [ ] 3.4.14 Prevent deletion if in use
-    - [ ] 3.4.15 Test: Create new tile type with resource
-    - [ ] 3.4.16 Test: Change resource dropdown, see live update
-    - [ ] 3.4.17 Test: Cannot delete tile type used on map
+  - [x] 3.4 Implement tile type management UI (REQ-CFG-002)
+    - [x] 3.4.1 Add "Tile Types" tab to config editor
+    - [x] 3.4.2 Create buildTileTypeListUI() method
+    - [x] 3.4.3 Display all tile types with resource info
+    - [x] 3.4.4 Add [+ New Tile Type] button
+    - [x] 3.4.5 Create buildTileTypeEditorUI(tileTypeId) method
+    - [x] 3.4.6 Form fields: ID, Name (i18n), Resource Produced (dropdown), Base Rate
+    - [x] 3.4.7 Populate resource dropdown from resources.js
+    - [x] 3.4.8 Add multi-select for allowed drones
+    - [x] 3.4.9 Implement onSaveTileType() handler
+    - [x] 3.4.10 Validate using ConfigManager.validateTileType()
+    - [x] 3.4.11 Save to config on success
+    - [x] 3.4.12 Implement onDeleteTileType() handler
+    - [x] 3.4.13 Check if any map tiles use this type
+    - [x] 3.4.14 Prevent deletion if in use
+    - [x] 3.4.15 Test: Create new tile type with resource
+    - [x] 3.4.16 Test: Change resource dropdown, see live update
+    - [x] 3.4.17 Test: Cannot delete tile type used on map
   - [ ] 3.5 Implement config import/export (REQ-CFG-008)
     - [ ] 3.5.1 Add [Export All] button to toolbar
     - [ ] 3.5.2 Implement exportAllConfigs() method
