@@ -450,15 +450,15 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 7.1.5 Add test scripts to package.json
     - [x] 7.1.6 Configure coverage thresholds (70% minimum)
     - [x] 7.1.7 Test basic setup: `npm run test`
-  - [ ] 7.2 Write ResourceManager tests
-    - [ ] 7.2.1 Create `src/systems/ResourceManager.test.js`
-    - [ ] 7.2.2 Test addResource() method
-    - [ ] 7.2.3 Test consumeResource() method
-    - [ ] 7.2.4 Test hasResources() method
-    - [ ] 7.2.5 Test update() method with hexGrid
-    - [ ] 7.2.6 Test generation rates calculation
-    - [ ] 7.2.7 Test getSaveData() and loadSaveData()
-    - [ ] 7.2.8 Run tests: `npm run test ResourceManager`
+  - [x] 7.2 Write ResourceManager tests
+    - [x] 7.2.1 Create `src/systems/ResourceManager.test.js`
+    - [x] 7.2.2 Test addResource() method
+    - [x] 7.2.3 Test consumeResource() method
+    - [x] 7.2.4 Test hasResources() method
+    - [x] 7.2.5 Test update() method with hexGrid
+    - [x] 7.2.6 Test generation rates calculation
+    - [x] 7.2.7 Test getSaveData() and loadSaveData()
+    - [x] 7.2.8 Run tests: `npm run test ResourceManager`
   - [ ] 7.3 Write CraftingManager tests
     - [ ] 7.3.1 Create `src/systems/CraftingManager.test.js`
     - [ ] 7.3.2 Test craftComponent() method
