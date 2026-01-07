@@ -3,6 +3,7 @@
 
 import Phaser from 'phaser';
 import { LockedPageOverlay } from '../ui/LockedPageOverlay.js';
+import { t } from '../utils/i18n.js';
 
 export class GalaxyScene extends Phaser.Scene {
   constructor() {
@@ -32,11 +33,11 @@ export class GalaxyScene extends Phaser.Scene {
 
     panel.innerHTML = `
       <div class="page-panel">
-        <h2>🌌 Galaxy Map</h2>
+        <h2>🌌 ${t('galaxy.title')}</h2>
         <div id="galaxy-content" style="opacity: 0.3; pointer-events: none;">
           <div class="info-box" style="margin-bottom: 2rem;">
-            <p>The Galaxy Map allows you to explore distant planets and expand your operations.</p>
-            <p>Discover new resources, establish outposts, and unlock advanced technologies.</p>
+            <p>${t('galaxy.locked')}</p>
+            <p>${t('galaxy.hint')}</p>
           </div>
           
           <div style="display: flex; justify-content: space-around; align-items: center; padding: 3rem 0; flex-wrap: wrap; gap: 2rem;">
@@ -122,8 +123,8 @@ export class GalaxyScene extends Phaser.Scene {
     if (!panel) return;
 
     this.lockedOverlay = new LockedPageOverlay(
-      'Deep Space Scanner offline',
-      'Upgrade your base infrastructure and research space travel technology'
+      t('galaxy.locked'),
+      t('galaxy.hint')
     );
     
     this.lockedOverlay.show(panel);

@@ -46,21 +46,21 @@ export class ResourcePanel {
   createPanelContent() {
     this.panel.innerHTML = `
       <h3 style="margin: 0 0 1rem 0; color: var(--accent-primary); border-bottom: 2px solid var(--accent-primary); padding-bottom: 0.5rem;">
-        Resources
+        ${t('common.resources')}
       </h3>
       <div class="resource-list">
         <div class="resource-item">
-          <span class="resource-name">Iron</span>
+          <span class="resource-name">${t('resources.iron')}</span>
           <span class="resource-value" id="resource-iron">0</span>
           <span class="resource-rate" id="rate-iron">+0.0/s</span>
         </div>
         <div class="resource-item">
-          <span class="resource-name">Silicon</span>
+          <span class="resource-name">${t('resources.silicon')}</span>
           <span class="resource-value" id="resource-silicon">0</span>
           <span class="resource-rate" id="rate-silicon">+0.0/s</span>
         </div>
         <div class="resource-item">
-          <span class="resource-name">Energy</span>
+          <span class="resource-name">${t('resources.energy')}</span>
           <span class="resource-value" id="resource-energy">0</span>
           <span class="resource-rate" id="rate-energy">+0.0/s</span>
         </div>
@@ -69,33 +69,33 @@ export class ResourcePanel {
         id="debug-add-resources" 
         class="btn" 
         style="margin-top: 1rem; padding: 0.5rem; font-size: 0.8rem; background: var(--bg-tertiary);"
-        title="Debug: Add 100 of each resource"
+        title="${t('common.debugAdd')}"
       >
-        🔧 Debug +100
+        🔧 ${t('common.debugAdd')}
       </button>
       <button 
         id="debug-reset-resources" 
         class="btn" 
         style="margin-top: 0.5rem; padding: 0.5rem; font-size: 0.8rem; background: var(--accent-secondary);"
-        title="Debug: Reset resources to 0"
+        title="${t('common.resetResources')}"
       >
-        🔄 Reset Resources
+        🔄 ${t('common.resetResources')}
       </button>
       <button 
         id="debug-hard-reset" 
         class="btn" 
         style="margin-top: 0.5rem; padding: 0.5rem; font-size: 0.8rem; background: #d32f2f;"
-        title="Debug: Hard reset - clears all progress"
+        title="${t('common.reset')}"
       >
-        ⚠️ Hard Reset
+        ⚠️ ${t('common.reset')}
       </button>
       <button 
         id="manual-save-btn" 
         class="btn" 
         style="margin-top: 0.5rem; padding: 0.5rem; font-size: 0.8rem; background: var(--color-silicon);"
-        title="Save game manually"
+        title="${t('common.saveGame')}"
       >
-        💾 Save Game
+        💾 ${t('common.saveGame')}
       </button>
     `;
 

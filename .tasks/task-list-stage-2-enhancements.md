@@ -517,47 +517,47 @@ Update the file after completing each sub-task, not just after completing an ent
 ### PHASE 8: LOCALIZATION
 
 - [ ] 8.0 Add Full Localization Support
-  - [ ] 8.1 Audit all text in codebase
-    - [ ] 8.1.1 Search all .js files for hardcoded strings
-    - [ ] 8.1.2 List all navigation labels
-    - [ ] 8.1.3 List all button labels
-    - [ ] 8.1.4 List all page titles and headers
-    - [ ] 8.1.5 List all descriptions and tooltips
-    - [ ] 8.1.6 List all notification messages
-    - [ ] 8.1.7 List all error messages
-    - [ ] 8.1.8 Create comprehensive list (~120-150 keys)
-  - [ ] 8.2 Create English translation file
-    - [ ] 8.2.1 Structure en.json with categories
-    - [ ] 8.2.2 Add navigation translations
-    - [ ] 8.2.3 Add resource translations
-    - [ ] 8.2.4 Add component translations
-    - [ ] 8.2.5 Add structure translations
-    - [ ] 8.2.6 Add drone translations
-    - [ ] 8.2.7 Add UI label translations
-    - [ ] 8.2.8 Add message translations
-    - [ ] 8.2.9 Add tooltip translations
-    - [ ] 8.2.10 Add error message translations
-    - [ ] 8.2.11 Verify all keys present
-  - [ ] 8.3 Generate German translations
-    - [ ] 8.3.1 Use AI to translate all keys to German
-    - [ ] 8.3.2 Review translations for accuracy
-    - [ ] 8.3.3 Adjust technical terms as needed
-    - [ ] 8.3.4 Verify grammar and context
-    - [ ] 8.3.5 Test with German-speaking user if possible
+  - [x] 8.1 Audit all text in codebase
+    - [x] 8.1.1 Search all .js files for hardcoded strings
+    - [x] 8.1.2 List all navigation labels
+    - [x] 8.1.3 List all button labels
+    - [x] 8.1.4 List all page titles and headers
+    - [x] 8.1.5 List all descriptions and tooltips
+    - [x] 8.1.6 List all notification messages
+    - [x] 8.1.7 List all error messages
+    - [x] 8.1.8 Create comprehensive list (~120-150 keys)
+  - [x] 8.2 Create English translation file
+    - [x] 8.2.1 Structure en.json with categories
+    - [x] 8.2.2 Add navigation translations
+    - [x] 8.2.3 Add resource translations
+    - [x] 8.2.4 Add component translations
+    - [x] 8.2.5 Add structure translations
+    - [x] 8.2.6 Add drone translations
+    - [x] 8.2.7 Add UI label translations
+    - [x] 8.2.8 Add message translations
+    - [x] 8.2.9 Add tooltip translations
+    - [x] 8.2.10 Add error message translations
+    - [x] 8.2.11 Verify all keys present
+  - [x] 8.3 Generate German translations
+    - [x] 8.3.1 Use AI to translate all keys to German
+    - [x] 8.3.2 Review translations for accuracy
+    - [x] 8.3.3 Adjust technical terms as needed
+    - [x] 8.3.4 Verify grammar and context
+    - [x] 8.3.5 Test with German-speaking user if possible
   - [ ] 8.4 Update all scenes to use t()
-    - [ ] 8.4.1 Update TabNavigation.js to use t() for labels
+    - [x] 8.4.1 Update TabNavigation.js to use t() for labels
     - [ ] 8.4.2 Update MapScene.js for any displayed text
     - [ ] 8.4.3 Update CraftingScene.js to use t() throughout
     - [ ] 8.4.4 Update DronesScene.js to use t() throughout
     - [ ] 8.4.5 Update StructuresScene.js to use t() throughout
-    - [ ] 8.4.6 Update ResearchScene.js placeholder text
-    - [ ] 8.4.7 Update GalaxyScene.js placeholder text
+    - [x] 8.4.6 Update ResearchScene.js placeholder text
+    - [x] 8.4.7 Update GalaxyScene.js placeholder text
     - [ ] 8.4.8 Update SettingsScene.js to use t() for labels
     - [ ] 8.4.9 Update ConfigScene.js to use t() for labels
   - [ ] 8.5 Update all UI components to use t()
-    - [ ] 8.5.1 Update ResourcePanel.js
+    - [x] 8.5.1 Update ResourcePanel.js
     - [ ] 8.5.2 Update TileInfoPanel.js
-    - [ ] 8.5.3 Update LockedPageOverlay.js
+    - [x] 8.5.3 Update LockedPageOverlay.js
     - [ ] 8.5.4 Update StructureBuildPanel.js if created
   - [ ] 8.6 Update all managers to use t() for messages
     - [ ] 8.6.1 Update ResourceManager error messages

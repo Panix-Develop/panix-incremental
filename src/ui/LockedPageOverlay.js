@@ -1,8 +1,10 @@
 // LockedPageOverlay.js - Overlay component for locked pages
 // Shows lock icon and message for features not yet unlocked
 
+import { t } from '../utils/i18n.js';
+
 export class LockedPageOverlay {
-  constructor(message = 'This feature is locked', hint = 'Continue playing to unlock') {
+  constructor(message = null, hint = null) {
     this.message = message;
     this.hint = hint;
     this.overlay = null;
@@ -27,8 +29,8 @@ export class LockedPageOverlay {
     this.overlay.innerHTML = `
       <div class="locked-overlay-content">
         <div class="locked-icon">🔒</div>
-        <h2 class="locked-message">${this.message}</h2>
-        <p class="locked-hint">${this.hint}</p>
+        <h2 class="locked-message">${this.message || t('navigation.locked')}</h2>
+        <p class="locked-hint">${this.hint || ''}</p>
       </div>
     `;
 

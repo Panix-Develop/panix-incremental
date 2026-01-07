@@ -3,6 +3,7 @@
 
 import Phaser from 'phaser';
 import { LockedPageOverlay } from '../ui/LockedPageOverlay.js';
+import { t } from '../utils/i18n.js';
 
 export class ResearchScene extends Phaser.Scene {
   constructor() {
@@ -32,44 +33,44 @@ export class ResearchScene extends Phaser.Scene {
 
     panel.innerHTML = `
       <div class="page-panel">
-        <h2>🔬 Research Lab</h2>
+        <h2>🔬 ${t('research.title')}</h2>
         <div id="research-content" style="opacity: 0.3; pointer-events: none;">
           <div class="info-box" style="margin-bottom: 2rem;">
-            <p>The Research Lab allows you to unlock new technologies and upgrades.</p>
-            <p>Research areas include:</p>
+            <p>${t('research.locked')}</p>
+            <p>${t('research.hint')}</p>
           </div>
           
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
             <div class="stat-card">
-              <h3>📦 Resource Generation</h3>
+              <h3>📦 ${t('research.categories.resourceGen')}</h3>
               <p style="font-size: 0.9rem; color: var(--text-secondary);">
                 Increase efficiency of resource gathering from tiles
               </p>
             </div>
             
             <div class="stat-card">
-              <h3>🤖 Drone Efficiency</h3>
+              <h3>🤖 ${t('research.categories.droneEfficiency')}</h3>
               <p style="font-size: 0.9rem; color: var(--text-secondary);">
                 Improve drone gathering rates and reduce build costs
               </p>
             </div>
             
             <div class="stat-card">
-              <h3>🏗️ Structures</h3>
+              <h3>🏗️ ${t('research.categories.structures')}</h3>
               <p style="font-size: 0.9rem; color: var(--text-secondary);">
                 Unlock new building types and upgrade existing ones
               </p>
             </div>
             
             <div class="stat-card">
-              <h3>🗺️ Map Expansion</h3>
+              <h3>🗺️ ${t('research.categories.map')}</h3>
               <p style="font-size: 0.9rem; color: var(--text-secondary);">
                 Expand your territory and discover new resource types
               </p>
             </div>
             
             <div class="stat-card">
-              <h3>⚡ Automation</h3>
+              <h3>⚡ ${t('research.categories.automation')}</h3>
               <p style="font-size: 0.9rem; color: var(--text-secondary);">
                 Automate resource collection and production
               </p>
@@ -88,8 +89,8 @@ export class ResearchScene extends Phaser.Scene {
     if (!panel) return;
 
     this.lockedOverlay = new LockedPageOverlay(
-      'Research Lab not yet constructed',
-      'Complete initial objectives and build required structures to unlock research'
+      t('research.locked'),
+      t('research.hint')
     );
     
     this.lockedOverlay.show(panel);
