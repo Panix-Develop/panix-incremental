@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main  # Deploy when pushing to main branch
+    tags:
+      - 'v*'  # Deploy on version tags (v1.0.0, v2.0.0, etc.)
   workflow_dispatch:  # Allow manual deployment from Actions tab
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
