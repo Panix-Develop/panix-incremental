@@ -10,7 +10,7 @@ export const mapConfig = {
   // Starting position (center of map)
   startingTile: {
     q: 5,
-    r: 3
+    r: 1
   },
 
   // Tile resource layout (10×10 grid)
