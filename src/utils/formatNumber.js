@@ -14,7 +14,7 @@ export function formatNormal(num) {
   const suffixes = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc'];
   const tier = Math.floor(Math.log10(Math.abs(num)) / 3);
   
-  if (tier === 0) {
+  if (tier <= 0) {
     // Numbers less than 1000, show up to 2 decimal places
     return num < 10 ? num.toFixed(2) : Math.floor(num).toString();
   }
