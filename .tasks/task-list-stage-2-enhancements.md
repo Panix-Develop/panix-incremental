@@ -442,14 +442,14 @@ Update the file after completing each sub-task, not just after completing an ent
 ### PHASE 7: TESTING FRAMEWORK
 
 - [ ] 7.0 Implement Testing Framework and Tests
-  - [ ] 7.1 Set up Vitest
-    - [ ] 7.1.1 Install Vitest: `npm install -D vitest`
-    - [ ] 7.1.2 Install @vitest/ui: `npm install -D @vitest/ui`
-    - [ ] 7.1.3 Install coverage tool: `npm install -D @vitest/coverage-v8`
-    - [ ] 7.1.4 Create `vitest.config.js` with configuration
-    - [ ] 7.1.5 Add test scripts to package.json
-    - [ ] 7.1.6 Configure coverage thresholds (70% minimum)
-    - [ ] 7.1.7 Test basic setup: `npm run test`
+  - [x] 7.1 Set up Vitest
+    - [x] 7.1.1 Install Vitest: `npm install -D vitest`
+    - [x] 7.1.2 Install @vitest/ui: `npm install -D @vitest/ui`
+    - [x] 7.1.3 Install coverage tool: `npm install -D @vitest/coverage-v8`
+    - [x] 7.1.4 Create `vitest.config.js` with configuration
+    - [x] 7.1.5 Add test scripts to package.json
+    - [x] 7.1.6 Configure coverage thresholds (70% minimum)
+    - [x] 7.1.7 Test basic setup: `npm run test`
   - [ ] 7.2 Write ResourceManager tests
     - [ ] 7.2.1 Create `src/systems/ResourceManager.test.js`
     - [ ] 7.2.2 Test addResource() method
