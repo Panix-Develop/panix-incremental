@@ -2,6 +2,7 @@
 // REQ-RES-002: Display resources in panel
 
 import { formatNumber } from '../utils/formatNumber.js';
+import { t } from '../utils/i18n.js';
 
 export class ResourcePanel {
   constructor(settingsManager = null) {

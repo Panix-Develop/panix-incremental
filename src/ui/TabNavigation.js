@@ -2,24 +2,25 @@
 // REQ-UI-001: Tab navigation between Map, Crafting, Drones
 
 import { isDevMode } from '../utils/devMode.js';
+import { t } from '../utils/i18n.js';
 
 export class TabNavigation {
   constructor(game) {
     this.game = game;
     this.currentTab = 'map';
     this.tabs = [
-      { id: 'map', label: 'Map', icon: '🗺️', locked: false },
-      { id: 'galaxy', label: 'Galaxy', icon: '🌌', locked: true },
-      { id: 'crafting', label: 'Crafting', icon: '🔧', locked: false },
-      { id: 'drones', label: 'Drones', icon: '🤖', locked: false },
-      { id: 'structures', label: 'Structures', icon: '🏗️', locked: false },
-      { id: 'research', label: 'Research', icon: '🔬', locked: true },
-      { id: 'settings', label: 'Settings', icon: '⚙️', locked: false }
+      { id: 'map', label: t('navigation.map'), icon: '🗺️', locked: false },
+      { id: 'galaxy', label: t('navigation.galaxy'), icon: '🌌', locked: true },
+      { id: 'crafting', label: t('navigation.crafting'), icon: '🔧', locked: false },
+      { id: 'drones', label: t('navigation.drones'), icon: '🤖', locked: false },
+      { id: 'structures', label: t('navigation.structures'), icon: '🏗️', locked: false },
+      { id: 'research', label: t('navigation.research'), icon: '🔬', locked: true },
+      { id: 'settings', label: t('navigation.settings'), icon: '⚙️', locked: false }
     ];
 
     // Add config tab only in dev mode
     if (isDevMode()) {
-      this.tabs.push({ id: 'config', label: 'Config', icon: '🛠️', locked: false });
+      this.tabs.push({ id: 'config', label: t('navigation.config'), icon: '🛠️', locked: false });
     }
     
     this.setupTabs();
@@ -40,7 +41,7 @@ export class TabNavigation {
     navButtons.innerHTML = this.tabs.map(tab => `
       <button class="nav-btn ${tab.id === 'map' ? 'active' : ''} ${tab.locked ? 'locked' : ''}" 
               data-tab="${tab.id}"
-              ${tab.locked ? 'title="This feature is locked"' : ''}>
+              ${tab.locked ? `title="${t('navigation.locked')}"` : ''}>
         <span class="nav-btn-icon">${tab.icon}</span>
         <span>${tab.label}${tab.locked ? ' 🔒' : ''}</span>
       </button>
