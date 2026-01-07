@@ -66,13 +66,13 @@ export class StructuresScene extends Phaser.Scene {
 
     let html = `
       <div class="stat-card">
-        <h3>Statistics</h3>
+        <h3>${t('structures.stats')}</h3>
         <div class="tile-info-row">
-          <span class="tile-info-label">Total Structures:</span>
+          <span class="tile-info-label">${t('structures.totalBuilt')}:</span>
           <span class="tile-info-value">${allStructures.length}</span>
         </div>
         <div class="tile-info-row">
-          <span class="tile-info-label">Energy Generation:</span>
+          <span class="tile-info-label">${t('structures.energyGeneration')}:</span>
           <span class="tile-info-value">${t('structures.energyPerSecond', { amount: totalEnergy.toFixed(1) })}</span>
         </div>
       </div>
@@ -90,7 +90,7 @@ export class StructuresScene extends Phaser.Scene {
     if (allStructures.length > 0) {
       html += `
         <div class="stat-card" style="margin-top: 1rem;">
-          <h3>Built Structures</h3>
+          <h3>${t('structures.builtStructures')}</h3>
       `;
 
       for (const [structureType, structures] of Object.entries(structuresByType)) {
@@ -135,9 +135,9 @@ export class StructuresScene extends Phaser.Scene {
     } else {
       html += `
         <div class="info-box" style="margin-top: 1rem;">
-          <p>No structures built yet.</p>
+          <p>${t('structures.noStructures')}</p>
           <p style="margin-top: 0.5rem; font-size: 0.9rem;">
-            Select an empty tile on the map to build your first solar panel!
+            ${t('structures.buildHint')}
           </p>
         </div>
       `;

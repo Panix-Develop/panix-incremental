@@ -76,6 +76,12 @@
   "structures": {
     "title": "Structures",
     "structure": "Structure",
+    "stats": "Statistics",
+    "totalBuilt": "Total Structures",
+    "energyGeneration": "Energy Generation",
+    "builtStructures": "Built Structures",
+    "noStructures": "No structures built yet.",
+    "buildHint": "Select an empty tile on the map to build your first solar panel!",
     "solarPanel": {
       "name": "Solar Panel",
       "description": "Generates energy from sunlight. Provides steady power for your operations."

@@ -76,6 +76,12 @@
   "structures": {
     "title": "Strukturen",
     "structure": "Struktur",
+    "stats": "Statistiken",
+    "totalBuilt": "Gesamte Strukturen",
+    "energyGeneration": "Energieerzeugung",
+    "builtStructures": "Gebaute Strukturen",
+    "noStructures": "Noch keine Strukturen gebaut.",
+    "buildHint": "Wähle ein leeres Feld auf der Karte, um dein erstes Solarpanel zu bauen!",
     "solarPanel": {
       "name": "Solarpanel",
       "description": "Erzeugt Energie aus Sonnenlicht. Liefert stetige Energie für deine Operationen."
