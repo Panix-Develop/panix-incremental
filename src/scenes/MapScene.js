@@ -249,8 +249,23 @@ export class MapScene extends Phaser.Scene {
         const circleX = x + this.hexSize * 0.5;
         const circleY = y - this.hexSize * 0.5;
         
-        // Background circle
-        graphics.fillStyle(0x16213e, 1.0);
+        // REQ-VIS-003: Drone capacity color indicators
+        // Calculate capacity percentage
+        const maxDrones = 10; // From balance.js maxDronesPerTile
+        const capacityPercent = (tile.drones / maxDrones) * 100;
+        
+        // Determine color based on capacity
+        let circleColor;
+        if (capacityPercent >= 100) {
+          circleColor = 0x4ade80; // Green - full capacity
+        } else if (capacityPercent >= 50) {
+          circleColor = 0xfbbf24; // Yellow - medium capacity
+        } else {
+          circleColor = 0x9ca3af; // Gray - low capacity
+        }
+        
+        // Background circle with capacity color
+        graphics.fillStyle(circleColor, 1.0);
         graphics.fillCircle(circleX, circleY, circleRadius);
         
         // Border

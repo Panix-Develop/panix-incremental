@@ -149,32 +149,32 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 2.1.13 Test: Build solar panel, should show ⚡|
     - [x] 2.1.14 Test: Create structure with tier 3, should show correct bars
     - [x] 2.1.15 Test: Icon should not cover resource name or drone count
-  - [ ] 2.2 Implement live resource updates (REQ-VIS-002)
-    - [ ] 2.2.1 Read `src/scenes/CraftingScene.js` create() method
-    - [ ] 2.2.2 Add game.events listener for 'step' event
-    - [ ] 2.2.3 Implement updateResourceDisplay() method
-    - [ ] 2.2.4 Update displayed amounts from resourceManager
-    - [ ] 2.2.5 Update button disabled states based on current resources
-    - [ ] 2.2.6 Throttle updates to once per second for performance
-    - [ ] 2.2.7 Repeat for `src/scenes/DronesScene.js`
-    - [ ] 2.2.8 Add step listener and updateResourceDisplay()
-    - [ ] 2.2.9 Update `src/ui/ResourcePanel.js` similarly
-    - [ ] 2.2.10 Test: Resources should update without clicking anything
-    - [ ] 2.2.11 Test: Craft button should enable when resources reach required amount
-    - [ ] 2.2.12 Test performance: Ensure 60 FPS maintained
-    - [ ] 2.2.13 Use Chrome DevTools to check for lag
-  - [ ] 2.3 Add drone capacity color indicators (REQ-VIS-003)
-    - [ ] 2.3.1 Read `src/scenes/MapScene.js` drawTile() method
-    - [ ] 2.3.2 Find where drone count circle is drawn
-    - [ ] 2.3.3 Calculate capacity percentage: (tile.drones / tile.maxDrones) * 100
-    - [ ] 2.3.4 Define color logic: >=100% green, 50-99% yellow, <50% gray
-    - [ ] 2.3.5 Update circle fill color based on capacity
-    - [ ] 2.3.6 Use colors: green=#4ade80, yellow=#fbbf24, gray=#9ca3af
-    - [ ] 2.3.7 Test: Deploy drones to see color change
-    - [ ] 2.3.8 Test: Fill tile to max (5 drones), should be green
-    - [ ] 2.3.9 Test: Partial fill (2-3 drones), should be yellow
-    - [ ] 2.3.10 Test: Low fill (1 drone), should be gray
-    - [ ] 2.3.11 Verify color contrast is sufficient (accessibility)
+  - [x] 2.2 Implement live resource updates (REQ-VIS-002)
+    - [x] 2.2.1 Read `src/scenes/CraftingScene.js` create() method
+    - [x] 2.2.2 Add game.events listener for 'step' event
+    - [x] 2.2.3 Implement updateResourceDisplay() method
+    - [x] 2.2.4 Update displayed amounts from resourceManager
+    - [x] 2.2.5 Update button disabled states based on current resources
+    - [x] 2.2.6 Throttle updates to once per second for performance
+    - [x] 2.2.7 Repeat for `src/scenes/DronesScene.js`
+    - [x] 2.2.8 Add step listener and updateResourceDisplay()
+    - [x] 2.2.9 Update `src/ui/ResourcePanel.js` similarly
+    - [x] 2.2.10 Test: Resources should update without clicking anything
+    - [x] 2.2.11 Test: Craft button should enable when resources reach required amount
+    - [x] 2.2.12 Test performance: Ensure 60 FPS maintained
+    - [x] 2.2.13 Use Chrome DevTools to check for lag
+  - [x] 2.3 Add drone capacity color indicators (REQ-VIS-003)
+    - [x] 2.3.1 Read `src/scenes/MapScene.js` drawTile() method
+    - [x] 2.3.2 Find where drone count circle is drawn
+    - [x] 2.3.3 Calculate capacity percentage: (tile.drones / tile.maxDrones) * 100
+    - [x] 2.3.4 Define color logic: >=100% green, 50-99% yellow, <50% gray
+    - [x] 2.3.5 Update circle fill color based on capacity
+    - [x] 2.3.6 Use colors: green=#4ade80, yellow=#fbbf24, gray=#9ca3af
+    - [x] 2.3.7 Test: Deploy drones to see color change
+    - [x] 2.3.8 Test: Fill tile to max (5 drones), should be green
+    - [x] 2.3.9 Test: Partial fill (2-3 drones), should be yellow
+    - [x] 2.3.10 Test: Low fill (1 drone), should be gray
+    - [x] 2.3.11 Verify color contrast is sufficient (accessibility)
   - [ ] 2.4 Remove "custom" labels (REQ-VIS-004)
     - [ ] 2.4.1 Grep search for "custom" in src/ directory
     - [ ] 2.4.2 Read `src/scenes/ConfigScene.js` for "custom" references
