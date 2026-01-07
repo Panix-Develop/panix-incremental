@@ -1,0 +1,198 @@
+/* Page-specific Styles */
+
+/* Sidebar Navigation */
+#sidebar-navigation {
+  width: 200px;
+  min-width: 200px;
+  background-color: var(--bg-secondary);
+  border-right: 2px solid var(--accent-primary);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+#nav-buttons {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0;
+}
+
+/* Navigation Button Locked State */
+.nav-btn.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nav-btn.locked:hover {
+  background-color: var(--bg-tertiary);
+  transform: none;
+}
+
+/* Main Content Area */
+#main-content {
+  flex: 1;
+  background-color: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Resource Panel (top-left) */
+#resource-panel {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 400px;
+  max-width: 600px;
+  min-width: 200px;
+  resize: horizontal;
+  overflow: auto;
+}
+
+#resource-panel h2 {
+  color: var(--accent-primary);
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  border-bottom: 2px solid var(--accent-primary);
+  padding-bottom: 0.5rem;
+}
+
+#resources {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Tile Info Panel (right side) */
+#tile-info-panel {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 300px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Crafting Panel */
+#crafting-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-primary);
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 5;
+  display: none;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+#crafting-panel h1 {
+  color: var(--accent-primary);
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: bold;
+  border-bottom: 2px solid var(--accent-primary);
+  padding-bottom: 0.75rem;
+}
+
+#crafting-panel h3 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+#craft-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Drones Panel */
+#drones-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-primary);
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 5;
+  display: none;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+#drones-panel h1 {
+  color: var(--accent-primary);
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: bold;
+  border-bottom: 2px solid var(--accent-primary);
+  padding-bottom: 0.75rem;
+}
+
+#drones-panel h3 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Settings Panel */
+#settings-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-primary);
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 5;
+  display: none;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+#settings-panel h1 {
+  color: var(--accent-primary);
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: bold;
+  border-bottom: 2px solid var(--accent-primary);
+  padding-bottom: 0.75rem;
+}
+
+#settings-panel h3 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.settings-select {
+  transition: border-color 0.3s ease;
+}
+
+.settings-select:hover {
+  border-color: var(--accent-primary);
+}
+
+.settings-select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.1);
+}
+
+#drones-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}

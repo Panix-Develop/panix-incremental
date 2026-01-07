@@ -3,6 +3,10 @@
 
 import { recipes } from '../config/recipes.js';
 
+/**
+ * Manages drone building, deployment, and resource assignment
+ * REQ-DRONE-001: Track available and deployed drones
+ */
 export class DroneManager {
   constructor(craftingManager, hexGrid) {
     this.craftingManager = craftingManager;

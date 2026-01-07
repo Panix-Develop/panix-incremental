@@ -1,19 +1,42 @@
 // main.js - Entry point for Panix Incremental
 // REQ-STATE-001: Initialize Phaser game
 
+// Import modular CSS
+import './styles/base.css';
+import './styles/components.css';
+import './styles/pages.css';
+import './styles/utilities.css';
+
 import Phaser from 'phaser';
 import { gameConfig } from './config/gameConfig.js';
 import { MapScene } from './scenes/MapScene.js';
 import { CraftingScene } from './scenes/CraftingScene.js';
 import { DronesScene } from './scenes/DronesScene.js';
+import { StructuresScene } from './scenes/StructuresScene.js';
+import { ResearchScene } from './scenes/ResearchScene.js';
+import { GalaxyScene } from './scenes/GalaxyScene.js';
+import { SettingsScene } from './scenes/SettingsScene.js';
+import { ConfigScene } from './scenes/ConfigScene.js';
 import { ResourceManager } from './systems/ResourceManager.js';
+import { SettingsManager } from './systems/SettingsManager.js';
 import { CraftingManager } from './systems/CraftingManager.js';
 import { DroneManager } from './systems/DroneManager.js';
+import { StructureManager } from './systems/StructureManager.js';
 import { TabNavigation } from './ui/TabNavigation.js';
+import { ResourcePanel } from './ui/ResourcePanel.js';
 import { saveGame, loadGame, hasSaveData } from './utils/saveLoad.js';
+import { isDevMode } from './utils/devMode.js';
+import { t } from './utils/i18n.js';
 
 // Add scenes to config
-gameConfig.scene = [MapScene, CraftingScene, DronesScene];
+const scenes = [MapScene, CraftingScene, DronesScene, StructuresScene, ResearchScene, GalaxyScene, SettingsScene];
+
+// Add ConfigScene only in dev mode
+if (isDevMode()) {
+  scenes.push(ConfigScene);
+}
+
+gameConfig.scene = scenes;
 
 // Create Phaser game instance
 const game = new Phaser.Game(gameConfig);
@@ -33,19 +56,23 @@ game.events.once('ready', () => {
       const resourceManager = new ResourceManager();
       const craftingManager = new CraftingManager(resourceManager);
       const droneManager = new DroneManager(craftingManager, mapScene.hexGrid);
+      const structureManager = new StructureManager(resourceManager);
+      const settingsManager = new SettingsManager();
 
       // Store managers for save/load
       managers = {
         resourceManager,
         craftingManager,
         droneManager,
+        structureManager,
+        settingsManager,
         hexGrid: mapScene.hexGrid
       };
 
       // REQ-STATE-004: Load game on startup
       const wasLoaded = loadGame(managers);
       if (wasLoaded) {
-        showNotification('Game loaded successfully!');
+        showNotification(t('messages.gameLoaded'));
         
         // Refresh all tile visuals after loading drones
         managers.droneManager.getDeployments().forEach(deployment => {
@@ -57,6 +84,16 @@ game.events.once('ready', () => {
       mapScene.resourceManager = resourceManager;
       mapScene.craftingManager = craftingManager;
       mapScene.droneManager = droneManager;
+      mapScene.structureManager = structureManager;
+      mapScene.settingsManager = settingsManager;
+      
+      // Recreate ResourcePanel with settingsManager
+      mapScene.resourcePanel = new ResourcePanel(settingsManager);
+      
+      // Set managers on TileInfoPanel
+      if (mapScene.tileInfoPanel) {
+        mapScene.tileInfoPanel.setManagers(structureManager, resourceManager);
+      }
 
       // Initialize CraftingScene with managers
       game.scene.start('CraftingScene', {
@@ -70,9 +107,35 @@ game.events.once('ready', () => {
         craftingManager: craftingManager
       });
 
+      // Initialize StructuresScene with managers
+      game.scene.start('StructuresScene', {
+        structureManager: structureManager,
+        resourceManager: resourceManager
+      });
+
+      // Initialize ResearchScene (locked)
+      game.scene.start('ResearchScene');
+
+      // Initialize GalaxyScene (locked)
+      game.scene.start('GalaxyScene');
+
+      // Initialize ConfigScene (dev mode only)
+      if (isDevMode()) {
+        game.scene.start('ConfigScene');
+        game.scene.sleep('ConfigScene');
+      }
+
+      // Initialize SettingsScene with managers
+      game.scene.start('SettingsScene', {
+        settingsManager: settingsManager
+      });
+
       // Start with MapScene active, other scenes in background
       game.scene.sleep('CraftingScene');
       game.scene.sleep('DronesScene');
+      game.scene.sleep('StructuresScene');
+      game.scene.sleep('ResearchScene');
+      game.scene.sleep('GalaxyScene');
 
       // Initialize tab navigation
       const tabNavigation = new TabNavigation(game);
@@ -96,9 +159,9 @@ game.events.once('ready', () => {
         if (managers) {
           const success = saveGame(managers);
           if (success) {
-            showNotification('Game saved!');
+            showNotification(t('messages.gameSaved'));
           } else {
-            showNotification('Failed to save game');
+            showNotification(t('messages.saveFailed'));
           }
         }
       });
@@ -109,7 +172,7 @@ game.events.once('ready', () => {
           managers.resourceManager.resources.iron = 0;
           managers.resourceManager.resources.silicon = 0;
           managers.resourceManager.resources.energy = 0;
-          showNotification('Resources reset to 0');
+          showNotification(t('messages.resourcesReset'));
         }
       });
 
@@ -118,10 +181,29 @@ game.events.once('ready', () => {
         if (managers) {
           // Clear save data
           localStorage.clear();
-          showNotification('Hard reset complete. Reloading...');
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
+          
+          // Reset all managers
+          managers.resourceManager.resources = { iron: 0, silicon: 0, energy: 0 };
+          managers.craftingManager.components = { chassis: 0, circuit: 0, powerCore: 0 };
+          managers.droneManager.availableDrones = 0;
+          managers.droneManager.totalBuilt = 0;
+          managers.droneManager.deployments = [];
+          managers.structureManager.reset();
+          
+          // Reset all drones from tiles
+          managers.hexGrid.getAllTiles().forEach(tile => {
+            if (tile.drones > 0) {
+              managers.hexGrid.setTileDrones(tile.q, tile.r, 0);
+            }
+          });
+          
+          showNotification(t('messages.hardResetComplete'));
+          
+          // Refresh all UI
+          const mapScene = game.scene.getScene('MapScene');
+          if (mapScene) {
+            mapScene.updateTileVisuals();
+          }
         }
       });
 
@@ -132,8 +214,6 @@ game.events.once('ready', () => {
       window.droneManager = droneManager;
       window.saveGame = () => saveGame(managers);
       window.loadGame = () => loadGame(managers);
-
-      console.log('Panix Incremental - All systems initialized');
     }
   }, 100);
 });
@@ -169,6 +249,4 @@ function showNotification(message) {
     }, 300);
   }, 3000);
 }
-
-console.log('Panix Incremental - Game initialized');
 

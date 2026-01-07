@@ -1,9 +1,13 @@
 // ResourcePanel.js - Resource display component
 // REQ-RES-002: Display resources in panel
 
+import { formatNumber } from '../utils/formatNumber.js';
+import { t } from '../utils/i18n.js';
+
 export class ResourcePanel {
-  constructor() {
+  constructor(settingsManager = null) {
     this.panel = document.getElementById('resource-panel');
+    this.settingsManager = settingsManager;
     
     if (!this.panel) {
       console.error('Resource panel element not found!');
@@ -11,6 +15,33 @@ export class ResourcePanel {
     }
 
     this.createPanelContent();
+    
+    // Load saved width
+    const savedWidth = localStorage.getItem('resourcePanelWidth');
+    if (savedWidth) {
+      this.panel.style.width = savedWidth + 'px';
+    }
+    
+    // Save width on resize
+    const resizeObserver = new ResizeObserver(entries => {
+      for (let entry of entries) {
+        const width = entry.contentRect.width;
+        localStorage.setItem('resourcePanelWidth', width);
+      }
+    });
+    resizeObserver.observe(this.panel);
+    
+    // Listen for settings changes to update number format and language
+    window.addEventListener('settingsUpdated', (e) => {
+      if (e.detail.setting === 'numberFormat') {
+        // Trigger a refresh of the display
+        this.lastResources = null;
+      } else if (e.detail.setting === 'language') {
+        // Rebuild panel with new translations
+        this.createPanelContent();
+        this.lastResources = null;
+      }
+    });
   }
 
   /**
@@ -19,21 +50,21 @@ export class ResourcePanel {
   createPanelContent() {
     this.panel.innerHTML = `
       <h3 style="margin: 0 0 1rem 0; color: var(--accent-primary); border-bottom: 2px solid var(--accent-primary); padding-bottom: 0.5rem;">
-        Resources
+        ${t('common.resources')}
       </h3>
       <div class="resource-list">
         <div class="resource-item">
-          <span class="resource-name">Iron</span>
+          <span class="resource-name">${t('resources.iron')}</span>
           <span class="resource-value" id="resource-iron">0</span>
           <span class="resource-rate" id="rate-iron">+0.0/s</span>
         </div>
         <div class="resource-item">
-          <span class="resource-name">Silicon</span>
+          <span class="resource-name">${t('resources.silicon')}</span>
           <span class="resource-value" id="resource-silicon">0</span>
           <span class="resource-rate" id="rate-silicon">+0.0/s</span>
         </div>
         <div class="resource-item">
-          <span class="resource-name">Energy</span>
+          <span class="resource-name">${t('resources.energy')}</span>
           <span class="resource-value" id="resource-energy">0</span>
           <span class="resource-rate" id="rate-energy">+0.0/s</span>
         </div>
@@ -42,33 +73,33 @@ export class ResourcePanel {
         id="debug-add-resources" 
         class="btn" 
         style="margin-top: 1rem; padding: 0.5rem; font-size: 0.8rem; background: var(--bg-tertiary);"
-        title="Debug: Add 100 of each resource"
+        title="${t('common.debugAdd')}"
       >
-        🔧 Debug +100
+        🔧 ${t('common.debugAdd')}
       </button>
       <button 
         id="debug-reset-resources" 
         class="btn" 
         style="margin-top: 0.5rem; padding: 0.5rem; font-size: 0.8rem; background: var(--accent-secondary);"
-        title="Debug: Reset resources to 0"
+        title="${t('common.resetResources')}"
       >
-        🔄 Reset Resources
+        🔄 ${t('common.resetResources')}
       </button>
       <button 
         id="debug-hard-reset" 
         class="btn" 
         style="margin-top: 0.5rem; padding: 0.5rem; font-size: 0.8rem; background: #d32f2f;"
-        title="Debug: Hard reset - clears all progress"
+        title="${t('common.reset')}"
       >
-        ⚠️ Hard Reset
+        ⚠️ ${t('common.reset')}
       </button>
       <button 
         id="manual-save-btn" 
         class="btn" 
         style="margin-top: 0.5rem; padding: 0.5rem; font-size: 0.8rem; background: var(--color-silicon);"
-        title="Save game manually"
+        title="${t('common.saveGame')}"
       >
-        💾 Save Game
+        💾 ${t('common.saveGame')}
       </button>
     `;
 
@@ -150,15 +181,17 @@ export class ResourcePanel {
    * @param {object} rates - Generation rates per second
    */
   update(resources, rates) {
-    // Update values
-    this.updateElement('resource-iron', resources.iron);
-    this.updateElement('resource-silicon', resources.silicon);
-    this.updateElement('resource-energy', resources.energy);
+    const format = this.settingsManager ? this.settingsManager.getNumberFormat() : 'normal';
+    
+    // Update values with formatted numbers
+    this.updateElement('resource-iron', formatNumber(resources.iron, format));
+    this.updateElement('resource-silicon', formatNumber(resources.silicon, format));
+    this.updateElement('resource-energy', formatNumber(resources.energy, format));
 
     // Update rates
-    this.updateElement('rate-iron', this.formatRate(rates.iron));
-    this.updateElement('rate-silicon', this.formatRate(rates.silicon));
-    this.updateElement('rate-energy', this.formatRate(rates.energy));
+    this.updateElement('rate-iron', this.formatRate(rates.iron, format));
+    this.updateElement('rate-silicon', this.formatRate(rates.silicon, format));
+    this.updateElement('rate-energy', this.formatRate(rates.energy, format));
   }
 
   /**
@@ -176,27 +209,14 @@ export class ResourcePanel {
   /**
    * Format generation rate for display
    * @param {number} rate - Resources per second
+   * @param {string} format - Number format
    * @returns {string} - Formatted rate string
    */
-  formatRate(rate) {
+  formatRate(rate, format = 'normal') {
     if (rate === 0) return '+0.0/s';
-    return `+${rate.toFixed(1)}/s`;
-  }
-
-  /**
-   * Format large numbers with abbreviations
-   * @param {number} num - Number to format
-   * @returns {string} - Formatted number
-   */
-  formatNumber(num) {
-    if (num < 1000) {
-      return Math.floor(num).toString();
-    } else if (num < 1000000) {
-      return (num / 1000).toFixed(1) + 'K';
-    } else if (num < 1000000000) {
-      return (num / 1000000).toFixed(1) + 'M';
-    } else {
-      return (num / 1000000000).toFixed(1) + 'B';
+    if (rate < 1) {
+      return `+${rate.toFixed(2)}/s`;
     }
+    return `+${formatNumber(rate, format)}/s`;
   }
 }

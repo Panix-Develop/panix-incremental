@@ -1,0 +1,220 @@
+{
+  "navigation": {
+    "map": "Karte",
+    "galaxy": "Galaxie",
+    "crafting": "Fertigung",
+    "drones": "Drohnen",
+    "structures": "Strukturen",
+    "research": "Forschung",
+    "settings": "Einstellungen",
+    "config": "Konfiguration",
+    "locked": "Diese Funktion ist gesperrt"
+  },
+  "resources": {
+    "iron": "Eisen",
+    "silicon": "Silizium",
+    "energy": "Energie",
+    "title": "Ressourcen"
+  },
+  "crafting": {
+    "title": "Fertigungsstation",
+    "componentInventory": "Komponentenlager",
+    "craftComponents": "Komponenten herstellen",
+    "chassis": "Chassis",
+    "circuits": "Schaltkreise",
+    "powerCores": "Energiekerne",
+    "cost": "Kosten",
+    "craft": "Herstellen",
+    "insufficientResources": "Unzureichende Ressourcen",
+    "tip": "💡 <strong>Tipp:</strong> Stelle Komponenten aus Rohressourcen her und verwende sie dann, um Drohnen im Drohnen-Tab zu bauen.",
+    "components": {
+      "chassis": {
+        "name": "Drohnen-Chassis",
+        "description": "Grundrahmen für alle Drohnen"
+      },
+      "circuit": {
+        "name": "Basis-Schaltkreis",
+        "description": "Elektronisches Steuerungssystem"
+      },
+      "powerCore": {
+        "name": "Energiekern",
+        "description": "Energiespeicherung und -verteilung"
+      }
+    }
+  },
+  "drones": {
+    "title": "Drohnen-Montagehalle",
+    "droneInventory": "Drohnen-Inventar",
+    "availableDrones": "Verfügbare Drohnen",
+    "totalBuilt": "Gesamt gebaut",
+    "componentInventory": "Komponentenlager",
+    "buildDrones": "Drohnen bauen",
+    "buildDrone": "Drohne bauen",
+    "insufficientComponents": "Unzureichende Komponenten",
+    "description": "Beschreibung",
+    "gatherRate": "Generierungsrate",
+    "gatherRateValue": "{rate} Ressourcen/Sek pro Drohne",
+    "tip": "💡 <strong>Tipp:</strong> Baue Drohnen hier und setze sie dann auf Ressourcen-Feldern in der Karte ein, um Ressourcen zu generieren.",
+    "noDrones": "Keine Drohnen",
+    "types": {
+      "harvester": "Sammel-Drohne",
+      "harvesterDesc": "Basis-Drohne zur Ressourcengewinnung. Sammelt Ressourcen von Feldern.",
+      "basicGatherer": {
+        "name": "Basis-Sammel-Drohne",
+        "description": "Automatisierter Ressourcen-Sammler"
+      }
+    }
+  },
+  "map": {
+    "selectTile": "Wähle ein Feld aus, um Details anzuzeigen",
+    "tileInfo": "Feld-Information",
+    "type": "Typ",
+    "resource": "Ressource",
+    "drones": "Drohnen",
+    "noDrones": "Keine Drohnen",
+    "maxDrones": "Max Drohnen",
+    "generationRate": "Generierungsrate",
+    "generation": "Generierung",
+    "perSecond": "{amount}/Sek",
+    "deployDrone": "Drohne einsetzen",
+    "removeDrone": "Drohne entfernen",
+    "atCapacity": "Voll belegt",
+    "startingBase": "Ausgangsbasis",
+    "autoCollecting": "Auto-Sammlung",
+    "coordinates": "Koordinaten",
+    "resourceTile": "Ressource",
+    "deposit": "Vorkommen",
+    "emptyTile": "Leeres Feld",
+    "noResources": "Keine Ressourcen verfügbar",
+    "tileTypes": {
+      "iron": "Eisen-Mine",
+      "silicon": "Silizium-Vorkommen",
+      "energy": "Energiequelle",
+      "empty": "Leer"
+    }
+  },
+  "structures": {
+    "title": "Strukturen",
+    "structure": "Struktur",
+    "stats": "Statistiken",
+    "totalBuilt": "Gesamte Strukturen",
+    "energyGeneration": "Energieerzeugung",
+    "builtStructures": "Gebaute Strukturen",
+    "built": "gebaut",
+    "noStructures": "Noch keine Strukturen gebaut.",
+    "buildHint": "Wähle ein leeres Feld auf der Karte, um dein erstes Solarpanel zu bauen!",
+    "solarPanel": {
+      "name": "Solarpanel",
+      "description": "Erzeugt Energie aus Sonnenlicht. Liefert stetige Energie für deine Operationen."
+    },
+    "build": "Bauen",
+    "demolish": "Abreißen",
+    "cost": "Kosten",
+    "stats": "Statistiken",
+    "energyPerSecond": "Energie: {amount}/Sek",
+    "cannotBuild": "Kann hier nicht bauen",
+    "insufficientResources": "Unzureichende Ressourcen",
+    "free": "Kostenlos",
+    "noStats": "Keine besonderen Statistiken"
+  },
+  "research": {
+    "title": "Forschungslabor",
+    "locked": "Forschungslabor noch nicht gebaut",
+    "hint": "Vervollständige erste Ziele, um Forschung freizuschalten",
+    "categories": {
+      "resourceGen": "Ressourcengenerierung",
+      "droneEfficiency": "Drohnen-Effizienz",
+      "structures": "Strukturen",
+      "map": "Karte",
+      "automation": "Automatisierung"
+    }
+  },
+  "galaxy": {
+    "title": "Tiefraumscanner",
+    "locked": "Tiefraumscanner offline",
+    "hint": "Verbessere deine Basis-Infrastruktur zum Freischalten",
+    "planets": "Planeten"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "display": {
+      "title": "Anzeige-Einstellungen",
+      "numberFormat": "Zahlenformat",
+      "formatNormal": "Normal (1,23K, 4,56M)",
+      "formatScientific": "Wissenschaftlich (1,23e3, 4,56e6)",
+      "formatEngineering": "Technisch (1,23e3, 12,3e3)",
+      "language": "Sprache",
+      "langEnglish": "Englisch",
+      "langGerman": "Deutsch"
+    },
+    "player": {
+      "title": "Spieler-Einstellungen",
+      "name": "Spielername",
+      "namePlaceholder": "Gib deinen Namen ein",
+      "nameMaxLength": "Maximal 20 Zeichen",
+      "updateName": "Name aktualisieren",
+      "updateSuccess": "✓ Aktualisiert!"
+    },
+    "about": {
+      "title": "Über",
+      "gameName": "Panix Incremental",
+      "version": "Version",
+      "stage": "Phase",
+      "stageDescription": "Kern-Systeme Erweiterung",
+      "description": "Ein weltraumthematisches Incremental-Spiel mit Hex-Gitter-Ressourcenverwaltung, Drohnen-Automatisierung und strategischer Expansion."
+    }
+  },
+  "config": {
+    "title": "Konfigurations-Editor",
+    "devModeOnly": "Nur im Dev-Modus",
+    "categories": {
+      "structures": "Strukturen",
+      "drones": "Drohnen",
+      "research": "Forschung"
+    },
+    "selectItem": "Wähle ein Element zum Bearbeiten",
+    "create": "Neu erstellen",
+    "delete": "Löschen",
+    "save": "Änderungen speichern",
+    "cancel": "Abbrechen",
+    "confirmDelete": "Bist du sicher, dass du dieses Element löschen möchtest?"
+  },
+  "common": {
+    "resources": "Ressourcen",
+    "reset": "Harter Reset",
+    "confirmReset": "Bist du sicher, dass du den gesamten Fortschritt zurücksetzen möchtest? Dies kann nicht rückgängig gemacht werden!",
+    "add100": "100 hinzufügen",
+    "debugPanel": "Debug-Panel",
+    "debugAdd": "Debug +100",
+    "resetResources": "Ressourcen zurücksetzen",
+    "saveGame": "Spiel speichern",
+    "close": "Schließen",
+    "confirm": "Bestätigen",
+    "cancel": "Abbrechen",
+    "loading": "Laden...",
+    "error": "Fehler",
+    "success": "Erfolg"
+  },
+  "messages": {
+    "droneBuilt": "Drohne erfolgreich gebaut!",
+    "droneDeployed": "Drohne auf {tile} eingesetzt",
+    "droneRemoved": "Drohne von {tile} entfernt",
+    "structureBuilt": "{structure} erfolgreich gebaut!",
+    "insufficientResources": "Unzureichende Ressourcen",
+    "insufficientComponents": "Unzureichende Komponenten",
+    "noDronesAvailable": "Keine Drohnen verfügbar",
+    "tileAtCapacity": "Feld hat maximale Kapazität erreicht",
+    "cannotBuildHere": "Kann hier nicht bauen",
+    "settingsSaved": "Einstellungen gespeichert",
+    "nameTooShort": "Name muss mindestens 2 Zeichen lang sein",
+    "nameTooLong": "Name darf maximal 20 Zeichen lang sein",
+    "gameLoaded": "Spiel erfolgreich geladen!",
+    "gameSaved": "Spiel gespeichert!",
+    "saveFailed": "Speichern fehlgeschlagen",
+    "resourcesReset": "Ressourcen auf 0 zurückgesetzt",
+    "hardResetComplete": "Harter Reset abgeschlossen!",
+    "saveDeleted": "Spielstand gelöscht",
+    "errorLoading": "Fehler beim Laden des Spiels",
+    "errorSaving": "Fehler beim Speichern des Spiels"
+  }
+}

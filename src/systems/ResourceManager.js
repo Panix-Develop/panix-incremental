@@ -3,6 +3,10 @@
 
 import { balance } from '../config/balance.js';
 
+/**
+ * Manages game resources (iron, silicon, energy) and their generation rates
+ * REQ-RES-001: Track three basic resources
+ */
 export class ResourceManager {
   constructor() {
     // REQ-RES-001: Track three basic resources
@@ -26,8 +30,9 @@ export class ResourceManager {
    * Section 10: Resource Generation Update algorithm
    * @param {number} deltaTime - Time since last update in milliseconds
    * @param {object} hexGrid - HexGrid instance for tile data
+   * @param {object} structureManager - StructureManager instance for structure generation
    */
-  update(deltaTime, hexGrid) {
+  update(deltaTime, hexGrid, structureManager = null) {
     const deltaSeconds = deltaTime / 1000;
 
     // Reset generation rates
@@ -50,6 +55,15 @@ export class ResourceManager {
         this.generationRates[tile.type] += rate;
       }
     });
+
+    // Structure-based energy generation
+    if (structureManager) {
+      const energyRate = structureManager.getTotalEnergyGeneration();
+      if (energyRate > 0) {
+        this.resources.energy += energyRate * deltaSeconds;
+        this.generationRates.energy += energyRate;
+      }
+    }
 
     // REQ-RES-005: Display resources as whole numbers
     this.resources.iron = Math.max(0, this.resources.iron);
@@ -93,6 +107,8 @@ export class ResourceManager {
    * @returns {boolean} - True if affordable
    */
   canAfford(cost) {
+    if (!cost) return true; // No cost means free
+    
     for (const [resource, amount] of Object.entries(cost)) {
       if (this.getResource(resource) < amount) {
         return false;
@@ -127,6 +143,23 @@ export class ResourceManager {
     if (this.resources.hasOwnProperty(resourceType)) {
       this.resources[resourceType] += amount;
     }
+  }
+
+  /**
+   * Remove resources
+   * @param {string} resourceType - Resource to remove
+   * @param {number} amount - Amount to remove
+   * @returns {boolean} - True if successful
+   */
+  removeResource(resourceType, amount) {
+    if (!this.resources.hasOwnProperty(resourceType)) {
+      return false;
+    }
+    if (this.getResource(resourceType) < amount) {
+      return false;
+    }
+    this.resources[resourceType] -= amount;
+    return true;
   }
 
   /**

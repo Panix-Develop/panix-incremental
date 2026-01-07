@@ -1,17 +1,62 @@
 // TabNavigation.js - Tab system for scene switching
 // REQ-UI-001: Tab navigation between Map, Crafting, Drones
 
+import { isDevMode } from '../utils/devMode.js';
+import { t } from '../utils/i18n.js';
+
 export class TabNavigation {
   constructor(game) {
     this.game = game;
     this.currentTab = 'map';
     this.tabs = [
-      { id: 'map', label: 'Map', icon: '🗺️' },
-      { id: 'crafting', label: 'Crafting', icon: '🔧' },
-      { id: 'drones', label: 'Drones', icon: '🤖' }
+      { id: 'map', label: t('navigation.map'), icon: '🗺️', locked: false },
+      { id: 'galaxy', label: t('navigation.galaxy'), icon: '🌌', locked: true },
+      { id: 'crafting', label: t('navigation.crafting'), icon: '🔧', locked: false },
+      { id: 'drones', label: t('navigation.drones'), icon: '🤖', locked: false },
+      { id: 'structures', label: t('navigation.structures'), icon: '🏗️', locked: false },
+      { id: 'research', label: t('navigation.research'), icon: '🔬', locked: true },
+      { id: 'settings', label: t('navigation.settings'), icon: '⚙️', locked: false }
     ];
+
+    // Add config tab only in dev mode
+    if (isDevMode()) {
+      this.tabs.push({ id: 'config', label: t('navigation.config'), icon: '🛠️', locked: false });
+    }
     
     this.setupTabs();
+    
+    // Listen for language changes and rebuild tabs
+    window.addEventListener('settingsUpdated', (e) => {
+      if (e.detail.setting === 'language') {
+        this.refreshTabs();
+      }
+    });
+  }
+  
+  /**
+   * Refresh tab labels after language change
+   */
+  refreshTabs() {
+    // Update tab labels
+    this.tabs = [
+      { id: 'map', label: t('navigation.map'), icon: '🗺️', locked: false },
+      { id: 'galaxy', label: t('navigation.galaxy'), icon: '🌌', locked: true },
+      { id: 'crafting', label: t('navigation.crafting'), icon: '🔧', locked: false },
+      { id: 'drones', label: t('navigation.drones'), icon: '🤖', locked: false },
+      { id: 'structures', label: t('navigation.structures'), icon: '🏗️', locked: false },
+      { id: 'research', label: t('navigation.research'), icon: '🔬', locked: true },
+      { id: 'settings', label: t('navigation.settings'), icon: '⚙️', locked: false }
+    ];
+    
+    if (isDevMode()) {
+      this.tabs.push({ id: 'config', label: t('navigation.config'), icon: '🛠️', locked: false });
+    }
+    
+    // Rebuild the navigation
+    this.setupTabs();
+    
+    // Restore active state
+    this.switchTab(this.currentTab);
   }
 
   /**
@@ -27,9 +72,11 @@ export class TabNavigation {
 
     // Create navigation buttons
     navButtons.innerHTML = this.tabs.map(tab => `
-      <button class="nav-btn ${tab.id === 'map' ? 'active' : ''}" data-tab="${tab.id}">
+      <button class="nav-btn ${tab.id === 'map' ? 'active' : ''} ${tab.locked ? 'locked' : ''}" 
+              data-tab="${tab.id}"
+              ${tab.locked ? `title="${t('navigation.locked')}"` : ''}>
         <span class="nav-btn-icon">${tab.icon}</span>
-        <span>${tab.label}</span>
+        <span>${tab.label}${tab.locked ? ' 🔒' : ''}</span>
       </button>
     `).join('');
 
@@ -45,11 +92,17 @@ export class TabNavigation {
 
   /**
    * Switch to a different tab
-   * @param {string} tabName - 'map', 'crafting', or 'drones'
+   * @param {string} tabName - Tab id to switch to
    */
   switchTab(tabName) {
-    if (!this.tabs.find(t => t.id === tabName)) {
+    const tab = this.tabs.find(t => t.id === tabName);
+    if (!tab) {
       console.error('Invalid tab:', tabName);
+      return;
+    }
+
+    // Don't switch to locked tabs
+    if (tab.locked) {
       return;
     }
 
@@ -70,12 +123,22 @@ export class TabNavigation {
     const uiOverlay = document.getElementById('ui-overlay');
     const craftingPanel = document.getElementById('crafting-panel');
     const dronesPanel = document.getElementById('drones-panel');
+    const structuresPanel = document.getElementById('structures-panel');
+    const researchPanel = document.getElementById('research-panel');
+    const galaxyPanel = document.getElementById('galaxy-panel');
+    const settingsPanel = document.getElementById('settings-panel');
+    const configPanel = document.getElementById('config-panel');
 
     // Hide all content first
     if (phaserGame) phaserGame.style.display = 'none';
     if (uiOverlay) uiOverlay.style.display = 'none';
     if (craftingPanel) craftingPanel.style.display = 'none';
     if (dronesPanel) dronesPanel.style.display = 'none';
+    if (structuresPanel) structuresPanel.style.display = 'none';
+    if (researchPanel) researchPanel.style.display = 'none';
+    if (galaxyPanel) galaxyPanel.style.display = 'none';
+    if (settingsPanel) settingsPanel.style.display = 'none';
+    if (configPanel) configPanel.style.display = 'none';
 
     // Show appropriate content
     switch (tabName) {
@@ -101,6 +164,44 @@ export class TabNavigation {
           if (dronesScene) {
             dronesScene.updateUI();
           }
+        }
+        break;
+
+      case 'structures':
+        if (structuresPanel) {
+          structuresPanel.style.display = 'block';
+          const structuresScene = this.game.scene.getScene('StructuresScene');
+          if (structuresScene) {
+            structuresScene.updatePanel();
+          }
+        }
+        break;
+
+      case 'research':
+        if (researchPanel) {
+          researchPanel.style.display = 'block';
+        }
+        break;
+
+      case 'galaxy':
+        if (galaxyPanel) {
+          galaxyPanel.style.display = 'block';
+        }
+        break;
+
+      case 'settings':
+        if (settingsPanel) {
+          settingsPanel.style.display = 'block';
+          const settingsScene = this.game.scene.getScene('SettingsScene');
+          if (settingsScene) {
+            settingsScene.updateUI();
+          }
+        }
+        break;
+
+      case 'config':
+        if (configPanel) {
+          configPanel.style.display = 'block';
         }
         break;
     }

@@ -5,8 +5,8 @@
 // Component recipes (REQ-CRAFT-002)
 export const componentRecipes = {
   chassis: {
-    name: 'Drone Chassis',
-    description: 'Basic frame for all drones',
+    name: 'crafting.components.chassis.name',
+    description: 'crafting.components.chassis.description',
     cost: {
       iron: 50,
       silicon: 0,
@@ -16,8 +16,8 @@ export const componentRecipes = {
   },
   
   circuit: {
-    name: 'Basic Circuit',
-    description: 'Electronic control system',
+    name: 'crafting.components.circuit.name',
+    description: 'crafting.components.circuit.description',
     cost: {
       iron: 10,
       silicon: 30,
@@ -27,8 +27,8 @@ export const componentRecipes = {
   },
   
   powerCore: {
-    name: 'Power Core',
-    description: 'Energy storage and distribution',
+    name: 'crafting.components.powerCore.name',
+    description: 'crafting.components.powerCore.description',
     cost: {
       iron: 0,
       silicon: 20,
@@ -41,8 +41,8 @@ export const componentRecipes = {
 // Drone recipes (REQ-DRONE-001)
 export const droneRecipes = {
   basicGatherer: {
-    name: 'Basic Gathering Drone',
-    description: 'Automated resource collector',
+    name: 'drones.types.basicGatherer.name',
+    description: 'drones.types.basicGatherer.description',
     components: {
       chassis: 1,
       circuit: 1,
@@ -82,8 +82,48 @@ export function getComponentRecipe(componentType) {
 }
 
 // Helper function to get drone recipe
+// Includes custom drones from localStorage in dev mode
 export function getDroneRecipe(droneType) {
+  // Check if it's a custom drone
+  if (droneType.startsWith('custom_')) {
+    const customDrones = localStorage.getItem('dev_drones_override');
+    if (customDrones) {
+      try {
+        const overrides = JSON.parse(customDrones);
+        if (overrides[droneType]) {
+          return overrides[droneType];
+        }
+      } catch (error) {
+        console.warn('Failed to load custom drone:', error);
+      }
+    }
+    return null;
+  }
+  
   return droneRecipes[droneType];
+}
+
+// Helper function to get all drone recipes (including custom)
+export function getAllDroneRecipes() {
+  const allRecipes = { ...droneRecipes };
+  
+  // Add custom drones from localStorage (dev mode)
+  const customDrones = localStorage.getItem('dev_drones_override');
+  if (customDrones) {
+    try {
+      const overrides = JSON.parse(customDrones);
+      // Add custom drones (those starting with 'custom_')
+      Object.entries(overrides).forEach(([id, recipe]) => {
+        if (id.startsWith('custom_')) {
+          allRecipes[id] = recipe;
+        }
+      });
+    } catch (error) {
+      console.warn('Failed to load custom drones:', error);
+    }
+  }
+  
+  return allRecipes;
 }
 
 // Export as default object for convenience

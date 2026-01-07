@@ -3,6 +3,10 @@
 
 import { recipes } from '../config/recipes.js';
 
+/**
+ * Manages component crafting and inventory
+ * REQ-CRAFT-004: Manage component inventory
+ */
 export class CraftingManager {
   constructor(resourceManager) {
     this.resourceManager = resourceManager;

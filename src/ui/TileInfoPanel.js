@@ -1,6 +1,9 @@
 // TileInfoPanel.js - Tile details panel component
 // REQ-INFO-001: Display selected tile details
 
+import { getAllStructures, getStructure } from '../config/structures.js';
+import { t } from '../utils/i18n.js';
+
 export class TileInfoPanel {
   constructor() {
     this.panel = document.getElementById('tile-info-panel');
@@ -11,6 +14,20 @@ export class TileInfoPanel {
     }
 
     this.currentTile = null;
+    this.deployBtn = null;
+    this.removeBtn = null;
+    this.structureManager = null;
+    this.resourceManager = null;
+  }
+
+  /**
+   * Set managers for structure building
+   * @param {object} structureManager - StructureManager instance
+   * @param {object} resourceManager - ResourceManager instance
+   */
+  setManagers(structureManager, resourceManager) {
+    this.structureManager = structureManager;
+    this.resourceManager = resourceManager;
   }
 
   /**
@@ -36,7 +53,7 @@ export class TileInfoPanel {
       </div>
       <div class="tile-info-content">
         <div class="tile-info-row">
-          <span class="tile-info-label">Coordinates:</span>
+          <span class="tile-info-label">${t('map.coordinates')}:</span>
           <span class="tile-info-value">Q${tile.q}, R${tile.r}</span>
         </div>
     `;
@@ -45,41 +62,133 @@ export class TileInfoPanel {
     if (tile.isStarting) {
       content += `
         <div class="tile-info-row">
-          <span class="tile-info-label">Type:</span>
-          <span class="tile-info-value">Starting Base</span>
+          <span class="tile-info-label">${t('map.type')}:</span>
+          <span class="tile-info-value">${t('map.startingBase')}</span>
         </div>
         <div class="tile-info-row">
-          <span class="tile-info-label">Auto-collecting:</span>
-          <span class="tile-info-value">+${generationRate.toFixed(1)} Iron/s</span>
+          <span class="tile-info-label">${t('map.autoCollecting')}:</span>
+          <span class="tile-info-value">+${generationRate.toFixed(1)} ${t('resources.iron')}/s</span>
         </div>
       `;
     }
     // REQ-INFO-004: Empty tile display
     else if (tile.type === 'empty') {
-      content += `
-        <div class="tile-info-row">
-          <span class="tile-info-label">Type:</span>
-          <span class="tile-info-value">Empty Tile</span>
-        </div>
-        <div style="margin-top: 1rem; color: var(--text-secondary); font-style: italic;">
-          No resources available
-        </div>
-      `;
+      // Check if tile has a structure
+      const existingStructure = this.structureManager ? 
+        this.structureManager.getStructureAt(tile.q, tile.r) : null;
+
+      if (existingStructure) {
+        // Show existing structure info
+        const structureDef = getStructure(existingStructure.structureType);
+        content += `
+          <div class="tile-info-row">
+            <span class="tile-info-label">Structure:</span>
+            <span class="tile-info-value">${structureDef.icon} ${t(structureDef.name)}</span>
+          </div>
+          <div class="tile-info-row">
+            <span class="tile-info-label">${t('structures.stats')}:</span>
+            <span class="tile-info-value">${t('structures.energyPerSecond', { amount: existingStructure.stats.energyPerSecond.toFixed(1) })}</span>
+          </div>
+        `;
+      } else {
+        // Show empty tile + structure building options
+        content += `
+          <div class="tile-info-row">
+            <span class="tile-info-label">${t('map.type')}:</span>
+            <span class="tile-info-value">${t('map.emptyTile')}</span>
+          </div>
+        `;
+
+        // Show buildable structures
+        if (this.structureManager && this.resourceManager) {
+          const structures = getAllStructures();
+          
+          if (structures.length > 0) {
+            content += `
+              <div style="margin-top: 1rem;">
+                <div style="font-weight: 600; margin-bottom: 0.5rem; color: var(--primary);">
+                  ${t('structures.build')} ${t('structures.title')}
+                </div>
+            `;
+
+            for (const structure of structures) {
+              const check = this.structureManager.canBuildStructure(
+                structure.id, tile.q, tile.r, tile
+              );
+              const canAfford = this.resourceManager.canAfford(structure.costs);
+
+              content += `
+                <div class="structure-card" style="margin-bottom: 0.75rem; padding: 0.75rem; background: var(--bg-secondary); border-radius: 4px;">
+                  <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <span style="font-size: 1.5rem;">${structure.icon}</span>
+                    <div style="flex: 1;">
+                      <div style="font-weight: 600;">${t(structure.name)}</div>
+                      <div style="font-size: 0.85rem; color: var(--text-secondary);">${t(structure.description)}</div>
+                    </div>
+                  </div>
+                  <div style="font-size: 0.85rem; margin-bottom: 0.5rem;">
+                    <strong>${t('structures.cost')}:</strong>
+              `;
+
+              if (structure.costs) {
+                for (const [resource, amount] of Object.entries(structure.costs)) {
+                  const current = this.resourceManager.getResource(resource);
+                  const hasEnough = current >= amount;
+                  const color = hasEnough ? 'var(--success)' : 'var(--danger)';
+                  content += ` <span style="color: ${color};">${resource}: ${amount}</span>`;
+                }
+              } else {
+                content += ` <span style="color: var(--text-secondary);">${t('structures.free')}</span>`;
+              }
+
+              content += `
+                  </div>
+                  <div style="font-size: 0.85rem; margin-bottom: 0.5rem;">
+                    <strong>${t('structures.stats')}:</strong>
+              `;
+
+              if (structure.stats && structure.stats.energyPerSecond !== undefined) {
+                content += ` ${t('structures.energyPerSecond', { amount: structure.stats.energyPerSecond.toFixed(1) })}`;
+              } else {
+                content += ` <span style="color: var(--text-secondary);">${t('structures.noStats')}</span>`;
+              }
+
+              content += `
+                  </div>
+                  <button class="btn build-structure-btn" 
+                          data-structure-id="${structure.id}"
+                          ${!check.canBuild ? 'disabled' : ''}>
+                    ${check.canBuild ? t('structures.build') : t('structures.insufficientResources')}
+                  </button>
+                </div>
+              `;
+            }
+
+            content += `</div>`;
+          }
+        } else {
+          content += `
+            <div style="margin-top: 1rem; color: var(--text-secondary); font-style: italic;">
+              ${t('map.noResources')}
+            </div>
+          `;
+        }
+      }
     }
     // REQ-INFO-002: Resource tile display
     else {
       const resourceName = tile.type.charAt(0).toUpperCase() + tile.type.slice(1);
       content += `
         <div class="tile-info-row">
-          <span class="tile-info-label">Resource:</span>
-          <span class="tile-info-value">${resourceName} Deposit</span>
+          <span class="tile-info-label">${t('map.resource')}:</span>
+          <span class="tile-info-value">${resourceName} ${t('map.deposit')}</span>
         </div>
         <div class="tile-info-row">
-          <span class="tile-info-label">Drones:</span>
+          <span class="tile-info-label">${t('map.drones')}:</span>
           <span class="tile-info-value">${tile.drones}/${tile.maxDrones}</span>
         </div>
         <div class="tile-info-row">
-          <span class="tile-info-label">Generation:</span>
+          <span class="tile-info-label">${t('map.generation')}:</span>
           <span class="tile-info-value">+${generationRate.toFixed(1)} ${resourceName}/s</span>
         </div>
       `;
@@ -93,10 +202,10 @@ export class TileInfoPanel {
         content += `
           <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
             <button id="deploy-drone-btn" class="btn" ${!canDeploy ? 'disabled' : ''} style="flex: 1;">
-              ${canDeploy ? 'Deploy Drone' : 'At Capacity'}
+              ${canDeploy ? t('map.deployDrone') : t('map.atCapacity')}
             </button>
-            <button id="remove-drone-btn" class="btn" ${!canRemove ? 'disabled' : ''} style="flex: 1; background: var(--accent-secondary);">
-              ${canRemove ? 'Remove Drone' : 'No Drones'}
+            <button id="remove-drone-btn" class="btn secondary" ${!canRemove ? 'disabled' : ''} style="flex: 1;">
+              ${canRemove ? t('map.removeDrone') : t('map.noDrones')}
             </button>
           </div>
         `;
@@ -109,21 +218,32 @@ export class TileInfoPanel {
 
     this.panel.innerHTML = content;
 
-    // Set up deploy button click handler
+    // Set up deploy button click handler (only if not already set)
     const deployBtn = document.getElementById('deploy-drone-btn');
-    if (deployBtn) {
+    if (deployBtn && deployBtn !== this.deployBtn) {
+      this.deployBtn = deployBtn;
       deployBtn.addEventListener('click', () => {
         this.onDeployDrone();
       });
     }
 
-    // Set up remove button click handler
+    // Set up remove button click handler (only if not already set)
     const removeBtn = document.getElementById('remove-drone-btn');
-    if (removeBtn) {
+    if (removeBtn && removeBtn !== this.removeBtn) {
+      this.removeBtn = removeBtn;
       removeBtn.addEventListener('click', () => {
         this.onRemoveDrone();
       });
     }
+
+    // Set up build structure button handlers
+    const buildButtons = this.panel.querySelectorAll('.build-structure-btn');
+    buildButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const structureId = btn.getAttribute('data-structure-id');
+        this.onBuildStructure(structureId);
+      });
+    });
   }
 
   /**
@@ -142,12 +262,14 @@ export class TileInfoPanel {
    */
   getTileTitle(tile) {
     if (tile.isStarting) {
-      return 'Starting Base';
+      return t('map.startingBase');
     }
     if (tile.type === 'empty') {
-      return 'Empty Tile';
+      return t('map.emptyTile');
     }
-    return tile.type.charAt(0).toUpperCase() + tile.type.slice(1) + ' Deposit';
+    // Use translation keys for resource types
+    const resourceKey = `map.tileTypes.${tile.type}`;
+    return t(resourceKey);
   }
 
   /**
@@ -171,6 +293,33 @@ export class TileInfoPanel {
       detail: { tile: this.currentTile }
     });
     window.dispatchEvent(event);
+  }
+
+  /**
+   * Handle build structure button click
+   * @param {string} structureId - Structure type to build
+   */
+  onBuildStructure(structureId) {
+    if (!this.currentTile || !this.structureManager) return;
+
+    const success = this.structureManager.buildStructure(
+      structureId,
+      this.currentTile.q,
+      this.currentTile.r,
+      this.currentTile
+    );
+
+    if (success) {
+      // Emit event for UI updates
+      const event = new CustomEvent('structureBuilt', {
+        detail: {
+          structureId,
+          q: this.currentTile.q,
+          r: this.currentTile.r
+        }
+      });
+      window.dispatchEvent(event);
+    }
   }
 
   /**

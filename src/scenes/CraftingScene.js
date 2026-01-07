@@ -3,6 +3,7 @@
 
 import Phaser from 'phaser';
 import { recipes, getComponentRecipe } from '../config/recipes.js';
+import { t } from '../utils/i18n.js';
 
 export class CraftingScene extends Phaser.Scene {
   constructor() {
@@ -26,7 +27,12 @@ export class CraftingScene extends Phaser.Scene {
     // Create UI container in DOM
     this.createUI();
     
-    console.log('CraftingScene created');
+    // Listen for language changes to refresh UI
+    window.addEventListener('settingsUpdated', (e) => {
+      if (e.detail.setting === 'language') {
+        this.updateUI();
+      }
+    });
   }
 
   /**
@@ -60,32 +66,32 @@ export class CraftingScene extends Phaser.Scene {
     const componentTypes = Object.keys(recipes.components);
 
     let html = `
-      <h2 style="color: var(--accent-primary); margin-bottom: 2rem;">Crafting Station</h2>
+      <h1>${t('crafting.title')}</h1>
         
         <div style="margin-bottom: 2rem;">
-          <h3 style="color: var(--text-primary); margin-bottom: 1rem;">Component Inventory</h3>
+          <h3>${t('crafting.componentInventory')}</h3>
           <div style="display: flex; gap: 2rem; margin-bottom: 2rem;">
             <div>
-              <span style="color: var(--text-secondary);">Chassis:</span>
+              <span style="color: var(--text-secondary);">${t('crafting.chassis')}:</span>
               <span style="color: var(--text-primary); margin-left: 0.5rem; font-weight: bold;">${components.chassis}</span>
             </div>
             <div>
-              <span style="color: var(--text-secondary);">Circuits:</span>
+              <span style="color: var(--text-secondary);">${t('crafting.circuits')}:</span>
               <span style="color: var(--text-primary); margin-left: 0.5rem; font-weight: bold;">${components.circuit}</span>
             </div>
             <div>
-              <span style="color: var(--text-secondary);">Power Cores:</span>
+              <span style="color: var(--text-secondary);">${t('crafting.powerCores')}:</span>
               <span style="color: var(--text-primary); margin-left: 0.5rem; font-weight: bold;">${components.powerCore}</span>
             </div>
           </div>
-          <div style="margin-top: 1rem; padding: 1rem; background: rgba(233, 69, 96, 0.1); border-left: 3px solid var(--accent-primary); border-radius: 4px;">
+          <div class="info-box">
             <div style="color: var(--text-secondary); font-size: 0.9rem;">
-              💡 <strong>Tip:</strong> Craft components from resources, then use them to build drones in the Drones tab.
+              ${t('crafting.tip')}
             </div>
           </div>
         </div>
 
-        <h3 style="color: var(--text-primary); margin-bottom: 1rem;">Craft Components</h3>
+        <h3>${t('crafting.craftComponents')}</h3>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
     `;
 
@@ -94,14 +100,14 @@ export class CraftingScene extends Phaser.Scene {
       const recipe = getComponentRecipe(componentType);
       const canCraft = this.craftingManager.canCraft(componentType);
       
-      // Format component name
-      const displayName = this.formatComponentName(componentType);
+      // Use translation for component name
+      const displayName = t(recipe.name);
       
       html += `
-        <div class="craft-card" style="background: var(--bg-secondary); border: 2px solid ${canCraft ? 'var(--accent-primary)' : 'var(--text-secondary)'}; border-radius: 8px; padding: 1.5rem;">
+        <div class="craft-card ${canCraft ? 'craftable' : 'not-craftable'}">
           <h4 style="color: var(--text-primary); margin-bottom: 1rem;">${displayName}</h4>
           <div style="margin-bottom: 1rem;">
-            <div style="color: var(--text-secondary); margin-bottom: 0.5rem;">Cost:</div>
+            <div style="color: var(--text-secondary); margin-bottom: 0.5rem;">${t('crafting.cost')}:</div>
       `;
 
       // Display costs
@@ -124,9 +130,8 @@ export class CraftingScene extends Phaser.Scene {
             class="btn craft-btn" 
             data-component="${componentType}"
             ${!canCraft ? 'disabled' : ''}
-            style="${canCraft ? '' : 'opacity: 0.5; cursor: not-allowed;'}"
           >
-            ${canCraft ? 'Craft' : 'Insufficient Resources'}
+            ${canCraft ? t('crafting.craft') : t('crafting.insufficientResources')}
           </button>
         </div>
       `;
