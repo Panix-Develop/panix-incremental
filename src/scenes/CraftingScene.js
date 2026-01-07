@@ -126,8 +126,10 @@ export class CraftingScene extends Phaser.Scene {
             <div style="color: var(--text-secondary); margin-bottom: 0.5rem;">${t('crafting.cost')}:</div>
       `;
 
-      // Display costs (only show resources that are needed)
+      // Display costs (only show resources that are needed with amount > 0)
       for (const [resource, amount] of Object.entries(recipe.cost)) {
+        if (amount <= 0) continue; // Skip resources with 0 cost
+        
         const current = this.resourceManager.getResource(resource);
         const hasEnough = current >= amount;
         const color = hasEnough ? 'var(--text-primary)' : 'var(--accent-primary)';
