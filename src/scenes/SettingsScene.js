@@ -2,6 +2,7 @@
 // Provides UI for game configuration and preferences
 
 import Phaser from 'phaser';
+import { t } from '../utils/i18n.js';
 
 export class SettingsScene extends Phaser.Scene {
   constructor() {
@@ -51,83 +52,83 @@ export class SettingsScene extends Phaser.Scene {
     const playerName = this.settingsManager.getPlayerName();
 
     let html = `
-      <h1>Settings</h1>
+      <h1>${t('settings.title')}</h1>
       
       <!-- Display Settings Section -->
       <div style="margin-bottom: 2.5rem;">
-        <h3>Display Settings</h3>
+        <h3>${t('settings.display.title')}</h3>
         
         <div style="margin-bottom: 1.5rem;">
           <label style="display: block; color: var(--text-secondary); margin-bottom: 0.5rem;">
-            Number Format
+            ${t('settings.display.numberFormat')}
           </label>
           <select 
             id="number-format-select" 
             class="settings-select"
             style="width: 100%; padding: 0.75rem; background: var(--bg-secondary); color: var(--text-primary); border: 2px solid var(--border-color); border-radius: 5px; font-size: 1rem; cursor: pointer;"
           >
-            <option value="normal" ${numberFormat === 'normal' ? 'selected' : ''}>Normal (1.23K, 4.56M)</option>
-            <option value="scientific" ${numberFormat === 'scientific' ? 'selected' : ''}>Scientific (1.23e3, 4.56e6)</option>
-            <option value="engineering" ${numberFormat === 'engineering' ? 'selected' : ''}>Engineering (1.23e3, 12.3e3)</option>
+            <option value="normal" ${numberFormat === 'normal' ? 'selected' : ''}>${t('settings.display.formatNormal')}</option>
+            <option value="scientific" ${numberFormat === 'scientific' ? 'selected' : ''}>${t('settings.display.formatScientific')}</option>
+            <option value="engineering" ${numberFormat === 'engineering' ? 'selected' : ''}>${t('settings.display.formatEngineering')}</option>
           </select>
         </div>
 
         <div style="margin-bottom: 1.5rem;">
           <label style="display: block; color: var(--text-secondary); margin-bottom: 0.5rem;">
-            Language
+            ${t('settings.display.language')}
           </label>
           <select 
             id="language-select" 
             class="settings-select"
             style="width: 100%; padding: 0.75rem; background: var(--bg-secondary); color: var(--text-primary); border: 2px solid var(--border-color); border-radius: 5px; font-size: 1rem; cursor: pointer;"
           >
-            <option value="en" ${language === 'en' ? 'selected' : ''}>English</option>
-            <option value="de" ${language === 'de' ? 'selected' : ''}>German (Deutsch)</option>
+            <option value="en" ${language === 'en' ? 'selected' : ''}>${t('settings.display.langEnglish')}</option>
+            <option value="de" ${language === 'de' ? 'selected' : ''}>${t('settings.display.langGerman')}</option>
           </select>
         </div>
       </div>
 
       <!-- Player Settings Section -->
       <div style="margin-bottom: 2.5rem;">
-        <h3>Player Settings</h3>
+        <h3>${t('settings.player.title')}</h3>
         
         <div style="margin-bottom: 1.5rem;">
           <label style="display: block; color: var(--text-secondary); margin-bottom: 0.5rem;">
-            Player Name
+            ${t('settings.player.name')}
           </label>
           <input 
             type="text" 
             id="player-name-input" 
             value="${playerName}"
             maxlength="20"
-            placeholder="Enter your name"
+            placeholder="${t('settings.player.namePlaceholder')}"
             style="width: 100%; padding: 0.75rem; background: var(--bg-secondary); color: var(--text-primary); border: 2px solid var(--border-color); border-radius: 5px; font-size: 1rem; box-sizing: border-box;"
           />
           <div style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem;">
-            Maximum 20 characters
+            ${t('settings.player.nameMaxLength')}
           </div>
         </div>
 
         <button id="update-name-btn" class="btn">
-          Update Name
+          ${t('settings.player.updateName')}
         </button>
       </div>
 
       <!-- About Section -->
       <div class="info-box">
-        <h3 style="margin-top: 0;">About</h3>
+        <h3 style="margin-top: 0;">${t('settings.about.title')}</h3>
         <div style="color: var(--text-secondary); line-height: 1.6;">
           <div style="margin-bottom: 0.5rem;">
-            <strong style="color: var(--text-primary);">Panix Incremental</strong>
+            <strong style="color: var(--text-primary);">${t('settings.about.gameName')}</strong>
           </div>
           <div style="margin-bottom: 0.5rem;">
-            Version: <strong style="color: var(--accent-primary);">0.1.0</strong>
+            ${t('settings.about.version')}: <strong style="color: var(--accent-primary);">0.1.0</strong>
           </div>
           <div style="margin-bottom: 0.5rem;">
-            Stage: <strong style="color: var(--accent-primary);">2 - Core Systems Enhancement</strong>
+            ${t('settings.about.stage')}: <strong style="color: var(--accent-primary);">2 - ${t('settings.about.stageDescription')}</strong>
           </div>
           <div style="margin-top: 1rem; font-size: 0.9rem;">
-            A space-themed incremental game featuring hex-grid resource management, drone automation, and strategic expansion.
+            ${t('settings.about.description')}
           </div>
         </div>
       </div>
@@ -173,10 +174,10 @@ export class SettingsScene extends Phaser.Scene {
           this.emitSettingsUpdated('playerName', newName);
           
           // Show success feedback
-          updateNameBtn.textContent = '✓ Updated!';
+          updateNameBtn.textContent = t('settings.player.updateSuccess');
           updateNameBtn.style.background = 'var(--success)';
           setTimeout(() => {
-            updateNameBtn.textContent = 'Update Name';
+            updateNameBtn.textContent = t('settings.player.updateName');
             updateNameBtn.style.background = '';
           }, 2000);
         }

@@ -116,22 +116,31 @@
   },
   "settings": {
     "title": "Einstellungen",
-    "displaySettings": "Anzeige-Einstellungen",
-    "numberFormat": "Zahlenformat",
-    "language": "Sprache",
-    "playerSettings": "Spieler-Einstellungen",
-    "playerName": "Spielername",
-    "updateName": "Name aktualisieren",
-    "about": "Über",
-    "version": "Version",
-    "formats": {
-      "normal": "Normal (1,23K, 4,56M)",
-      "scientific": "Wissenschaftlich (1,23e3, 4,56e6)",
-      "engineering": "Technisch (1,23e3, 12,3e3)"
+    "display": {
+      "title": "Anzeige-Einstellungen",
+      "numberFormat": "Zahlenformat",
+      "formatNormal": "Normal (1,23K, 4,56M)",
+      "formatScientific": "Wissenschaftlich (1,23e3, 4,56e6)",
+      "formatEngineering": "Technisch (1,23e3, 12,3e3)",
+      "language": "Sprache",
+      "langEnglish": "Englisch",
+      "langGerman": "Deutsch"
     },
-    "languages": {
-      "en": "Englisch",
-      "de": "Deutsch"
+    "player": {
+      "title": "Spieler-Einstellungen",
+      "name": "Spielername",
+      "namePlaceholder": "Gib deinen Namen ein",
+      "nameMaxLength": "Maximal 20 Zeichen",
+      "updateName": "Name aktualisieren",
+      "updateSuccess": "✓ Aktualisiert!"
+    },
+    "about": {
+      "title": "Über",
+      "gameName": "Panix Incremental",
+      "version": "Version",
+      "stage": "Phase",
+      "stageDescription": "Kern-Systeme Erweiterung",
+      "description": "Ein weltraumthematisches Incremental-Spiel mit Hex-Gitter-Ressourcenverwaltung, Drohnen-Automatisierung und strategischer Expansion."
     }
   },
   "config": {
