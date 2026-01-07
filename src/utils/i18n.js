@@ -1,28 +1,37 @@
 // i18n.js - Internationalization utility
 // Provides translation functions for multi-language support
 
+import enTranslations from '../locales/en.json';
+import deTranslations from '../locales/de.json';
+
 let currentLanguage = 'en';
 let translations = {};
+
+// Available translations
+const availableTranslations = {
+  en: enTranslations,
+  de: deTranslations
+};
 
 /**
  * Load translations for a specific language
  * @param {string} lang - Language code (e.g., 'en', 'de')
- * @returns {Promise<void>}
  */
-export async function loadTranslations(lang) {
+export function loadTranslations(lang) {
   try {
-    const response = await fetch(`/src/locales/${lang}.json`);
-    if (!response.ok) {
-      throw new Error(`Failed to load translations for ${lang}`);
+    if (availableTranslations[lang]) {
+      translations = availableTranslations[lang];
+      currentLanguage = lang;
+    } else {
+      console.warn(`Translations for ${lang} not found, falling back to English`);
+      translations = availableTranslations.en;
+      currentLanguage = 'en';
     }
-    translations = await response.json();
-    currentLanguage = lang;
   } catch (error) {
     console.error('Failed to load translations:', error);
     // Fallback to English if loading fails
-    if (lang !== 'en') {
-      await loadTranslations('en');
-    }
+    translations = availableTranslations.en;
+    currentLanguage = 'en';
   }
 }
 
@@ -75,37 +84,31 @@ export function t(key, params = {}) {
  * @param {object} params - Parameters to replace
  * @returns {string} English translation or key
  */
-async function getFallbackTranslation(key, params) {
-  try {
-    const response = await fetch('/src/locales/en.json');
-    const enTranslations = await response.json();
-    
-    const keys = key.split('.');
-    let value = enTranslations;
-    
-    for (const k of keys) {
-      if (value && typeof value === 'object' && k in value) {
-        value = value[k];
-      } else {
-        return key;
-      }
-    }
-    
-    if (typeof value !== 'string') {
+function getFallbackTranslation(key, params) {
+  const enTranslations = availableTranslations.en;
+  
+  const keys = key.split('.');
+  let value = enTranslations;
+  
+  for (const k of keys) {
+    if (value && typeof value === 'object' && k in value) {
+      value = value[k];
+    } else {
       return key;
     }
-    
-    // Replace parameters
-    let result = value;
-    for (const [paramKey, paramValue] of Object.entries(params)) {
-      result = result.replace(new RegExp(`\\{${paramKey}\\}`, 'g'), paramValue);
-    }
-    
-    return result;
-  } catch (error) {
-    console.error('Failed to load fallback translation:', error);
+  }
+  
+  if (typeof value !== 'string') {
     return key;
   }
+  
+  // Replace parameters
+  let result = value;
+  for (const [paramKey, paramValue] of Object.entries(params)) {
+    result = result.replace(new RegExp(`\\{${paramKey}\\}`, 'g'), paramValue);
+  }
+  
+  return result;
 }
 
 /**
@@ -119,13 +122,34 @@ export function getCurrentLanguage() {
 /**
  * Set language and reload translations
  * @param {string} lang - Language code
- * @returns {Promise<void>}
  */
-export async function setLanguage(lang) {
-  await loadTranslations(lang);
+export function setLanguage(lang) {
+  loadTranslations(lang);
   // Emit event for UI updates
   window.dispatchEvent(new CustomEvent('languageChanged', { detail: { language: lang } }));
 }
 
-// Initialize with English by default
-loadTranslations('en');
+/**
+ * Initialize i18n by loading language from settings
+ * Checks localStorage for saved language preference
+ */
+function initializeLanguage() {
+  try {
+    const savedSettings = localStorage.getItem('panix_settings');
+    if (savedSettings) {
+      const settings = JSON.parse(savedSettings);
+      if (settings.language) {
+        loadTranslations(settings.language);
+        return;
+      }
+    }
+  } catch (error) {
+    console.error('Failed to load language from settings:', error);
+  }
+  
+  // Default to English if no saved language
+  loadTranslations('en');
+}
+
+// Initialize with language from settings or default to English
+initializeLanguage();

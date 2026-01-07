@@ -72,7 +72,12 @@ export class ConfigScene extends Phaser.Scene {
 
           <!-- Entity Editor -->
           <div>
-            <h3>Editor</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+              <h3 style="margin: 0;">Editor</h3>
+              <div id="config-editor-toolbar" style="display: flex; gap: 0.5rem;">
+                <!-- Toolbar buttons will be populated when entity is selected -->
+              </div>
+            </div>
             <div id="config-editor" class="stat-card" style="max-height: 500px; overflow-y: auto;">
               <p style="color: var(--text-secondary); font-style: italic;">
                 Select an entity from the list to edit
@@ -96,32 +101,63 @@ export class ConfigScene extends Phaser.Scene {
    * Set up event listeners
    */
   setupEventListeners() {
+    // Remove any existing event listeners by cloning and replacing elements
+    const addNewBtn = document.getElementById('config-add-new');
+    if (addNewBtn) {
+      const newAddNewBtn = addNewBtn.cloneNode(true);
+      addNewBtn.parentNode.replaceChild(newAddNewBtn, addNewBtn);
+      newAddNewBtn.addEventListener('click', () => {
+        this.addNewEntity();
+      });
+    }
+
     // Type selector buttons
-    document.getElementById('config-type-structures')?.addEventListener('click', () => {
-      this.selectType('structures');
-    });
-    document.getElementById('config-type-drones')?.addEventListener('click', () => {
-      this.selectType('drones');
-    });
+    const structuresBtn = document.getElementById('config-type-structures');
+    if (structuresBtn) {
+      const newStructuresBtn = structuresBtn.cloneNode(true);
+      structuresBtn.parentNode.replaceChild(newStructuresBtn, structuresBtn);
+      newStructuresBtn.addEventListener('click', () => {
+        this.selectType('structures');
+      });
+    }
+
+    const dronesBtn = document.getElementById('config-type-drones');
+    if (dronesBtn) {
+      const newDronesBtn = dronesBtn.cloneNode(true);
+      dronesBtn.parentNode.replaceChild(newDronesBtn, dronesBtn);
+      newDronesBtn.addEventListener('click', () => {
+        this.selectType('drones');
+      });
+    }
 
     // Export button
-    document.getElementById('config-export')?.addEventListener('click', () => {
-      this.exportConfig();
-    });
+    const exportBtn = document.getElementById('config-export');
+    if (exportBtn) {
+      const newExportBtn = exportBtn.cloneNode(true);
+      exportBtn.parentNode.replaceChild(newExportBtn, exportBtn);
+      newExportBtn.addEventListener('click', () => {
+        this.exportConfig();
+      });
+    }
 
     // Import button
-    document.getElementById('config-import-trigger')?.addEventListener('click', () => {
-      document.getElementById('config-import-file')?.click();
-    });
+    const importTriggerBtn = document.getElementById('config-import-trigger');
+    if (importTriggerBtn) {
+      const newImportTriggerBtn = importTriggerBtn.cloneNode(true);
+      importTriggerBtn.parentNode.replaceChild(newImportTriggerBtn, importTriggerBtn);
+      newImportTriggerBtn.addEventListener('click', () => {
+        document.getElementById('config-import-file')?.click();
+      });
+    }
 
-    document.getElementById('config-import-file')?.addEventListener('change', (e) => {
-      this.importConfig(e);
-    });
-
-    // Add New button
-    document.getElementById('config-add-new')?.addEventListener('click', () => {
-      this.addNewEntity();
-    });
+    const importFileInput = document.getElementById('config-import-file');
+    if (importFileInput) {
+      const newImportFileInput = importFileInput.cloneNode(true);
+      importFileInput.parentNode.replaceChild(newImportFileInput, importFileInput);
+      newImportFileInput.addEventListener('change', (e) => {
+        this.importConfig(e);
+      });
+    }
   }
 
   /**
@@ -168,21 +204,8 @@ export class ConfigScene extends Phaser.Scene {
       }));
     }
 
-    // Add custom entities from localStorage
-    const storageKey = this.selectedType === 'structures' 
-      ? 'dev_structures_override' 
-      : 'dev_drones_override';
-    
-    const existing = localStorage.getItem(storageKey);
-    if (existing) {
-      const overrides = JSON.parse(existing);
-      Object.keys(overrides).forEach(id => {
-        // Add custom entities (those starting with 'custom_')
-        if (id.startsWith('custom_')) {
-          entities.push({ id, ...overrides[id] });
-        }
-      });
-    }
+    // Note: getAllStructures() and getAllDroneRecipes() already include custom entities from localStorage,
+    // so we don't need to load them separately here
 
     listEl.innerHTML = entities.map(entity => {
       const isCustom = entity.id.startsWith('custom_');
@@ -250,7 +273,9 @@ export class ConfigScene extends Phaser.Scene {
    */
   updateEditor() {
     const editorEl = document.getElementById('config-editor');
-    if (!editorEl) return;
+    const toolbarEl = document.getElementById('config-editor-toolbar');
+    
+    if (!editorEl || !toolbarEl) return;
 
     if (!this.selectedEntity) {
       editorEl.innerHTML = `
@@ -258,9 +283,18 @@ export class ConfigScene extends Phaser.Scene {
           Select an entity from the list to edit
         </p>
       `;
+      toolbarEl.innerHTML = '';
       return;
     }
 
+    // Update toolbar with action buttons
+    toolbarEl.innerHTML = `
+      <button id="config-save-changes" class="btn" style="padding: 0.5rem 1rem;">💾 Save</button>
+      <button id="config-reset-entity" class="btn secondary" style="padding: 0.5rem 1rem;">🔄 Reset</button>
+      ${this.selectedEntity.id.startsWith('custom_') ? '<button id="config-delete-entity" class="btn secondary" style="padding: 0.5rem 1rem; background: rgba(233, 69, 96, 0.2);">🗑️ Delete</button>' : ''}
+    `;
+
+    // Update editor content (scrollable area)
     editorEl.innerHTML = `
       <div style="margin-bottom: 1rem;">
         <h4 style="margin-bottom: 0.5rem;">${this.selectedEntity.icon || '⚙️'} ${this.selectedEntity.name || this.selectedEntity.id}</h4>
@@ -269,7 +303,7 @@ export class ConfigScene extends Phaser.Scene {
       <div class="info-box" style="background: rgba(126, 211, 33, 0.1); border-color: #7ED321;">
         <p style="margin: 0; font-size: 0.9rem;">
           <strong>💡 Live Editing</strong><br>
-          Edit the JSON below and click "Save Changes" to update localStorage. 
+          Edit the JSON below and click "Save" to update localStorage. 
           The game will use your changes on next page load. Click "Reset" to restore defaults.
         </p>
       </div>
@@ -288,15 +322,9 @@ export class ConfigScene extends Phaser.Scene {
         line-height: 1.5;
         resize: vertical;
       ">${JSON.stringify(this.selectedEntity, null, 2)}</textarea>
-
-      <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
-        <button id="config-save-changes" class="btn">💾 Save Changes</button>
-        <button id="config-reset-entity" class="btn secondary">🔄 Reset to Default</button>
-        ${this.selectedEntity.id.startsWith('custom_') ? '<button id="config-delete-entity" class="btn secondary" style="margin-left: auto; background: rgba(233, 69, 96, 0.2);">🗑️ Delete</button>' : ''}
-      </div>
     `;
 
-    // Add event listeners for save and reset
+    // Add event listeners for toolbar buttons
     document.getElementById('config-save-changes')?.addEventListener('click', () => {
       this.saveEntityChanges();
     });
@@ -453,9 +481,16 @@ export class ConfigScene extends Phaser.Scene {
    * Add a new entity (creates a template in localStorage)
    */
   addNewEntity() {
-    // Generate a unique ID
+    // Prevent duplicate creation if already in progress
+    if (this._creatingEntity) {
+      return;
+    }
+    this._creatingEntity = true;
+
+    // Generate a unique ID using timestamp and random suffix
     const timestamp = Date.now();
-    const newId = `custom_${this.selectedType.slice(0, -1)}_${timestamp}`;
+    const randomSuffix = Math.floor(Math.random() * 10000);
+    const newId = `custom_${this.selectedType.slice(0, -1)}_${timestamp}_${randomSuffix}`;
     
     // Create template based on type
     let template = {};
@@ -517,6 +552,11 @@ export class ConfigScene extends Phaser.Scene {
     // Update UI
     this.updateEntityList();
     this.updateEditor();
+    
+    // Reset creation flag after a short delay
+    setTimeout(() => {
+      this._creatingEntity = false;
+    }, 100);
     
     console.log(`Created new ${this.selectedType} entity: ${newId}`);
   }
