@@ -25,6 +25,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for tag operations
+
+      - name: Create version branch
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "Creating version branch: version/$VERSION"
+          git checkout -b version/$VERSION
+          git push origin version/$VERSION --force
 
       - name: Setup Node
         uses: actions/setup-node@v4
