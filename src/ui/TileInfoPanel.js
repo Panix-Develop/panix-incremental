@@ -53,7 +53,7 @@ export class TileInfoPanel {
       </div>
       <div class="tile-info-content">
         <div class="tile-info-row">
-          <span class="tile-info-label">Coordinates:</span>
+          <span class="tile-info-label">${t('map.coordinates')}:</span>
           <span class="tile-info-value">Q${tile.q}, R${tile.r}</span>
         </div>
     `;
@@ -62,12 +62,12 @@ export class TileInfoPanel {
     if (tile.isStarting) {
       content += `
         <div class="tile-info-row">
-          <span class="tile-info-label">Type:</span>
-          <span class="tile-info-value">Starting Base</span>
+          <span class="tile-info-label">${t('map.type')}:</span>
+          <span class="tile-info-value">${t('map.startingBase')}</span>
         </div>
         <div class="tile-info-row">
-          <span class="tile-info-label">Auto-collecting:</span>
-          <span class="tile-info-value">+${generationRate.toFixed(1)} Iron/s</span>
+          <span class="tile-info-label">${t('map.autoCollecting')}:</span>
+          <span class="tile-info-value">+${generationRate.toFixed(1)} ${t('resources.iron')}/s</span>
         </div>
       `;
     }
@@ -94,8 +94,8 @@ export class TileInfoPanel {
         // Show empty tile + structure building options
         content += `
           <div class="tile-info-row">
-            <span class="tile-info-label">Type:</span>
-            <span class="tile-info-value">Empty Tile</span>
+            <span class="tile-info-label">${t('map.type')}:</span>
+            <span class="tile-info-value">${t('map.emptyTile')}</span>
           </div>
         `;
 
@@ -169,7 +169,7 @@ export class TileInfoPanel {
         } else {
           content += `
             <div style="margin-top: 1rem; color: var(--text-secondary); font-style: italic;">
-              No resources available
+              ${t('map.noResources')}
             </div>
           `;
         }
@@ -180,15 +180,15 @@ export class TileInfoPanel {
       const resourceName = tile.type.charAt(0).toUpperCase() + tile.type.slice(1);
       content += `
         <div class="tile-info-row">
-          <span class="tile-info-label">Resource:</span>
-          <span class="tile-info-value">${resourceName} Deposit</span>
+          <span class="tile-info-label">${t('map.resource')}:</span>
+          <span class="tile-info-value">${resourceName} ${t('map.deposit')}</span>
         </div>
         <div class="tile-info-row">
-          <span class="tile-info-label">Drones:</span>
+          <span class="tile-info-label">${t('map.drones')}:</span>
           <span class="tile-info-value">${tile.drones}/${tile.maxDrones}</span>
         </div>
         <div class="tile-info-row">
-          <span class="tile-info-label">Generation:</span>
+          <span class="tile-info-label">${t('map.generation')}:</span>
           <span class="tile-info-value">+${generationRate.toFixed(1)} ${resourceName}/s</span>
         </div>
       `;
@@ -202,10 +202,10 @@ export class TileInfoPanel {
         content += `
           <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
             <button id="deploy-drone-btn" class="btn" ${!canDeploy ? 'disabled' : ''} style="flex: 1;">
-              ${canDeploy ? 'Deploy Drone' : 'At Capacity'}
+              ${canDeploy ? t('map.deployDrone') : t('map.atCapacity')}
             </button>
             <button id="remove-drone-btn" class="btn secondary" ${!canRemove ? 'disabled' : ''} style="flex: 1;">
-              ${canRemove ? 'Remove Drone' : 'No Drones'}
+              ${canRemove ? t('map.removeDrone') : t('map.noDrones')}
             </button>
           </div>
         `;

@@ -51,7 +51,9 @@
     "selectTile": "Select a tile to view details",
     "tileInfo": "Tile Information",
     "type": "Type",
+    "resource": "Resource",
     "drones": "Drones",
+    "noDrones": "No Drones",
     "maxDrones": "Max Drones",
     "generationRate": "Generation Rate",
     "generation": "Generation",
@@ -63,7 +65,7 @@
     "autoCollecting": "Auto-collecting",
     "coordinates": "Coordinates",
     "resourceTile": "Resource",
-    "deposit": "{resource} Deposit",
+    "deposit": "Deposit",
     "emptyTile": "Empty Tile",
     "noResources": "No resources available",
     "tileTypes": {

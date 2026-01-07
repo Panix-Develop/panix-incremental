@@ -51,7 +51,9 @@
     "selectTile": "Wähle ein Feld aus, um Details anzuzeigen",
     "tileInfo": "Feld-Information",
     "type": "Typ",
+    "resource": "Ressource",
     "drones": "Drohnen",
+    "noDrones": "Keine Drohnen",
     "maxDrones": "Max Drohnen",
     "generationRate": "Generierungsrate",
     "generation": "Generierung",
@@ -63,7 +65,7 @@
     "autoCollecting": "Auto-Sammlung",
     "coordinates": "Koordinaten",
     "resourceTile": "Ressource",
-    "deposit": "{resource}-Vorkommen",
+    "deposit": "Vorkommen",
     "emptyTile": "Leeres Feld",
     "noResources": "Keine Ressourcen verfügbar",
     "tileTypes": {
