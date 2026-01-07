@@ -112,7 +112,7 @@ export class StructuresScene extends Phaser.Scene {
               <div>
                 <div style="font-weight: 600; font-size: 1.1rem;">${t(structureDef.name)}</div>
                 <div style="font-size: 0.85rem; color: var(--text-secondary);">
-                  ${count} built • ${t('structures.energyPerSecond', { amount: totalEnergyForType.toFixed(1) })}
+                  ${count} ${t('structures.built')} • ${t('structures.energyPerSecond', { amount: totalEnergyForType.toFixed(1) })}
                 </div>
               </div>
             </div>

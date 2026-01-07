@@ -123,10 +123,10 @@ export class DronesScene extends Phaser.Scene {
     html += `
       <div class="craft-card ${canBuild ? 'craftable' : 'not-craftable'}">
         <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">
-          ${recipe.name}
+          ${t(recipe.name)}
           ${isCustom ? '<span style="color: var(--accent-primary); font-size: 0.75rem; margin-left: 0.5rem;">CUSTOM</span>' : ''}
         </h4>
-        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">${recipe.description}</p>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">${t(recipe.description)}</p>
         
         <div style="margin-bottom: 1rem;">
           <div style="color: var(--text-secondary); margin-bottom: 0.5rem; font-weight: 600;">${t('drones.description')}:</div>

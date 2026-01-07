@@ -26,7 +26,21 @@
     "cost": "Kosten",
     "craft": "Herstellen",
     "insufficientResources": "Unzureichende Ressourcen",
-    "tip": "💡 <strong>Tipp:</strong> Fertige Komponenten aus Rohstoffen und nutze sie dann, um Drohnen im Drohnen-Tab zu bauen."
+    "tip": "💡 <strong>Tipp:</strong> Stelle Komponenten aus Rohressourcen her und verwende sie dann, um Drohnen im Drohnen-Tab zu bauen.",
+    "components": {
+      "chassis": {
+        "name": "Drohnen-Chassis",
+        "description": "Grundrahmen für alle Drohnen"
+      },
+      "circuit": {
+        "name": "Basis-Schaltkreis",
+        "description": "Elektronisches Steuerungssystem"
+      },
+      "powerCore": {
+        "name": "Energiekern",
+        "description": "Energiespeicherung und -verteilung"
+      }
+    }
   },
   "drones": {
     "title": "Drohnen-Montagehalle",
@@ -44,7 +58,11 @@
     "noDrones": "Keine Drohnen",
     "types": {
       "harvester": "Sammel-Drohne",
-      "harvesterDesc": "Basis-Drohne zur Ressourcengewinnung. Sammelt Ressourcen von Feldern."
+      "harvesterDesc": "Basis-Drohne zur Ressourcengewinnung. Sammelt Ressourcen von Feldern.",
+      "basicGatherer": {
+        "name": "Basis-Sammel-Drohne",
+        "description": "Automatisierter Ressourcen-Sammler"
+      }
     }
   },
   "map": {
@@ -82,6 +100,7 @@
     "totalBuilt": "Gesamte Strukturen",
     "energyGeneration": "Energieerzeugung",
     "builtStructures": "Gebaute Strukturen",
+    "built": "gebaut",
     "noStructures": "Noch keine Strukturen gebaut.",
     "buildHint": "Wähle ein leeres Feld auf der Karte, um dein erstes Solarpanel zu bauen!",
     "solarPanel": {

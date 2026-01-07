@@ -262,12 +262,14 @@ export class TileInfoPanel {
    */
   getTileTitle(tile) {
     if (tile.isStarting) {
-      return 'Starting Base';
+      return t('map.startingBase');
     }
     if (tile.type === 'empty') {
-      return 'Empty Tile';
+      return t('map.emptyTile');
     }
-    return tile.type.charAt(0).toUpperCase() + tile.type.slice(1) + ' Deposit';
+    // Use translation keys for resource types
+    const resourceKey = `map.tileTypes.${tile.type}`;
+    return t(resourceKey);
   }
 
   /**

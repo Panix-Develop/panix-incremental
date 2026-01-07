@@ -26,7 +26,21 @@
     "cost": "Cost",
     "craft": "Craft",
     "insufficientResources": "Insufficient Resources",
-    "tip": "💡 <strong>Tip:</strong> Craft components from raw resources, then use them to build drones in the Drones tab."
+    "tip": "💡 <strong>Tip:</strong> Craft components from raw resources, then use them to build drones in the Drones tab.",
+    "components": {
+      "chassis": {
+        "name": "Drone Chassis",
+        "description": "Basic frame for all drones"
+      },
+      "circuit": {
+        "name": "Basic Circuit",
+        "description": "Electronic control system"
+      },
+      "powerCore": {
+        "name": "Power Core",
+        "description": "Energy storage and distribution"
+      }
+    }
   },
   "drones": {
     "title": "Drone Assembly Bay",
@@ -44,7 +58,11 @@
     "noDrones": "No Drones",
     "types": {
       "harvester": "Harvester Drone",
-      "harvesterDesc": "Basic drone for resource extraction. Collects resources from tiles."
+      "harvesterDesc": "Basic drone for resource extraction. Collects resources from tiles.",
+      "basicGatherer": {
+        "name": "Basic Gathering Drone",
+        "description": "Automated resource collector"
+      }
     }
   },
   "map": {
@@ -82,6 +100,7 @@
     "totalBuilt": "Total Structures",
     "energyGeneration": "Energy Generation",
     "builtStructures": "Built Structures",
+    "built": "built",
     "noStructures": "No structures built yet.",
     "buildHint": "Select an empty tile on the map to build your first solar panel!",
     "solarPanel": {

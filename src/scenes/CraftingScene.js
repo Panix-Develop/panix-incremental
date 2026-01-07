@@ -102,8 +102,8 @@ export class CraftingScene extends Phaser.Scene {
       const recipe = getComponentRecipe(componentType);
       const canCraft = this.craftingManager.canCraft(componentType);
       
-      // Format component name
-      const displayName = this.formatComponentName(componentType);
+      // Use translation for component name
+      const displayName = t(recipe.name);
       
       html += `
         <div class="craft-card ${canCraft ? 'craftable' : 'not-craftable'}">
