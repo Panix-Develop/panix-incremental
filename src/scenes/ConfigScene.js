@@ -1466,6 +1466,63 @@ export class ConfigScene extends Phaser.Scene {
   }
 
   /**
+   * Check entity dependencies with proper access to game state
+   * @param {string} entityType - Type of entity ('structure', 'resource', 'tileType')
+   * @param {string} entityId - ID of the entity to check
+   * @returns {Array<string>} List of dependencies
+   */
+  checkEntityDependencies(entityType, entityId) {
+    const dependencies = [];
+
+    if (entityType === 'resource') {
+      // Check if any tile types produce this resource
+      const allTileTypes = getAllTileTypes();
+      for (const [tileId, tile] of Object.entries(allTileTypes)) {
+        if (tile.resourceProduced === entityId) {
+          dependencies.push(`Tile type '${tileId}' produces this resource`);
+        }
+      }
+
+      // Check if any structures use this resource in costs
+      const allStructures = getAllStructures();
+      for (const struct of allStructures) {
+        if (struct.costs && struct.costs[entityId]) {
+          dependencies.push(`Structure '${struct.id}' requires this resource`);
+        }
+      }
+    }
+
+    if (entityType === 'structure') {
+      // Check if any structures of this type are built on the map
+      const mapScene = this.scene.get('MapScene');
+      if (mapScene && mapScene.structureManager) {
+        let builtCount = 0;
+        for (const [key, structure] of mapScene.structureManager.structures.entries()) {
+          if (structure.structureType === entityId) {
+            builtCount++;
+          }
+        }
+        if (builtCount > 0) {
+          dependencies.push(`${builtCount} structure(s) of this type are built on the map`);
+        }
+      }
+    }
+
+    if (entityType === 'tileType') {
+      const mapScene = this.scene.get('MapScene');
+      if (mapScene && mapScene.hexGrid) {
+        const allTiles = mapScene.hexGrid.getAllTiles();
+        const tilesUsingType = allTiles.filter(t => t.type === entityId);
+        if (tilesUsingType.length > 0) {
+          dependencies.push(`${tilesUsingType.length} tile(s) on the map use this type`);
+        }
+      }
+    }
+
+    return dependencies;
+  }
+
+  /**
    * Delete a custom entity
    */
   deleteEntity() {
@@ -1489,7 +1546,7 @@ export class ConfigScene extends Phaser.Scene {
     }
 
     // Check dependencies before deleting
-    const dependencies = this.configManager.checkDependencies(
+    const dependencies = this.checkEntityDependencies(
       this.selectedType.slice(0, -1), // Remove 's' from type
       this.selectedEntity.id
     );
@@ -1596,10 +1653,10 @@ export class ConfigScene extends Phaser.Scene {
     
     if (this.selectedType === 'structures') {
       // Check built structures
-      const structureManager = window.gameState?.structureManager;
-      if (structureManager) {
+      const mapScene = this.scene.get('MapScene');
+      if (mapScene && mapScene.structureManager) {
         let builtCount = 0;
-        for (const [key, structure] of structureManager.structures.entries()) {
+        for (const [key, structure] of mapScene.structureManager.structures.entries()) {
           if (structure.structureType === oldId) {
             builtCount++;
           }
@@ -1659,16 +1716,21 @@ export class ConfigScene extends Phaser.Scene {
     
     // 2. Update references based on type
     if (this.selectedType === 'structures') {
-      // Update built structures
-      const structureManager = window.gameState?.structureManager;
-      if (structureManager) {
-        for (const [key, structure] of structureManager.structures.entries()) {
+      // Update built structures on the map
+      const mapScene = this.scene.get('MapScene');
+      if (mapScene && mapScene.structureManager) {
+        let updatedCount = 0;
+        for (const [key, structure] of mapScene.structureManager.structures.entries()) {
           if (structure.structureType === oldId) {
             structure.structureType = trimmedNewId;
+            updatedCount++;
           }
         }
-        // Trigger save
-        window.dispatchEvent(new CustomEvent('structureBuilt'));
+        if (updatedCount > 0) {
+          console.log(`Updated ${updatedCount} built structure(s) from ${oldId} to ${trimmedNewId}`);
+          // Trigger autosave
+          window.dispatchEvent(new CustomEvent('structureBuilt'));
+        }
       }
     } else if (this.selectedType === 'resources') {
       // Update structure costs
