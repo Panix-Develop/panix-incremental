@@ -1729,7 +1729,9 @@ export class ConfigScene extends Phaser.Scene {
         if (updatedCount > 0) {
           console.log(`Updated ${updatedCount} built structure(s) from ${oldId} to ${trimmedNewId}`);
           // Trigger autosave
-          window.dispatchEvent(new CustomEvent('structureBuilt'));
+          if (window.gameLoop?.resourceManager) {
+            window.gameLoop.resourceManager.save();
+          }
         }
       }
     } else if (this.selectedType === 'resources') {
