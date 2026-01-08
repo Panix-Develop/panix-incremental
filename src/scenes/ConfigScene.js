@@ -509,6 +509,43 @@ export class ConfigScene extends Phaser.Scene {
     document.getElementById('config-delete-entity')?.addEventListener('click', () => {
       this.deleteEntity();
     });
+
+    // Listen for config changes to refresh dropdowns (REQ-CFG-005)
+    this.setupTileTypeEditorListeners();
+  }
+
+  /**
+   * Setup event listeners for tile type editor to react to config changes
+   * REQ-CFG-005: Config relationships
+   */
+  setupTileTypeEditorListeners() {
+    // Remove any existing listeners to avoid duplicates
+    this.configManager.off('resourceAdded', this.refreshTileResourceDropdown);
+    this.configManager.off('resourceUpdated', this.refreshTileResourceDropdown);
+
+    // Add listeners
+    this.configManager.on('resourceAdded', this.refreshTileResourceDropdown.bind(this));
+    this.configManager.on('resourceUpdated', this.refreshTileResourceDropdown.bind(this));
+  }
+
+  /**
+   * Refresh resource dropdown in tile type editor
+   * REQ-CFG-005: Live dropdown updates
+   */
+  refreshTileResourceDropdown() {
+    const resourceDropdown = document.getElementById('tile-resourceProduced');
+    if (!resourceDropdown) return;
+
+    const allResources = getAllResources();
+    const resourceIds = Array.isArray(allResources) ? allResources.map(r => r.id) : Object.values(allResources).map(r => r.id);
+    const currentValue = resourceDropdown.value;
+
+    resourceDropdown.innerHTML = `
+      <option value="">None</option>
+      ${resourceIds.map(id => 
+        `<option value="${id}" ${id === currentValue ? 'selected' : ''}>${id}</option>`
+      ).join('')}
+    `;
   }
 
   /**
@@ -695,6 +732,84 @@ export class ConfigScene extends Phaser.Scene {
     document.getElementById('config-delete-entity')?.addEventListener('click', () => {
       this.deleteEntity();
     });
+
+    // Listen for config changes to refresh dropdowns (REQ-CFG-005)
+    this.setupStructureEditorListeners();
+  }
+
+  /**
+   * Setup event listeners for structure editor to react to config changes
+   * REQ-CFG-005: Config relationships
+   */
+  setupStructureEditorListeners() {
+    // Remove any existing listeners to avoid duplicates
+    this.configManager.off('resourceAdded', this.refreshStructureCostDropdowns);
+    this.configManager.off('resourceUpdated', this.refreshStructureCostDropdowns);
+    this.configManager.off('tileTypeAdded', this.refreshStructureTileTypeCheckboxes);
+    this.configManager.off('tileTypeUpdated', this.refreshStructureTileTypeCheckboxes);
+
+    // Add listeners
+    this.configManager.on('resourceAdded', this.refreshStructureCostDropdowns.bind(this));
+    this.configManager.on('resourceUpdated', this.refreshStructureCostDropdowns.bind(this));
+    this.configManager.on('tileTypeAdded', this.refreshStructureTileTypeCheckboxes.bind(this));
+    this.configManager.on('tileTypeUpdated', this.refreshStructureTileTypeCheckboxes.bind(this));
+  }
+
+  /**
+   * Refresh cost resource dropdowns in structure editor
+   * REQ-CFG-005: Live dropdown updates
+   */
+  refreshStructureCostDropdowns() {
+    const costDropdowns = document.querySelectorAll('#structure-costs-list .cost-resource');
+    if (costDropdowns.length === 0) return;
+
+    const allResources = getAllResources();
+    const resourceIds = Array.isArray(allResources) ? allResources.map(r => r.id) : Object.values(allResources).map(r => r.id);
+
+    costDropdowns.forEach(dropdown => {
+      const currentValue = dropdown.value;
+      dropdown.innerHTML = resourceIds.map(id => 
+        `<option value="${id}" ${id === currentValue ? 'selected' : ''}>${id}</option>`
+      ).join('');
+    });
+
+    // Also refresh production dropdown
+    const productionDropdown = document.getElementById('structure-production-resource');
+    if (productionDropdown) {
+      const currentValue = productionDropdown.value;
+      productionDropdown.innerHTML = `
+        <option value="">None</option>
+        ${resourceIds.map(id => 
+          `<option value="${id}" ${id === currentValue ? 'selected' : ''}>${id}</option>`
+        ).join('')}
+      `;
+    }
+  }
+
+  /**
+   * Refresh tile type checkboxes in structure editor
+   * REQ-CFG-005: Live checkbox updates
+   */
+  refreshStructureTileTypeCheckboxes() {
+    const checkboxContainer = document.getElementById('structure-buildable-on');
+    if (!checkboxContainer) return;
+
+    // Get current selections
+    const selectedTiles = Array.from(checkboxContainer.querySelectorAll('.buildable-on-checkbox:checked'))
+      .map(cb => cb.value);
+
+    // Get all tile types
+    const allTileTypes = getAllTileTypes();
+    const tileTypeIds = Array.isArray(allTileTypes) ? allTileTypes.map(t => t.id) : Object.keys(allTileTypes);
+
+    // Rebuild checkboxes
+    checkboxContainer.innerHTML = tileTypeIds.map(id => `
+      <label style="display: flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.5rem; background: var(--bg-secondary); border-radius: 4px; cursor: pointer;">
+        <input type="checkbox" class="buildable-on-checkbox" value="${id}" ${selectedTiles.includes(id) ? 'checked' : ''}
+          style="cursor: pointer;">
+        <span style="font-size: 0.9rem;">${id}</span>
+      </label>
+    `).join('');
   }
 
   /**
@@ -898,6 +1013,72 @@ export class ConfigScene extends Phaser.Scene {
     document.getElementById('config-delete-entity')?.addEventListener('click', () => {
       this.deleteEntity();
     });
+
+    // Listen for config changes to refresh dropdowns (REQ-CFG-005)
+    this.setupDroneEditorListeners();
+  }
+
+  /**
+   * Setup event listeners for drone editor to react to config changes
+   * REQ-CFG-005: Config relationships
+   */
+  setupDroneEditorListeners() {
+    // Remove any existing listeners to avoid duplicates
+    this.configManager.off('resourceAdded', this.refreshDroneCostDropdowns);
+    this.configManager.off('resourceUpdated', this.refreshDroneCostDropdowns);
+    this.configManager.off('tileTypeAdded', this.refreshDroneTileTypeCheckboxes);
+    this.configManager.off('tileTypeUpdated', this.refreshDroneTileTypeCheckboxes);
+
+    // Add listeners
+    this.configManager.on('resourceAdded', this.refreshDroneCostDropdowns.bind(this));
+    this.configManager.on('resourceUpdated', this.refreshDroneCostDropdowns.bind(this));
+    this.configManager.on('tileTypeAdded', this.refreshDroneTileTypeCheckboxes.bind(this));
+    this.configManager.on('tileTypeUpdated', this.refreshDroneTileTypeCheckboxes.bind(this));
+  }
+
+  /**
+   * Refresh cost resource dropdowns in drone editor
+   * REQ-CFG-005: Live dropdown updates
+   */
+  refreshDroneCostDropdowns() {
+    const costDropdowns = document.querySelectorAll('#drone-costs-list .cost-resource');
+    if (costDropdowns.length === 0) return;
+
+    const allResources = getAllResources();
+    const resourceIds = Array.isArray(allResources) ? allResources.map(r => r.id) : Object.values(allResources).map(r => r.id);
+
+    costDropdowns.forEach(dropdown => {
+      const currentValue = dropdown.value;
+      dropdown.innerHTML = resourceIds.map(id => 
+        `<option value="${id}" ${id === currentValue ? 'selected' : ''}>${id}</option>`
+      ).join('');
+    });
+  }
+
+  /**
+   * Refresh tile type checkboxes in drone editor
+   * REQ-CFG-005: Live checkbox updates
+   */
+  refreshDroneTileTypeCheckboxes() {
+    const checkboxContainer = document.getElementById('drone-deployable-on');
+    if (!checkboxContainer) return;
+
+    // Get current selections
+    const selectedTiles = Array.from(checkboxContainer.querySelectorAll('.deployable-on-checkbox:checked'))
+      .map(cb => cb.value);
+
+    // Get all tile types
+    const allTileTypes = getAllTileTypes();
+    const tileTypeIds = Array.isArray(allTileTypes) ? allTileTypes.map(t => t.id) : Object.keys(allTileTypes);
+
+    // Rebuild checkboxes
+    checkboxContainer.innerHTML = tileTypeIds.map(id => `
+      <label style="display: flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.5rem; background: var(--bg-secondary); border-radius: 4px; cursor: pointer;">
+        <input type="checkbox" class="deployable-on-checkbox" value="${id}" ${selectedTiles.includes(id) ? 'checked' : ''}
+          style="cursor: pointer;">
+        <span style="font-size: 0.9rem;">${id}</span>
+      </label>
+    `).join('');
   }
 
   /**
@@ -1327,6 +1508,14 @@ export class ConfigScene extends Phaser.Scene {
     overrides[id] = resourceData;
     localStorage.setItem('dev_resources_override', JSON.stringify(overrides));
     
+    // Emit event for config relationships (REQ-CFG-005)
+    const isNewResource = !this.selectedEntity || this.selectedEntity.id !== id;
+    if (isNewResource) {
+      this.configManager.emit('resourceAdded', { id, data: resourceData });
+    } else {
+      this.configManager.emit('resourceUpdated', { id, data: resourceData });
+    }
+    
     // Update selected entity
     this.selectedEntity = { id, ...resourceData };
     
@@ -1423,6 +1612,14 @@ export class ConfigScene extends Phaser.Scene {
     
     overrides[id] = tileData;
     localStorage.setItem('dev_tiles_override', JSON.stringify(overrides));
+    
+    // Emit event for config relationships (REQ-CFG-005)
+    const isNewTileType = !this.selectedEntity || this.selectedEntity.id !== id;
+    if (isNewTileType) {
+      this.configManager.emit('tileTypeAdded', { id, data: tileData });
+    } else {
+      this.configManager.emit('tileTypeUpdated', { id, data: tileData });
+    }
     
     // Update selected entity
     this.selectedEntity = { id, ...tileData };

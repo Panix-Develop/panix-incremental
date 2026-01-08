@@ -320,21 +320,21 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 4.1.15 Test: Create structure with multiple costs
     - [x] 4.1.16 Test: Change resource in dropdown, cost updates
     - [x] 4.1.17 Test: Add/remove costs dynamically
-  - [ ] 4.2 Enhance drone management (REQ-CFG-004)
-    - [ ] 4.2.1 Read current drone editor in ConfigScene.js
-    - [ ] 4.2.2 Replace JSON textarea with form-based UI
-    - [ ] 4.2.3 Form fields: ID, Name (i18n), Description (i18n)
-    - [ ] 4.2.4 Create costs editor like structures
-    - [ ] 4.2.5 Add components multi-select (chassis, circuit, powerCore)
-    - [ ] 4.2.6 Add gathering capacity number input
-    - [ ] 4.2.7 Add tile type restrictions multi-select
-    - [ ] 4.2.8 Populate all dropdowns from defined entities
-    - [ ] 4.2.9 Implement onSaveDrone() handler
-    - [ ] 4.2.10 Validate using ConfigManager.validateDrone()
-    - [ ] 4.2.11 Convert form data to drone object
-    - [ ] 4.2.12 Save and refresh drone list
-    - [ ] 4.2.13 Test: Create drone with costs and components
-    - [ ] 4.2.14 Test: Tile type restrictions work correctly
+  - [x] 4.2 Enhance drone management (REQ-CFG-004)
+    - [x] 4.2.1 Read current drone editor in ConfigScene.js
+    - [x] 4.2.2 Replace JSON textarea with form-based UI
+    - [x] 4.2.3 Form fields: ID, Name (i18n), Description (i18n)
+    - [x] 4.2.4 Create costs editor like structures
+    - [x] 4.2.5 Add components multi-select (chassis, circuit, powerCore)
+    - [x] 4.2.6 Add gathering capacity number input
+    - [x] 4.2.7 Add tile type restrictions multi-select
+    - [x] 4.2.8 Populate all dropdowns from defined entities
+    - [x] 4.2.9 Implement onSaveDrone() handler
+    - [x] 4.2.10 Validate using ConfigManager.validateDrone()
+    - [x] 4.2.11 Convert form data to drone object
+    - [x] 4.2.12 Save and refresh drone list
+    - [x] 4.2.13 Test: Create drone with costs and components
+    - [x] 4.2.14 Test: Tile type restrictions work correctly
   - [ ] 4.3 Implement config relationships (REQ-CFG-005)
     - [ ] 4.3.1 Add event system to ConfigManager
     - [ ] 4.3.2 Emit 'resourceAdded' event when new resource created

@@ -9,6 +9,7 @@ import { getAllDroneRecipes } from '../config/recipes.js';
 /**
  * ConfigManager - Validates and manages configuration changes
  * Ensures data integrity when modifying resources, tiles, structures, and drones
+ * REQ-CFG-005: Event system for config relationships
  */
 export class ConfigManager {
   /**
@@ -19,6 +20,45 @@ export class ConfigManager {
     this.tileTypes = null;
     this.structures = null;
     this.drones = null;
+    this.eventListeners = {}; // Event system for config changes
+  }
+
+  /**
+   * Add event listener
+   * @param {string} eventName - Name of the event
+   * @param {Function} callback - Callback function
+   */
+  on(eventName, callback) {
+    if (!this.eventListeners[eventName]) {
+      this.eventListeners[eventName] = [];
+    }
+    this.eventListeners[eventName].push(callback);
+  }
+
+  /**
+   * Remove event listener
+   * @param {string} eventName - Name of the event
+   * @param {Function} callback - Callback function to remove
+   */
+  off(eventName, callback) {
+    if (!this.eventListeners[eventName]) return;
+    this.eventListeners[eventName] = this.eventListeners[eventName].filter(cb => cb !== callback);
+  }
+
+  /**
+   * Emit event
+   * @param {string} eventName - Name of the event
+   * @param {*} data - Data to pass to listeners
+   */
+  emit(eventName, data) {
+    if (!this.eventListeners[eventName]) return;
+    this.eventListeners[eventName].forEach(callback => {
+      try {
+        callback(data);
+      } catch (error) {
+        console.error(`Error in event listener for ${eventName}:`, error);
+      }
+    });
   }
 
   /**
