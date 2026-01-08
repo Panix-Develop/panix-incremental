@@ -1126,6 +1126,22 @@ export class ConfigScene extends Phaser.Scene {
     const tier = parseInt(document.getElementById('structure-tier').value);
     const type = document.getElementById('structure-type').value;
     
+    // Check if ID changed and there are built structures with the old ID
+    if (this.selectedEntity && this.selectedEntity.id !== id) {
+      const dependencies = this.configManager.checkDependencies('structure', this.selectedEntity.id);
+      if (dependencies.length > 0) {
+        errorDiv.style.display = 'block';
+        errorDiv.innerHTML = `
+          <strong>⚠️ Cannot change ID:</strong>
+          <ul>
+            ${dependencies.map(dep => `<li>${dep}</li>`).join('')}
+          </ul>
+          <p>Demolish these structures first or use the original ID.</p>
+        `;
+        return;
+      }
+    }
+    
     // Read costs
     const costs = {};
     document.querySelectorAll('.cost-entry').forEach(entry => {

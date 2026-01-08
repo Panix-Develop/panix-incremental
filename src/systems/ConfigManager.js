@@ -255,6 +255,22 @@ export class ConfigManager {
       }
     }
 
+    if (entityType === 'structure') {
+      // Check if any structures of this type are built on the map
+      const structureManager = window.gameState?.structureManager;
+      if (structureManager) {
+        let builtCount = 0;
+        for (const [key, structure] of structureManager.structures.entries()) {
+          if (structure.structureType === entityId) {
+            builtCount++;
+          }
+        }
+        if (builtCount > 0) {
+          dependencies.push(`${builtCount} structure(s) of this type are built on the map`);
+        }
+      }
+    }
+
     if (entityType === 'tileType') {
       // Check if any map tiles use this type (would need HexGrid reference)
       // For now, just indicate that map needs to be checked
