@@ -350,6 +350,7 @@ export class ConfigScene extends Phaser.Scene {
     toolbarEl.innerHTML = `
       <button id="config-save-changes" class="btn" style="padding: 0.5rem 1rem;">💾 Save</button>
       <button id="config-reset-entity" class="btn secondary" style="padding: 0.5rem 1rem;">🔄 Reset</button>
+      ${this.selectedEntity.id.startsWith('custom_') ? '<button id="config-migrate-id" class="btn secondary" style="padding: 0.5rem 1rem;">🔀 Migrate ID</button>' : ''}
       ${this.selectedEntity.id.startsWith('custom_') ? '<button id="config-delete-entity" class="btn secondary" style="padding: 0.5rem 1rem; background: rgba(233, 69, 96, 0.2);">🗑️ Delete</button>' : ''}
     `;
 
@@ -403,6 +404,10 @@ export class ConfigScene extends Phaser.Scene {
     });
 
     if (this.selectedEntity.id.startsWith('custom_')) {
+      document.getElementById('config-migrate-id')?.addEventListener('click', () => {
+        this.migrateEntityId();
+      });
+      
       document.getElementById('config-delete-entity')?.addEventListener('click', () => {
         this.deleteEntity();
       });
@@ -418,6 +423,7 @@ export class ConfigScene extends Phaser.Scene {
     toolbarEl.innerHTML = `
       <button id="config-save-changes" class="btn" style="padding: 0.5rem 1rem;">💾 Save</button>
       <button id="config-reset-entity" class="btn secondary" style="padding: 0.5rem 1rem;">🔄 Reset</button>
+      ${this.selectedEntity.id.startsWith('custom_') ? '<button id="config-migrate-id" class="btn secondary" style="padding: 0.5rem 1rem;">🔀 Migrate ID</button>' : ''}
       ${this.selectedEntity.id.startsWith('custom_') ? '<button id="config-delete-entity" class="btn secondary" style="padding: 0.5rem 1rem; background: rgba(233, 69, 96, 0.2);">🗑️ Delete</button>' : ''}
     `;
 
@@ -501,6 +507,10 @@ export class ConfigScene extends Phaser.Scene {
     });
 
     if (this.selectedEntity.id.startsWith('custom_')) {
+      document.getElementById('config-migrate-id')?.addEventListener('click', () => {
+        this.migrateEntityId();
+      });
+      
       document.getElementById('config-delete-entity')?.addEventListener('click', () => {
         this.deleteEntity();
       });
@@ -516,6 +526,7 @@ export class ConfigScene extends Phaser.Scene {
     toolbarEl.innerHTML = `
       <button id="config-save-changes" class="btn" style="padding: 0.5rem 1rem;">💾 Save</button>
       <button id="config-reset-entity" class="btn secondary" style="padding: 0.5rem 1rem;">🔄 Reset</button>
+      ${this.selectedEntity.id.startsWith('custom_') ? '<button id="config-migrate-id" class="btn secondary" style="padding: 0.5rem 1rem;">🔀 Migrate ID</button>' : ''}
       ${this.selectedEntity.id.startsWith('custom_') ? '<button id="config-delete-entity" class="btn secondary" style="padding: 0.5rem 1rem; background: rgba(233, 69, 96, 0.2);">🗑️ Delete</button>' : ''}
     `;
 
@@ -790,8 +801,12 @@ export class ConfigScene extends Phaser.Scene {
       this.resetEntity();
     });
 
-    // Add delete listener for custom entities
+    // Add migrate and delete listeners for custom entities
     if (this.selectedEntity.id.startsWith('custom_')) {
+      document.getElementById('config-migrate-id')?.addEventListener('click', () => {
+        this.migrateEntityId();
+      });
+      
       document.getElementById('config-delete-entity')?.addEventListener('click', () => {
         this.deleteEntity();
       });
@@ -1324,14 +1339,61 @@ export class ConfigScene extends Phaser.Scene {
     }
     this._creatingEntity = true;
 
-    // Generate a unique ID using timestamp and random suffix
-    const timestamp = Date.now();
-    const randomSuffix = Math.floor(Math.random() * 10000);
-    const newId = `custom_${this.selectedType.slice(0, -1)}_${timestamp}_${randomSuffix}`;
+    // Prompt for custom ID
+    const entityTypeSingular = this.selectedType.slice(0, -1); // Remove 's'
+    const defaultId = `custom_${entityTypeSingular}_${Date.now()}`;
+    const customId = prompt(
+      `Enter a custom ID for your new ${entityTypeSingular}:\n\n` +
+      `- Must start with "custom_"\n` +
+      `- Use only letters, numbers, hyphens, and underscores\n` +
+      `- Example: custom_my_${entityTypeSingular}`,
+      defaultId
+    );
+    
+    // User cancelled
+    if (customId === null) {
+      this._creatingEntity = false;
+      return;
+    }
+    
+    // Validate ID format
+    const newId = customId.trim();
+    if (!newId.startsWith('custom_')) {
+      alert('ID must start with "custom_"');
+      this._creatingEntity = false;
+      return;
+    }
+    
+    if (!/^[a-zA-Z0-9_-]+$/.test(newId)) {
+      alert('ID can only contain letters, numbers, hyphens, and underscores');
+      this._creatingEntity = false;
+      return;
+    }
+    
+    // Check if ID already exists
+    let storageKey;
+    if (this.selectedType === 'structures') {
+      storageKey = 'dev_structures_override';
+    } else if (this.selectedType === 'drones') {
+      storageKey = 'dev_drones_override';
+    } else if (this.selectedType === 'resources') {
+      storageKey = 'dev_resources_override';
+    } else if (this.selectedType === 'tiles') {
+      storageKey = 'dev_tiles_override';
+    }
+    
+    const existing = localStorage.getItem(storageKey);
+    if (existing) {
+      const overrides = JSON.parse(existing);
+      if (overrides[newId]) {
+        alert(`An entity with ID "${newId}" already exists. Please choose a different ID.`);
+        this._creatingEntity = false;
+        return;
+      }
+    }
     
     // Create template based on type
     let template = {};
-    let storageKey;
     
     if (this.selectedType === 'structures') {
       storageKey = 'dev_structures_override';
@@ -1480,6 +1542,187 @@ export class ConfigScene extends Phaser.Scene {
     
     // Clear selection and refresh
     this.selectedEntity = null;
+    this.updateEntityList();
+    this.updateEditor();
+  }
+
+  /**
+   * Migrate entity ID and update all references
+   * REQ-CFG-003: Enhanced ID management
+   */
+  migrateEntityId() {
+    if (!this.selectedEntity || !this.selectedEntity.id.startsWith('custom_')) {
+      console.warn('Can only migrate custom entity IDs');
+      return;
+    }
+
+    const oldId = this.selectedEntity.id;
+    const entityTypeSingular = this.selectedType.slice(0, -1);
+    
+    // Prompt for new ID
+    const newId = prompt(
+      `Migrate ID for ${this.selectedEntity.name || oldId}\n\n` +
+      `Current ID: ${oldId}\n\n` +
+      `Enter new ID:\n` +
+      `- Must start with "custom_"\n` +
+      `- Use only letters, numbers, hyphens, and underscores\n` +
+      `- All references will be updated automatically`,
+      oldId
+    );
+    
+    // User cancelled
+    if (newId === null || newId.trim() === oldId) {
+      return;
+    }
+    
+    // Validate ID format
+    const trimmedNewId = newId.trim();
+    if (!trimmedNewId.startsWith('custom_')) {
+      alert('ID must start with "custom_"');
+      return;
+    }
+    
+    if (!/^[a-zA-Z0-9_-]+$/.test(trimmedNewId)) {
+      alert('ID can only contain letters, numbers, hyphens, and underscores');
+      return;
+    }
+    
+    // Check if new ID already exists
+    let storageKey;
+    if (this.selectedType === 'structures') {
+      storageKey = 'dev_structures_override';
+    } else if (this.selectedType === 'drones') {
+      storageKey = 'dev_drones_override';
+    } else if (this.selectedType === 'resources') {
+      storageKey = 'dev_resources_override';
+    } else if (this.selectedType === 'tiles') {
+      storageKey = 'dev_tiles_override';
+    }
+    
+    const existing = localStorage.getItem(storageKey);
+    if (existing) {
+      const overrides = JSON.parse(existing);
+      if (overrides[trimmedNewId] && trimmedNewId !== oldId) {
+        alert(`An entity with ID "${trimmedNewId}" already exists. Please choose a different ID.`);
+        return;
+      }
+    }
+    
+    // Collect all references that will be updated
+    const updates = [];
+    
+    if (this.selectedType === 'structures') {
+      // Check built structures
+      const structureManager = window.gameState?.structureManager;
+      if (structureManager) {
+        let builtCount = 0;
+        for (const [key, structure] of structureManager.structures.entries()) {
+          if (structure.structureType === oldId) {
+            builtCount++;
+          }
+        }
+        if (builtCount > 0) {
+          updates.push(`${builtCount} built structure(s) on map`);
+        }
+      }
+    } else if (this.selectedType === 'resources') {
+      // Check structures using this resource in costs
+      const allStructures = JSON.parse(localStorage.getItem('dev_structures_override') || '{}');
+      let structureCount = 0;
+      for (const [structId, struct] of Object.entries(allStructures)) {
+        if (struct.costs && struct.costs[oldId]) {
+          structureCount++;
+        }
+      }
+      if (structureCount > 0) {
+        updates.push(`${structureCount} structure(s) cost definition(s)`);
+      }
+      
+      // Check tiles producing this resource
+      const allTiles = JSON.parse(localStorage.getItem('dev_tiles_override') || '{}');
+      let tileCount = 0;
+      for (const [tileId, tile] of Object.entries(allTiles)) {
+        if (tile.resourceProduced === oldId) {
+          tileCount++;
+        }
+      }
+      if (tileCount > 0) {
+        updates.push(`${tileCount} tile type(s) production`);
+      }
+    }
+    
+    // Show confirmation with update summary
+    const confirmMsg = updates.length > 0
+      ? `Migrate ID from "${oldId}" to "${trimmedNewId}"?\n\nThis will update:\n${updates.map(u => `• ${u}`).join('\n')}\n\nThis cannot be undone.`
+      : `Migrate ID from "${oldId}" to "${trimmedNewId}"?\n\nNo references found. This cannot be undone.`;
+    
+    if (!confirm(confirmMsg)) {
+      return;
+    }
+    
+    // Perform migration
+    
+    // 1. Update the entity in localStorage
+    if (existing) {
+      const overrides = JSON.parse(existing);
+      const entityData = overrides[oldId];
+      if (entityData) {
+        entityData.id = trimmedNewId;
+        delete overrides[oldId];
+        overrides[trimmedNewId] = entityData;
+        localStorage.setItem(storageKey, JSON.stringify(overrides));
+      }
+    }
+    
+    // 2. Update references based on type
+    if (this.selectedType === 'structures') {
+      // Update built structures
+      const structureManager = window.gameState?.structureManager;
+      if (structureManager) {
+        for (const [key, structure] of structureManager.structures.entries()) {
+          if (structure.structureType === oldId) {
+            structure.structureType = trimmedNewId;
+          }
+        }
+        // Trigger save
+        window.dispatchEvent(new CustomEvent('structureBuilt'));
+      }
+    } else if (this.selectedType === 'resources') {
+      // Update structure costs
+      const structOverrides = JSON.parse(localStorage.getItem('dev_structures_override') || '{}');
+      let structUpdated = false;
+      for (const [structId, struct] of Object.entries(structOverrides)) {
+        if (struct.costs && struct.costs[oldId]) {
+          struct.costs[trimmedNewId] = struct.costs[oldId];
+          delete struct.costs[oldId];
+          structUpdated = true;
+        }
+      }
+      if (structUpdated) {
+        localStorage.setItem('dev_structures_override', JSON.stringify(structOverrides));
+      }
+      
+      // Update tile production
+      const tileOverrides = JSON.parse(localStorage.getItem('dev_tiles_override') || '{}');
+      let tilesUpdated = false;
+      for (const [tileId, tile] of Object.entries(tileOverrides)) {
+        if (tile.resourceProduced === oldId) {
+          tile.resourceProduced = trimmedNewId;
+          tilesUpdated = true;
+        }
+      }
+      if (tilesUpdated) {
+        localStorage.setItem('dev_tiles_override', JSON.stringify(tileOverrides));
+      }
+    }
+    
+    console.log(`Migrated entity ID from ${oldId} to ${trimmedNewId}`);
+    alert(`✅ ID migrated successfully!\n\nOld ID: ${oldId}\nNew ID: ${trimmedNewId}\n\n${updates.length > 0 ? `Updated:\n${updates.map(u => `• ${u}`).join('\n')}` : 'No references needed updating.'}\n\nReload the page to see changes take effect.`);
+    
+    // Update selected entity
+    this.selectedEntity.id = trimmedNewId;
+    
+    // Refresh UI
     this.updateEntityList();
     this.updateEditor();
   }
