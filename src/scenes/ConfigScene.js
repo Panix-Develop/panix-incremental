@@ -942,8 +942,8 @@ export class ConfigScene extends Phaser.Scene {
       name, 
       icon, 
       baseRate,
-      // Mark as edit if we're modifying an existing entity
-      _isEdit: this.selectedEntity && this.selectedEntity.id === id
+      // Mark as edit if we had a selected entity (even if ID changed)
+      _isEdit: !!this.selectedEntity
     };
     
     // Validate using ConfigManager
@@ -970,6 +970,12 @@ export class ConfigScene extends Phaser.Scene {
     const existing = localStorage.getItem('dev_resources_override');
     if (existing) {
       overrides = JSON.parse(existing);
+    }
+    
+    // If ID changed, delete the old entry
+    if (this.selectedEntity && this.selectedEntity.id !== id && this.selectedEntity.id.startsWith('custom_')) {
+      delete overrides[this.selectedEntity.id];
+      console.log(`Deleted old resource entry: ${this.selectedEntity.id}`);
     }
     
     overrides[id] = resourceData;
@@ -1033,8 +1039,8 @@ export class ConfigScene extends Phaser.Scene {
       resourceProduced: resourceProduced || null, 
       baseRate,
       allowedDrones,
-      // Mark as edit if we're modifying an existing entity
-      _isEdit: this.selectedEntity && this.selectedEntity.id === id
+      // Mark as edit if we had a selected entity (even if ID changed)
+      _isEdit: !!this.selectedEntity
     };
     
     // Validate using ConfigManager
@@ -1061,6 +1067,12 @@ export class ConfigScene extends Phaser.Scene {
     const existing = localStorage.getItem('dev_tiles_override');
     if (existing) {
       overrides = JSON.parse(existing);
+    }
+    
+    // If ID changed, delete the old entry
+    if (this.selectedEntity && this.selectedEntity.id !== id && this.selectedEntity.id.startsWith('custom_')) {
+      delete overrides[this.selectedEntity.id];
+      console.log(`Deleted old tile type entry: ${this.selectedEntity.id}`);
     }
     
     overrides[id] = tileData;
@@ -1159,8 +1171,9 @@ export class ConfigScene extends Phaser.Scene {
       buildableOn,
       category: type, // Category matches type for now
       color: this.selectedEntity.color || 0xF5A623, // Keep existing color or default
-      // Mark as edit if we're modifying an existing entity (either default or custom)
-      _isEdit: this.selectedEntity && this.selectedEntity.id === id
+      // Mark as edit if we had a selected entity (even if ID changed)
+      // This allows validation to pass when updating existing entity
+      _isEdit: !!this.selectedEntity
     };
     
     // Validate using ConfigManager
@@ -1189,6 +1202,12 @@ export class ConfigScene extends Phaser.Scene {
     const existing = localStorage.getItem('dev_structures_override');
     if (existing) {
       overrides = JSON.parse(existing);
+    }
+    
+    // If ID changed, delete the old entry
+    if (this.selectedEntity && this.selectedEntity.id !== id && this.selectedEntity.id.startsWith('custom_')) {
+      delete overrides[this.selectedEntity.id];
+      console.log(`Deleted old structure entry: ${this.selectedEntity.id}`);
     }
     
     overrides[id] = structureData;

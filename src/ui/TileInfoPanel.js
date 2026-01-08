@@ -80,6 +80,7 @@ export class TileInfoPanel {
       if (existingStructure) {
         // Show existing structure info
         const structureDef = getStructure(existingStructure.structureType);
+        const energyRate = existingStructure.stats?.energyPerSecond || 0;
         content += `
           <div class="tile-info-row">
             <span class="tile-info-label">Structure:</span>
@@ -87,7 +88,7 @@ export class TileInfoPanel {
           </div>
           <div class="tile-info-row">
             <span class="tile-info-label">${t('structures.stats')}:</span>
-            <span class="tile-info-value">${t('structures.energyPerSecond', { amount: existingStructure.stats.energyPerSecond.toFixed(1) })}</span>
+            <span class="tile-info-value">${t('structures.energyPerSecond', { amount: energyRate.toFixed(1) })}</span>
           </div>
         `;
       } else {
