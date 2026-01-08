@@ -679,13 +679,17 @@ export class ConfigScene extends Phaser.Scene {
     // Add event listeners for dynamic cost management
     this.attachCostEventListeners();
 
-    // Add event listeners for save/reset/delete
+    // Add event listeners for save/reset/migrate/delete
     document.getElementById('config-save-changes')?.addEventListener('click', () => {
       this.saveStructureChanges();
     });
 
     document.getElementById('config-reset-entity')?.addEventListener('click', () => {
       this.resetEntity();
+    });
+
+    document.getElementById('config-migrate-id')?.addEventListener('click', () => {
+      this.migrateEntityId();
     });
 
     document.getElementById('config-delete-entity')?.addEventListener('click', () => {
