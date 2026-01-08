@@ -335,19 +335,19 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 4.2.12 Save and refresh drone list
     - [x] 4.2.13 Test: Create drone with costs and components
     - [x] 4.2.14 Test: Tile type restrictions work correctly
-  - [ ] 4.3 Implement config relationships (REQ-CFG-005)
-    - [ ] 4.3.1 Add event system to ConfigManager
-    - [ ] 4.3.2 Emit 'resourceAdded' event when new resource created
-    - [ ] 4.3.3 Listen in structure editor to update cost dropdowns
-    - [ ] 4.3.4 Listen in drone editor to update cost dropdowns
-    - [ ] 4.3.5 Listen in tile editor to update production dropdowns
-    - [ ] 4.3.6 Emit 'tileTypeAdded' event when new tile type created
-    - [ ] 4.3.7 Listen in structure editor to update placement restrictions
-    - [ ] 4.3.8 Listen in drone editor to update deployment restrictions
-    - [ ] 4.3.9 Implement refreshDropdowns() method for each editor
-    - [ ] 4.3.10 Test: Create new resource, immediately available in structure costs
-    - [ ] 4.3.11 Test: Create new tile type, available in structure placement
-    - [ ] 4.3.12 Test: Dropdowns update without page reload
+  - [x] 4.3 Implement config relationships (REQ-CFG-005)
+    - [x] 4.3.1 Add event system to ConfigManager
+    - [x] 4.3.2 Emit 'resourceAdded' event when new resource created
+    - [x] 4.3.3 Listen in structure editor to update cost dropdowns
+    - [x] 4.3.4 Listen in drone editor to update cost dropdowns
+    - [x] 4.3.5 Listen in tile editor to update production dropdowns
+    - [x] 4.3.6 Emit 'tileTypeAdded' event when new tile type created
+    - [x] 4.3.7 Listen in structure editor to update placement restrictions
+    - [x] 4.3.8 Listen in drone editor to update deployment restrictions
+    - [x] 4.3.9 Implement refreshDropdowns() method for each editor
+    - [x] 4.3.10 Test: Create new resource, immediately available in structure costs
+    - [x] 4.3.11 Test: Create new tile type, available in structure placement
+    - [x] 4.3.12 Test: Dropdowns update without page reload
   - [ ] 4.4 Add live preview system (REQ-CFG-009)
     - [ ] 4.4.1 Create preview panel in ConfigScene
     - [ ] 4.4.2 Show preview next to edit form

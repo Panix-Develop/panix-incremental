@@ -64,7 +64,7 @@ export class ConfigScene extends Phaser.Scene {
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 300px 1fr; gap: 2rem;">
+        <div style="display: grid; grid-template-columns: 250px 1fr 300px; gap: 1.5rem;">
           <!-- Entity List -->
           <div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
@@ -94,6 +94,16 @@ export class ConfigScene extends Phaser.Scene {
               <button id="config-export" class="btn">📥 Export JSON</button>
               <button id="config-import-trigger" class="btn secondary">📤 Import JSON</button>
               <input type="file" id="config-import-file" accept=".json" style="display: none;">
+            </div>
+          </div>
+
+          <!-- Live Preview Panel (REQ-CFG-009) -->
+          <div>
+            <h3 style="margin-bottom: 1rem;">Preview</h3>
+            <div id="config-preview" class="stat-card" style="min-height: 300px; padding: 1.5rem;">
+              <p style="color: var(--text-secondary); font-style: italic; text-align: center; margin-top: 2rem;">
+                Select an entity to see a live preview
+              </p>
             </div>
           </div>
         </div>
@@ -409,6 +419,14 @@ export class ConfigScene extends Phaser.Scene {
     document.getElementById('config-delete-entity')?.addEventListener('click', () => {
       this.deleteEntity();
     });
+
+    // Set up live preview updates (REQ-CFG-009)
+    const form = document.getElementById('resource-editor-form');
+    if (form) {
+      form.addEventListener('input', () => this.updatePreview());
+      form.addEventListener('change', () => this.updatePreview());
+    }
+    this.updatePreview(); // Initial preview
   }
 
   /**
@@ -512,6 +530,14 @@ export class ConfigScene extends Phaser.Scene {
 
     // Listen for config changes to refresh dropdowns (REQ-CFG-005)
     this.setupTileTypeEditorListeners();
+
+    // Set up live preview updates (REQ-CFG-009)
+    const form = document.getElementById('tile-editor-form');
+    if (form) {
+      form.addEventListener('input', () => this.updatePreview());
+      form.addEventListener('change', () => this.updatePreview());
+    }
+    this.updatePreview(); // Initial preview
   }
 
   /**
@@ -735,6 +761,28 @@ export class ConfigScene extends Phaser.Scene {
 
     // Listen for config changes to refresh dropdowns (REQ-CFG-005)
     this.setupStructureEditorListeners();
+
+    // Set up live preview updates (REQ-CFG-009)
+    this.setupStructurePreviewListeners();
+    this.updatePreview(); // Initial preview
+  }
+
+  /**
+   * Setup preview listeners for structure editor
+   * REQ-CFG-009: Live preview updates
+   */
+  setupStructurePreviewListeners() {
+    // Listen to all form inputs for changes
+    const form = document.getElementById('structure-editor-form');
+    if (!form) return;
+
+    form.addEventListener('input', () => {
+      this.updatePreview();
+    });
+
+    form.addEventListener('change', () => {
+      this.updatePreview();
+    });
   }
 
   /**
@@ -1016,6 +1064,27 @@ export class ConfigScene extends Phaser.Scene {
 
     // Listen for config changes to refresh dropdowns (REQ-CFG-005)
     this.setupDroneEditorListeners();
+
+    // Set up live preview updates (REQ-CFG-009)
+    this.setupDronePreviewListeners();
+    this.updatePreview(); // Initial preview
+  }
+
+  /**
+   * Setup preview listeners for drone editor
+   * REQ-CFG-009: Live preview updates
+   */
+  setupDronePreviewListeners() {
+    const form = document.getElementById('drone-editor-form');
+    if (!form) return;
+
+    form.addEventListener('input', () => {
+      this.updatePreview();
+    });
+
+    form.addEventListener('change', () => {
+      this.updatePreview();
+    });
   }
 
   /**
@@ -2461,5 +2530,258 @@ export class ConfigScene extends Phaser.Scene {
       event.target.value = '';
     };
     reader.readAsText(file);
+  }
+
+  /**
+   * Update preview panel based on current form data
+   * REQ-CFG-009: Live preview system
+   */
+  updatePreview() {
+    const previewEl = document.getElementById('config-preview');
+    if (!previewEl || !this.selectedEntity) return;
+
+    // Clear any pending debounced updates
+    if (this.previewTimeout) {
+      clearTimeout(this.previewTimeout);
+    }
+
+    // Debounce preview updates (250ms)
+    this.previewTimeout = setTimeout(() => {
+      if (this.selectedType === 'structures') {
+        this.updateStructurePreview(previewEl);
+      } else if (this.selectedType === 'drones') {
+        this.updateDronePreview(previewEl);
+      } else if (this.selectedType === 'resources') {
+        this.updateResourcePreview(previewEl);
+      } else if (this.selectedType === 'tiles') {
+        this.updateTilePreview(previewEl);
+      }
+    }, 250);
+  }
+
+  /**
+   * Update structure preview
+   * REQ-CFG-009: Structure preview with hex tile
+   */
+  updateStructurePreview(previewEl) {
+    const icon = document.getElementById('structure-icon')?.value || '⚙️';
+    const name = document.getElementById('structure-name')?.value || 'Unnamed';
+    const tier = parseInt(document.getElementById('structure-tier')?.value) || 1;
+    const type = document.getElementById('structure-type')?.value || 'production';
+
+    // Get costs
+    const costs = {};
+    document.querySelectorAll('#structure-costs-list .cost-entry').forEach(entry => {
+      const resource = entry.querySelector('.cost-resource')?.value;
+      const amount = parseInt(entry.querySelector('.cost-amount')?.value || '0');
+      if (resource && amount > 0) {
+        costs[resource] = amount;
+      }
+    });
+
+    // Get production
+    const prodResource = document.getElementById('structure-production-resource')?.value;
+    const prodAmount = parseFloat(document.getElementById('structure-production-amount')?.value || '0');
+
+    // Type emoji mapping
+    const typeEmoji = {
+      'energy': '⚡',
+      'production': '🏭',
+      'mining': '⛏️',
+      'research': '🔬',
+      'storage': '📦'
+    };
+
+    previewEl.innerHTML = `
+      <div style="text-align: center;">
+        <h4 style="margin-bottom: 1rem;">${icon} ${name}</h4>
+        
+        <!-- Hex tile visualization -->
+        <div style="display: inline-block; position: relative; margin: 1.5rem 0;">
+          <svg width="120" height="104" viewBox="0 0 120 104">
+            <polygon points="60,2 110,27 110,77 60,102 10,77 10,27" 
+              fill="rgba(126, 211, 33, 0.2)" 
+              stroke="var(--accent-secondary)" 
+              stroke-width="2"/>
+            <text x="60" y="55" text-anchor="middle" font-size="32">${icon}</text>
+            <text x="105" y="20" text-anchor="end" font-size="16">${typeEmoji[type] || '⚙️'}${'|'.repeat(tier)}</text>
+          </svg>
+        </div>
+
+        <!-- Stats -->
+        <div style="text-align: left; margin-top: 1rem;">
+          <div style="margin-bottom: 0.5rem;">
+            <strong>Type:</strong> ${type}
+          </div>
+          <div style="margin-bottom: 0.5rem;">
+            <strong>Tier:</strong> ${tier}
+          </div>
+          
+          ${Object.keys(costs).length > 0 ? `
+            <div style="margin-top: 1rem;">
+              <strong>Build Costs:</strong>
+              <div style="margin-top: 0.5rem; padding: 0.5rem; background: rgba(0,0,0,0.2); border-radius: 4px;">
+                ${Object.entries(costs).map(([resource, amount]) => 
+                  `<div>${resource}: ${amount}</div>`
+                ).join('')}
+              </div>
+            </div>
+          ` : ''}
+
+          ${prodResource && prodAmount > 0 ? `
+            <div style="margin-top: 1rem;">
+              <strong>Production:</strong>
+              <div style="margin-top: 0.5rem; padding: 0.5rem; background: rgba(0,0,0,0.2); border-radius: 4px;">
+                ${prodResource}: +${prodAmount}/sec
+              </div>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Update drone preview
+   * REQ-CFG-009: Drone preview with stat card
+   */
+  updateDronePreview(previewEl) {
+    const icon = document.getElementById('drone-icon')?.value || '🤖';
+    const name = document.getElementById('drone-name')?.value || 'Unnamed';
+    const gatherRate = parseFloat(document.getElementById('drone-gather-rate')?.value || '0.5');
+
+    // Get costs
+    const costs = {};
+    document.querySelectorAll('#drone-costs-list .cost-entry').forEach(entry => {
+      const resource = entry.querySelector('.cost-resource')?.value;
+      const amount = parseInt(entry.querySelector('.cost-amount')?.value || '0');
+      if (resource && amount > 0) {
+        costs[resource] = amount;
+      }
+    });
+
+    // Get components
+    const components = {};
+    document.querySelectorAll('#drone-components-list .component-entry').forEach(entry => {
+      const component = entry.querySelector('.component-type')?.value;
+      const amount = parseInt(entry.querySelector('.component-amount')?.value || '1');
+      if (component && amount > 0) {
+        components[component] = amount;
+      }
+    });
+
+    previewEl.innerHTML = `
+      <div style="text-align: center;">
+        <div style="font-size: 48px; margin-bottom: 0.5rem;">${icon}</div>
+        <h4 style="margin-bottom: 1.5rem;">${name}</h4>
+        
+        <!-- Stats card -->
+        <div style="text-align: left;">
+          <div style="margin-bottom: 1rem; padding: 0.75rem; background: rgba(126, 211, 33, 0.1); border: 1px solid var(--accent-secondary); border-radius: 4px;">
+            <strong>Gather Rate:</strong> ${gatherRate}/sec
+          </div>
+
+          ${Object.keys(components).length > 0 ? `
+            <div style="margin-bottom: 1rem;">
+              <strong>Required Components:</strong>
+              <div style="margin-top: 0.5rem; padding: 0.5rem; background: rgba(0,0,0,0.2); border-radius: 4px;">
+                ${Object.entries(components).map(([comp, amount]) => 
+                  `<div>${comp}: ${amount}</div>`
+                ).join('')}
+              </div>
+            </div>
+          ` : ''}
+
+          ${Object.keys(costs).length > 0 ? `
+            <div>
+              <strong>Build Costs:</strong>
+              <div style="margin-top: 0.5rem; padding: 0.5rem; background: rgba(0,0,0,0.2); border-radius: 4px;">
+                ${Object.entries(costs).map(([resource, amount]) => 
+                  `<div>${resource}: ${amount}</div>`
+                ).join('')}
+              </div>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Update resource preview
+   * REQ-CFG-009: Resource preview with icon and usage
+   */
+  updateResourcePreview(previewEl) {
+    const icon = document.getElementById('resource-icon')?.value || '⚙️';
+    const name = document.getElementById('resource-name')?.value || 'Unnamed';
+    const baseRate = parseFloat(document.getElementById('resource-baseRate')?.value || '0');
+
+    previewEl.innerHTML = `
+      <div style="text-align: center;">
+        <div style="font-size: 64px; margin-bottom: 1rem;">${icon}</div>
+        <h4 style="margin-bottom: 1.5rem;">${name}</h4>
+        
+        <div style="text-align: left;">
+          <div style="padding: 0.75rem; background: rgba(0,0,0,0.2); border-radius: 4px;">
+            <div style="margin-bottom: 0.5rem;">
+              <strong>Base Rate:</strong> ${baseRate}
+            </div>
+            <div style="color: var(--text-secondary); font-size: 0.9rem;">
+              Rate multiplier for production/consumption
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Update tile type preview
+   * REQ-CFG-009: Tile type preview with hex
+   */
+  updateTilePreview(previewEl) {
+    const name = document.getElementById('tile-name')?.value || 'Unnamed';
+    const resourceProduced = document.getElementById('tile-resourceProduced')?.value || '';
+    const baseRate = parseFloat(document.getElementById('tile-baseRate')?.value || '1');
+
+    // Get resource icon
+    const allResources = getAllResources();
+    const resourceData = Array.isArray(allResources) 
+      ? allResources.find(r => r.id === resourceProduced)
+      : allResources[resourceProduced];
+    const resourceIcon = resourceData?.icon || '❓';
+
+    previewEl.innerHTML = `
+      <div style="text-align: center;">
+        <h4 style="margin-bottom: 1.5rem;">${name}</h4>
+        
+        <!-- Hex tile visualization -->
+        <div style="display: inline-block; position: relative; margin: 1.5rem 0;">
+          <svg width="120" height="104" viewBox="0 0 120 104">
+            <polygon points="60,2 110,27 110,77 60,102 10,77 10,27" 
+              fill="rgba(74, 144, 226, 0.2)" 
+              stroke="var(--accent-primary)" 
+              stroke-width="2"/>
+            ${resourceProduced ? `<text x="60" y="55" text-anchor="middle" font-size="32">${resourceIcon}</text>` : ''}
+          </svg>
+        </div>
+
+        <!-- Stats -->
+        <div style="text-align: left; margin-top: 1rem;">
+          ${resourceProduced ? `
+            <div style="margin-bottom: 0.5rem;">
+              <strong>Produces:</strong> ${resourceProduced}
+            </div>
+            <div style="margin-bottom: 0.5rem;">
+              <strong>Base Rate:</strong> ${baseRate}/sec
+            </div>
+          ` : `
+            <div style="color: var(--text-secondary); font-style: italic;">
+              No resource production
+            </div>
+          `}
+        </div>
+      </div>
+    `;
   }
 }
