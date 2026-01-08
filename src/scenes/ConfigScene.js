@@ -350,8 +350,8 @@ export class ConfigScene extends Phaser.Scene {
     toolbarEl.innerHTML = `
       <button id="config-save-changes" class="btn" style="padding: 0.5rem 1rem;">💾 Save</button>
       <button id="config-reset-entity" class="btn secondary" style="padding: 0.5rem 1rem;">🔄 Reset</button>
-      ${this.selectedEntity.id.startsWith('custom_') ? '<button id="config-migrate-id" class="btn secondary" style="padding: 0.5rem 1rem;">🔀 Migrate ID</button>' : ''}
-      ${this.selectedEntity.id.startsWith('custom_') ? '<button id="config-delete-entity" class="btn secondary" style="padding: 0.5rem 1rem; background: rgba(233, 69, 96, 0.2);">🗑️ Delete</button>' : ''}
+      <button id="config-migrate-id" class="btn secondary" style="padding: 0.5rem 1rem;">🔀 Migrate ID</button>
+      <button id="config-delete-entity" class="btn secondary" style="padding: 0.5rem 1rem; background: rgba(233, 69, 96, 0.2);">🗑️ Delete</button>
     `;
 
     // Build form-based editor
@@ -365,9 +365,9 @@ export class ConfigScene extends Phaser.Scene {
       <form id="resource-editor-form" style="display: flex; flex-direction: column; gap: 1rem;">
         <div>
           <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">ID</label>
-          <input type="text" id="resource-id" value="${this.selectedEntity.id}" 
-            style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
-          <small style="color: var(--text-secondary);">Alphanumeric, hyphens, and underscores only</small>
+          <input type="text" id="resource-id" value="${this.selectedEntity.id}" disabled
+            style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-secondary); border: 1px solid var(--border-color); border-radius: 4px; cursor: not-allowed;">
+          <small style="color: var(--text-secondary);">Use "Migrate ID" button to change ID</small>
         </div>
 
         <div>
@@ -420,8 +420,8 @@ export class ConfigScene extends Phaser.Scene {
     toolbarEl.innerHTML = `
       <button id="config-save-changes" class="btn" style="padding: 0.5rem 1rem;">💾 Save</button>
       <button id="config-reset-entity" class="btn secondary" style="padding: 0.5rem 1rem;">🔄 Reset</button>
-      ${this.selectedEntity.id.startsWith('custom_') ? '<button id="config-migrate-id" class="btn secondary" style="padding: 0.5rem 1rem;">🔀 Migrate ID</button>' : ''}
-      ${this.selectedEntity.id.startsWith('custom_') ? '<button id="config-delete-entity" class="btn secondary" style="padding: 0.5rem 1rem; background: rgba(233, 69, 96, 0.2);">🗑️ Delete</button>' : ''}
+      <button id="config-migrate-id" class="btn secondary" style="padding: 0.5rem 1rem;">🔀 Migrate ID</button>
+      <button id="config-delete-entity" class="btn secondary" style="padding: 0.5rem 1rem; background: rgba(233, 69, 96, 0.2);">🗑️ Delete</button>
     `;
 
     // Get all resources for dropdown
@@ -441,9 +441,9 @@ export class ConfigScene extends Phaser.Scene {
       <form id="tile-editor-form" style="display: flex; flex-direction: column; gap: 1rem;">
         <div>
           <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">ID</label>
-          <input type="text" id="tile-id" value="${this.selectedEntity.id}" 
-            style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
-          <small style="color: var(--text-secondary);">Alphanumeric, hyphens, and underscores only</small>
+          <input type="text" id="tile-id" value="${this.selectedEntity.id}" disabled
+            style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-secondary); border: 1px solid var(--border-color); border-radius: 4px; cursor: not-allowed;">
+          <small style="color: var(--text-secondary);">Use "Migrate ID" button to change ID</small>
         </div>
 
         <div>
@@ -520,8 +520,8 @@ export class ConfigScene extends Phaser.Scene {
     toolbarEl.innerHTML = `
       <button id="config-save-changes" class="btn" style="padding: 0.5rem 1rem;">💾 Save</button>
       <button id="config-reset-entity" class="btn secondary" style="padding: 0.5rem 1rem;">🔄 Reset</button>
-      ${this.selectedEntity.id.startsWith('custom_') ? '<button id="config-migrate-id" class="btn secondary" style="padding: 0.5rem 1rem;">🔀 Migrate ID</button>' : ''}
-      ${this.selectedEntity.id.startsWith('custom_') ? '<button id="config-delete-entity" class="btn secondary" style="padding: 0.5rem 1rem; background: rgba(233, 69, 96, 0.2);">🗑️ Delete</button>' : ''}
+      <button id="config-migrate-id" class="btn secondary" style="padding: 0.5rem 1rem;">🔀 Migrate ID</button>
+      <button id="config-delete-entity" class="btn secondary" style="padding: 0.5rem 1rem; background: rgba(233, 69, 96, 0.2);">🗑️ Delete</button>
     `;
 
     // Get available resources for dropdowns
@@ -550,9 +550,9 @@ export class ConfigScene extends Phaser.Scene {
       <form id="structure-editor-form" style="display: flex; flex-direction: column; gap: 1rem;">
         <div>
           <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">ID</label>
-          <input type="text" id="structure-id" value="${this.selectedEntity.id}" 
-            style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
-          <small style="color: var(--text-secondary);">Alphanumeric, hyphens, and underscores only</small>
+          <input type="text" id="structure-id" value="${this.selectedEntity.id}" disabled
+            style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-secondary); border: 1px solid var(--border-color); border-radius: 4px; cursor: not-allowed;">
+          <small style="color: var(--text-secondary);">Use "Migrate ID" button to change ID</small>
         </div>
 
         <div>
