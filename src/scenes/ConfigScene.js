@@ -617,14 +617,39 @@ export class ConfigScene extends Phaser.Scene {
             <select id="structure-production-resource" 
               style="padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
               <option value="">None</option>
-              ${resourceIds.map(id => {
-                const productionResource = this.selectedEntity.stats?.energyPerSecond ? 'energy' : 
-                                          this.selectedEntity.stats?.productionRate ? Object.keys(this.selectedEntity.stats.productionRate || {})[0] : '';
-                return `<option value="${id}" ${id === productionResource ? 'selected' : ''}>${id}</option>`;
-              }).join('')}
+              ${(() => {
+                // Determine current production resource
+                let currentProductionResource = '';
+                let currentProductionAmount = 0;
+                
+                if (this.selectedEntity.stats?.energyPerSecond !== undefined) {
+                  currentProductionResource = 'energy';
+                  currentProductionAmount = this.selectedEntity.stats.energyPerSecond;
+                } else if (this.selectedEntity.stats?.productionRate) {
+                  const keys = Object.keys(this.selectedEntity.stats.productionRate);
+                  if (keys.length > 0) {
+                    currentProductionResource = keys[0];
+                    currentProductionAmount = this.selectedEntity.stats.productionRate[keys[0]];
+                  }
+                }
+                
+                return resourceIds.map(id => 
+                  `<option value="${id}" ${id === currentProductionResource ? 'selected' : ''}>${id}</option>`
+                ).join('');
+              })()}
             </select>
             <input type="number" id="structure-production-amount" 
-              value="${this.selectedEntity.stats?.energyPerSecond || this.selectedEntity.stats?.productionRate?.[Object.keys(this.selectedEntity.stats?.productionRate || {})[0]] || 0}" 
+              value="${(() => {
+                if (this.selectedEntity.stats?.energyPerSecond !== undefined) {
+                  return this.selectedEntity.stats.energyPerSecond;
+                } else if (this.selectedEntity.stats?.productionRate) {
+                  const keys = Object.keys(this.selectedEntity.stats.productionRate);
+                  if (keys.length > 0) {
+                    return this.selectedEntity.stats.productionRate[keys[0]];
+                  }
+                }
+                return 0;
+              })()}" 
               step="0.1" min="0"
               style="padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
           </div>
