@@ -1454,9 +1454,9 @@ export class ConfigScene extends Phaser.Scene {
     // Save to localStorage
     
     let overrides = {};
-    const existing = localStorage.getItem(storageKey);
-    if (existing) {
-      overrides = JSON.parse(existing);
+    const existingData = localStorage.getItem(storageKey);
+    if (existingData) {
+      overrides = JSON.parse(existingData);
     }
     
     overrides[newId] = template;
