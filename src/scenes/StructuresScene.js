@@ -105,6 +105,12 @@ export class StructuresScene extends Phaser.Scene {
         const count = structures.length;
         const totalEnergyForType = structures.reduce((sum, s) => sum + (s.stats.energyPerSecond || 0), 0);
 
+        // Skip if structure definition is not found (e.g., old ID after config change)
+        if (!structureDef) {
+          console.warn(`Structure definition not found for type: ${structureType}`);
+          continue;
+        }
+
         html += `
           <div style="margin-bottom: 1.5rem;">
             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
@@ -120,13 +126,14 @@ export class StructuresScene extends Phaser.Scene {
         `;
 
         for (const structure of structures) {
+          const energyRate = structure.stats?.energyPerSecond || 0;
           html += `
             <div style="padding: 0.5rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 4px;">
               <div style="font-size: 0.85rem; color: var(--text-secondary);">
                 Q${structure.q}, R${structure.r}
               </div>
               <div style="font-size: 0.9rem; color: var(--success);">
-                +${structure.stats.energyPerSecond.toFixed(1)}/s
+                +${energyRate.toFixed(1)}/s
               </div>
             </div>
           `;

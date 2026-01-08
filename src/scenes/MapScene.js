@@ -8,6 +8,7 @@ import { ResourcePanel } from '../ui/ResourcePanel.js';
 import { TileInfoPanel } from '../ui/TileInfoPanel.js';
 import { hexToPixel, pixelToHex, getHexVertices } from '../utils/hexMath.js';
 import { balance } from '../config/balance.js';
+import { getStructure } from '../config/structures.js';
 
 // Resource tile colors (REQ-UI-006)
 const COLORS = {
@@ -248,14 +249,104 @@ export class MapScene extends Phaser.Scene {
         const circleX = x + this.hexSize * 0.5;
         const circleY = y - this.hexSize * 0.5;
         
-        // Background circle
-        graphics.fillStyle(0x16213e, 1.0);
+        // REQ-VIS-003: Drone capacity color indicators
+        // Calculate capacity percentage
+        const maxDrones = 10; // From balance.js maxDronesPerTile
+        const capacityPercent = (tile.drones / maxDrones) * 100;
+        
+        // Determine color based on capacity
+        let circleColor;
+        if (capacityPercent >= 100) {
+          circleColor = 0x4ade80; // Green - full capacity
+        } else if (capacityPercent >= 50) {
+          circleColor = 0xfbbf24; // Yellow - medium capacity
+        } else {
+          circleColor = 0x9ca3af; // Gray - low capacity
+        }
+        
+        // Background circle with capacity color
+        graphics.fillStyle(circleColor, 1.0);
         graphics.fillCircle(circleX, circleY, circleRadius);
         
         // Border
         graphics.lineStyle(2, COLORS.hover, 1.0);
         graphics.strokeCircle(circleX, circleY, circleRadius);
       }
+    }
+
+    /**
+     * Get emoji icon for structure type
+     * REQ-VIS-001: Structure tier indicators
+     */
+    getStructureIcon(structureType) {
+      const icons = {
+        'energy': '⚡',
+        'production': '🏭',
+        'mining': '⛏️',
+        'research': '🔬',
+        'storage': '📦'
+      };
+      return icons[structureType] || '🏗️';
+    }
+
+    /**
+     * Draw structure tier indicator on tile
+     * REQ-VIS-001: Show icon + tier bars on map tiles
+     */
+    drawStructureIndicator(q, r) {
+      const key = `${q},${r}`;
+      const data = this.hexGraphics.get(key);
+      if (!data) return;
+
+      const tile = data.tile;
+      const pos = data.pos;
+
+      // Remove existing structure indicator if any
+      const existingIndicator = this.structureIndicators?.get(key);
+      if (existingIndicator) {
+        existingIndicator.destroy();
+        this.structureIndicators.delete(key);
+      }
+
+      // Check if there's a structure at this location via StructureManager
+      if (!this.structureManager) return;
+      
+      const structure = this.structureManager.getStructureAt(q, r);
+      if (!structure) return;
+
+      // Get structure definition to check tier and type
+      const structureDef = getStructure(structure.structureType);
+      if (!structureDef) return;
+
+      const tier = structureDef.tier || 1;
+      const type = structureDef.type || 'production';
+      const icon = this.getStructureIcon(type);
+
+      // Generate tier bars (repeated '|' characters)
+      const tierBars = '|'.repeat(Math.min(tier, 5)); // Cap at 5 bars for display
+
+      // Create text: icon + tier bars
+      const indicatorText = `${icon}${tierBars}`;
+
+      // Position in upper-left area of hex
+      const textX = pos.x - this.hexSize * 0.4;
+      const textY = pos.y - this.hexSize * 0.3;
+
+      const text = this.add.text(textX, textY, indicatorText, {
+        fontSize: '14px',
+        fontFamily: 'Arial',
+        color: '#ffffff',
+        fontStyle: 'bold',
+        stroke: '#000000',
+        strokeThickness: 2
+      });
+      text.setOrigin(0, 0.5);
+
+      // Store for later updates
+      if (!this.structureIndicators) {
+        this.structureIndicators = new Map();
+      }
+      this.structureIndicators.set(key, text);
     }
 
     /**
@@ -346,6 +437,8 @@ export class MapScene extends Phaser.Scene {
                         this.selectedTile.r === tile.r;
       
       this.drawHexagon(graphics, pos.x, pos.y, tile, isHovered, isSelected);
+      // REQ-VIS-001: Draw structure tier indicator
+      this.drawStructureIndicator(tile.q, tile.r);
     });
   }
 
@@ -394,6 +487,8 @@ export class MapScene extends Phaser.Scene {
                         this.selectedTile.r === tile.r;
       
       this.drawHexagon(graphics, pos.x, pos.y, tile, isHovered, isSelected);
+      // REQ-VIS-001: Update structure tier indicator
+      this.drawStructureIndicator(q, r);
     }
   }
 

@@ -1,17 +1,13 @@
-indicator of structures built on tile
+structure bubble indicator sometimes is BEHIND another tile
 
-crafting tab should increase resources live
+resource config tab is not scrollable
 
-indicator on map if all drones are satisfied
+erfundene wertre anklickbar in tiles
 
-config has drones and structures clones
+custom resources on map resource panel
 
-dont show "custom"
+building custoim structures on map
 
-webspace to save these things?
+upgrade base to higher tier to unlock automations
 
-also tiles + resources customizable
-
-dropdowns etc for config, not json
-
-downoadable configs for prod
+translation file for custom things, or at least translations in the custom config editor

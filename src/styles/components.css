@@ -195,9 +195,16 @@
 }
 
 /* Resource Items */
-.resource-item {
+.resource-list {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.resource-item {
+  display: grid;
+  grid-template-columns: minmax(60px, 1fr) minmax(60px, auto) minmax(80px, auto);
+  gap: 0.75rem;
   align-items: center;
   padding: 0.5rem 0;
   border-bottom: 1px solid var(--border-color);
@@ -210,18 +217,25 @@
 .resource-name {
   font-weight: 600;
   color: var(--text-primary);
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .resource-value {
   font-size: 1rem;
   color: var(--accent-primary);
   font-weight: bold;
+  text-align: right;
+  white-space: nowrap;
 }
 
 .resource-rate {
   font-size: 0.85rem;
   color: var(--color-energy);
-  margin-left: 0.5rem;
+  text-align: right;
+  white-space: nowrap;
 }
 
 /* Tile Info Components */

@@ -122,7 +122,6 @@ export class DronesScene extends Phaser.Scene {
       <div class="craft-card ${canBuild ? 'craftable' : 'not-craftable'}">
         <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">
           ${t(recipe.name)}
-          ${isCustom ? '<span style="color: var(--accent-primary); font-size: 0.75rem; margin-left: 0.5rem;">CUSTOM</span>' : ''}
         </h4>
         <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">${t(recipe.description)}</p>
         
@@ -131,17 +130,23 @@ export class DronesScene extends Phaser.Scene {
     `;
 
     // Display component requirements
-    for (const [component, amount] of Object.entries(recipe.components)) {
-      const current = components[component] || 0;
-      const hasEnough = current >= amount;
-      const color = hasEnough ? 'var(--text-primary)' : 'var(--accent-primary)';
-      const displayName = component.charAt(0).toUpperCase() + component.slice(1);
-      
+    if (recipe.components && typeof recipe.components === 'object') {
+      for (const [component, amount] of Object.entries(recipe.components)) {
+        const current = components[component] || 0;
+        const hasEnough = current >= amount;
+        const color = hasEnough ? 'var(--text-primary)' : 'var(--accent-primary)';
+        const displayName = component.charAt(0).toUpperCase() + component.slice(1);
+        
+        html += `
+          <div style="color: ${color}; margin-left: 1rem; display: flex; justify-content: space-between; padding: 0.3rem 0;">
+            <span>${displayName}:</span>
+            <span>${amount} <span style="color: var(--text-secondary); font-size: 0.9rem;">(have ${current})</span></span>
+          </div>
+        `;
+      }
+    } else {
       html += `
-        <div style="color: ${color}; margin-left: 1rem; display: flex; justify-content: space-between; padding: 0.3rem 0;">
-          <span>${displayName}:</span>
-          <span>${amount} <span style="color: var(--text-secondary); font-size: 0.9rem;">(have ${current})</span></span>
-        </div>
+        <div style="color: var(--text-secondary); margin-left: 1rem; font-style: italic;">No components defined</div>
       `;
     }
 
@@ -150,7 +155,7 @@ export class DronesScene extends Phaser.Scene {
         
         <div style="margin-bottom: 1rem; padding: 0.75rem; background: rgba(74, 144, 226, 0.1); border-radius: 4px;">
           <div style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.3rem;">${t('drones.gatherRate')}:</div>
-          <div style="color: var(--color-silicon); font-weight: 600;">${t('drones.gatherRateValue', { rate: recipe.stats.gatherRate })}</div>
+          <div style="color: var(--color-silicon); font-weight: 600;">${t('drones.gatherRateValue', { rate: recipe.stats?.gatherRate || 0 })}</div>
         </div>
 
         <button 

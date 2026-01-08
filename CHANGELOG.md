@@ -5,6 +5,147 @@ All notable changes to Panix Incremental will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-01-08
+
+### 🎉 Stage 3 Release: Polish & Config Enhancement
+
+This release focuses on bug fixes, visual enhancements, and a completely overhauled config system for advanced customization.
+
+### Fixed
+
+#### Critical Bug Fixes (Phase 1)
+- **Translation loading in production** - Fixed fetch() calls that failed in production builds by switching to direct JSON imports
+- **Language persistence** - Language selection now properly persists across browser reloads
+- **Duplicate entity creation** - Fixed bug where creating structures/drones would create 2 entities instead of 1
+- **Resource panel alignment** - Implemented CSS Grid layout for perfect column alignment of resources
+- **Config editor button layout** - Fixed scrolling issues by moving action buttons to a fixed toolbar
+
+### Added
+
+#### Visual Enhancements (Phase 2)
+- **Structure tier indicators** - Structures now display tier badges and type icons (⚡ energy, 🏭 production, ⛏️ mining) on map tiles
+- **Live resource updates** - Resource displays in Crafting, Drones, and Structures pages update automatically without clicking
+- **Drone capacity color indicators** - Tile drone circles now show:
+  - 🟢 Green at 100% capacity
+  - 🟡 Yellow at 50-99% capacity
+  - ⚪ Gray below 50% capacity
+- **Removed "custom" labels** - All entities now appear equal in UI, no special styling for custom content
+
+#### Config System Foundation (Phase 3)
+- **Resource management UI**:
+  - Create custom resources with icons and base rates
+  - Edit existing resources (iron, silicon, energy)
+  - Delete unused resources with dependency checking
+  - Validation ensures unique IDs and required fields
+- **Tile type management UI**:
+  - Create tile types that produce specific resources
+  - Configure base production rates
+  - Set allowed drone types for restrictions
+  - Validation ensures resource references exist
+- **ConfigManager system**:
+  - Centralized validation for all entity types
+  - Dependency checking prevents deleting resources in use
+  - Event system for config relationships
+  - Comprehensive error reporting
+- **Config import/export**:
+  - Export all configs to timestamped JSON file
+  - Import configs with validation and preview
+  - Metadata includes version, timestamp, author
+
+#### Config System Advanced (Phase 4)
+- **Form-based structure editor**:
+  - Replaced raw JSON editing with intuitive form UI
+  - Fields: ID, name, description (i18n keys)
+  - Tier (unlimited) and type (energy/production/mining/research/storage)
+  - Dynamic cost editor with [+ Add Cost] button
+  - Production configuration with resource dropdown
+  - Tile type restrictions with multi-select
+- **Form-based drone editor**:
+  - Intuitive form UI matching structure editor
+  - Cost editor with dynamic resource dropdowns
+  - Component requirements (chassis, circuit, powerCore)
+  - Gathering capacity/rate configuration
+  - Tile type restrictions
+- **Config relationships**:
+  - Auto-updating dropdowns when new entities are added
+  - Create a resource → immediately available in structure costs
+  - Create a tile type → immediately available in placement restrictions
+  - No page reload required
+- **Live preview system**:
+  - 3-column layout: entity list, edit form, preview panel
+  - Real-time preview updates as you type (250ms debounce)
+  - Structure preview: hex tile with tier indicator and stats
+  - Drone preview: stat card with costs and capabilities
+  - Resource preview: icon and usage count
+  - Tile preview: hex with resource information
+- **Secure config storage**:
+  - Dev mode: configs save to localStorage with `dev_` prefix
+  - Production: configs bundled into minified JS (not editable)
+  - Config editor completely disabled in production builds
+  - configStorage.js utility for centralized storage management
+
+### Changed
+
+#### Config Editor
+- **Complete overhaul** from raw JSON editing to form-based UI
+- **Better UX** with validation feedback and error messages
+- **Live updates** without page reload
+- **Visual previews** for all entity types
+
+#### Testing
+- **Updated test count**: 333 tests (was 312)
+- **Updated coverage**: 79% overall (core systems 97-100%)
+- **New test file**: ConfigManager.test.js with 26 tests
+- **Updated i18n tests** for new import approach
+
+#### Documentation
+- **README.md** updated with comprehensive config system guide
+- **CHANGELOG.md** with detailed Stage 3 changes
+- **Task lists** tracked throughout development
+
+### Technical
+
+#### New Files
+- `src/config/resources.js` - Resource definitions
+- `src/config/tiles.js` - Tile type definitions  
+- `src/systems/ConfigManager.js` - Config validation and events
+- `src/utils/configStorage.js` - Secure storage utilities
+- `src/systems/ConfigManager.test.js` - Validation tests
+
+#### Performance
+- Maintained 60 FPS with live updates
+- Debounced preview updates (250ms) prevent lag
+- Efficient event system for config relationships
+
+#### Code Quality
+- Following KISS, YAGNI, DRY, SRP principles
+- Comprehensive JSDoc documentation
+- Type validation throughout
+- Error handling for all user inputs
+
+### Migration Notes
+
+✅ **No breaking changes** - Save data from v2.0 is fully compatible with v2.1.
+
+**Upgrading from v2.0:**
+1. Update to v2.1
+2. Existing saves will work without modification
+3. New config features available in dev mode only
+4. Production builds continue to work as before
+
+### Known Issues
+
+- None at this time
+
+### Acknowledgments
+
+Built with:
+- Phaser 3 game framework
+- Vitest testing framework
+- esbuild bundler
+
+---
+
 ## [2.0.0] - 2026-01-07
 
 ### 🎉 Major Release: Stage 2 - Core Systems Enhancement

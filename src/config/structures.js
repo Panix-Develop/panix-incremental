@@ -33,6 +33,8 @@ export const STRUCTURES = {
     },
     buildableOn: ['empty'],  // Can only build on empty tiles
     category: 'energy',
+    tier: 1,  // Structure tier (1-5+, unlimited)
+    type: 'energy',  // Structure type: 'energy', 'production', 'mining', 'research', 'storage'
     // Visual properties (for future rendering)
     color: 0xF5A623,
     icon: '☀️'
@@ -41,27 +43,25 @@ export const STRUCTURES = {
 
 /**
  * Get structure definition by ID
- * Checks localStorage for custom structures in dev mode
+ * Checks localStorage for custom structures and overrides in dev mode
  * @param {string} structureId - Structure type identifier
  * @returns {object|null} Structure definition or null if not found
  */
 export function getStructure(structureId) {
-  // Check if it's a custom structure
-  if (structureId.startsWith('custom_')) {
-    const customStructures = localStorage.getItem('dev_structures_override');
-    if (customStructures) {
-      try {
-        const overrides = JSON.parse(customStructures);
-        if (overrides[structureId]) {
-          return { id: structureId, ...overrides[structureId] };
-        }
-      } catch (error) {
-        console.warn('Failed to load custom structure:', error);
+  // First check localStorage for any overrides (custom or modified defaults)
+  const structuresOverride = localStorage.getItem('dev_structures_override');
+  if (structuresOverride) {
+    try {
+      const overrides = JSON.parse(structuresOverride);
+      if (overrides[structureId]) {
+        return { id: structureId, ...overrides[structureId] };
       }
+    } catch (error) {
+      console.warn('Failed to load structure override:', error);
     }
-    return null;
   }
   
+  // Fall back to hardcoded default
   return STRUCTURES[structureId] || null;
 }
 
@@ -76,29 +76,33 @@ export function getStructuresByCategory(category) {
 
 /**
  * Get all buildable structures (for UI)
- * Includes custom structures from localStorage in dev mode
+ * Includes custom structures and overrides from localStorage in dev mode
  * @returns {Array<object>} Array of all structure definitions
  */
 export function getAllStructures() {
-  const baseStructures = Object.values(STRUCTURES);
+  // Start with base structures in a map
+  const structuresMap = {};
   
-  // Add custom structures from localStorage (dev mode)
-  const customStructures = localStorage.getItem('dev_structures_override');
-  if (customStructures) {
+  // Add all hardcoded structures
+  Object.entries(STRUCTURES).forEach(([id, structure]) => {
+    structuresMap[id] = { id, ...structure };
+  });
+  
+  // Apply overrides from localStorage (both custom and modified defaults)
+  const structuresOverride = localStorage.getItem('dev_structures_override');
+  if (structuresOverride) {
     try {
-      const overrides = JSON.parse(customStructures);
-      // Add custom structures (those starting with 'custom_')
+      const overrides = JSON.parse(structuresOverride);
       Object.entries(overrides).forEach(([id, structure]) => {
-        if (id.startsWith('custom_')) {
-          baseStructures.push({ id, ...structure });
-        }
+        // Override existing or add new custom structure
+        structuresMap[id] = { id, ...structure };
       });
     } catch (error) {
-      console.warn('Failed to load custom structures:', error);
+      console.warn('Failed to load structure overrides:', error);
     }
   }
   
-  return baseStructures;
+  return Object.values(structuresMap);
 }
 
 /**

@@ -82,41 +82,37 @@ export function getComponentRecipe(componentType) {
 }
 
 // Helper function to get drone recipe
-// Includes custom drones from localStorage in dev mode
+// Includes custom drones and overrides from localStorage in dev mode
 export function getDroneRecipe(droneType) {
-  // Check if it's a custom drone
-  if (droneType.startsWith('custom_')) {
-    const customDrones = localStorage.getItem('dev_drones_override');
-    if (customDrones) {
-      try {
-        const overrides = JSON.parse(customDrones);
-        if (overrides[droneType]) {
-          return overrides[droneType];
-        }
-      } catch (error) {
-        console.warn('Failed to load custom drone:', error);
+  // First check localStorage for any overrides (custom or modified defaults)
+  const dronesOverride = localStorage.getItem('dev_drones_override');
+  if (dronesOverride) {
+    try {
+      const overrides = JSON.parse(dronesOverride);
+      if (overrides[droneType]) {
+        return overrides[droneType];
       }
+    } catch (error) {
+      console.warn('Failed to load drone override:', error);
     }
-    return null;
   }
   
-  return droneRecipes[droneType];
+  // Fall back to hardcoded default
+  return droneRecipes[droneType] || null;
 }
 
-// Helper function to get all drone recipes (including custom)
+// Helper function to get all drone recipes (including custom and overrides)
 export function getAllDroneRecipes() {
   const allRecipes = { ...droneRecipes };
   
-  // Add custom drones from localStorage (dev mode)
-  const customDrones = localStorage.getItem('dev_drones_override');
-  if (customDrones) {
+  // Apply overrides from localStorage (both custom and modified defaults)
+  const dronesOverride = localStorage.getItem('dev_drones_override');
+  if (dronesOverride) {
     try {
-      const overrides = JSON.parse(customDrones);
-      // Add custom drones (those starting with 'custom_')
+      const overrides = JSON.parse(dronesOverride);
+      // Apply all overrides (custom or modified defaults)
       Object.entries(overrides).forEach(([id, recipe]) => {
-        if (id.startsWith('custom_')) {
-          allRecipes[id] = recipe;
-        }
+        allRecipes[id] = recipe;
       });
     } catch (error) {
       console.warn('Failed to load custom drones:', error);

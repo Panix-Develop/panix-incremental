@@ -25,9 +25,12 @@ A space-themed incremental/idle game built with Phaser 3. Explore a hex-based st
 - **Save/Load System**: Persistent storage using localStorage
 
 ### Developer Features
-- **Config Editor**: (Dev mode only) Edit drones, structures, and research in-browser
+- **Config Editor**: (Dev mode only) Edit resources, tiles, drones, and structures in-browser
+- **Live Preview**: Real-time visual feedback when editing configs
+- **Config Relationships**: Automatic dropdown updates when adding new entities
+- **Import/Export**: Share or backup custom configurations as JSON
 - **Debug Panel**: Add resources, view rates, and test features
-- **Unit Tests**: 312 tests with 85% coverage using Vitest
+- **Unit Tests**: 333 tests with 79% coverage using Vitest
 - **Hot Reload**: Development server with instant updates
 
 ## Setup
@@ -92,7 +95,9 @@ panix-incremental/
 │   │   ├── balance.js   # Resource rates, costs, generation
 │   │   ├── mapConfig.js # Map layout and tile distribution
 │   │   ├── recipes.js   # Crafting and drone recipes
-│   │   └── structures.js # Structure definitions
+│   │   ├── resources.js # Resource definitions
+│   │   ├── structures.js # Structure definitions
+│   │   └── tiles.js     # Tile type definitions
 │   ├── locales/         # Translation files
 │   │   ├── en.json      # English translations
 │   │   └── de.json      # German translations
@@ -116,6 +121,7 @@ panix-incremental/
 │   │   ├── DroneManager.js
 │   │   ├── StructureManager.js
 │   │   ├── SettingsManager.js
+│   │   ├── ConfigManager.js # Config validation and relationships
 │   │   └── HexGrid.js
 │   ├── ui/              # UI components
 │   │   ├── TabNavigation.js
@@ -127,7 +133,8 @@ panix-incremental/
 │   │   ├── i18n.js      # Internationalization
 │   │   ├── formatNumber.js # Number formatting
 │   │   ├── hexMath.js   # Hex grid math
-│   │   └── devMode.js   # Dev mode detection
+│   │   ├── devMode.js   # Dev mode detection
+│   │   └── configStorage.js # Secure config storage
 │   └── main.js          # Game initialization
 ├── .tasks/              # Project task lists and PRDs
 ├── index.html           # Entry point
@@ -165,15 +172,85 @@ const message = t('crafting.cost', { iron: 10, silicon: 5 });
 
 ## Dev Mode
 
-Enable dev mode to access the Config Editor:
+Enable dev mode to access the Config Editor and customize game content:
+
+### Accessing Dev Mode
 
 1. Run the development server (`npm run dev`)
 2. The Config Editor tab will appear in navigation
-3. Edit drones, structures, and research in real-time
-4. Export/import JSON configurations
-5. Changes save to localStorage (not persisted to files)
+3. Access is restricted to development builds only
 
-Dev mode is only available when running `npm run dev`, not in production builds.
+### Config Editor Features
+
+#### Resource Management
+- **Create custom resources** with unique icons and base rates
+- **Edit existing resources** (iron, silicon, energy)
+- **Delete unused resources** (dependencies are checked)
+- **Live preview** shows resource icon and usage count
+
+#### Tile Type Management
+- **Create tile types** that produce specific resources
+- **Configure base production rates** for each tile
+- **Set allowed drone types** for tile restrictions
+- **Live preview** shows hex tile with resource info
+
+#### Structure Editor (Form-Based UI)
+- **Basic Info**: ID, name, description (with i18n keys)
+- **Tier & Type**: Unlimited tiers, categorized as energy/production/mining/research/storage
+- **Costs**: Add multiple resource costs with dynamic dropdowns
+- **Production**: Configure which resource is produced and at what rate
+- **Tile Restrictions**: Multi-select which tile types allow this structure
+- **Live Preview**: See structure on hex tile with tier indicators
+
+#### Drone Editor (Form-Based UI)
+- **Basic Info**: ID, name, description (with i18n keys)
+- **Costs**: Add multiple resource costs for building the drone
+- **Components**: Select required components (chassis, circuit, powerCore)
+- **Gathering**: Configure gathering capacity/rate
+- **Tile Restrictions**: Choose which tile types this drone can work on
+- **Live Preview**: See drone stat card with costs and capabilities
+
+### Config Relationships
+
+The config system automatically handles entity relationships:
+
+- **Auto-updating dropdowns**: When you create a new resource, it immediately appears in structure cost dropdowns
+- **Dependency checking**: Cannot delete a resource if structures or drones use it
+- **Validation**: All entities are validated before saving (unique IDs, required fields, etc.)
+- **Event system**: Changes propagate instantly without page reload
+
+### Import/Export Configurations
+
+**Export**: Save your custom configs to a JSON file
+```
+Click [Export All] → Downloads "panix-config-YYYY-MM-DD.json"
+```
+
+**Import**: Load configs from a JSON file
+```
+Click [Import] → Select JSON file → Review summary → Confirm
+```
+
+**Config Format**:
+```json
+{
+  "version": "2.0",
+  "timestamp": "2026-01-08T12:00:00.000Z",
+  "resources": { ... },
+  "tiles": { ... },
+  "structures": { ... },
+  "drones": { ... }
+}
+```
+
+### Config Storage
+
+- **Dev Mode**: Configs save to localStorage with `dev_` prefix
+- **Production**: Configs are bundled into minified JS (secure, not editable)
+- **Security**: Config editor is completely disabled in production builds
+- Changes in dev mode are preserved across browser sessions
+
+**Note**: Dev mode is only available when running `npm run dev`, not in production builds.
 
 ## Browser Compatibility
 
@@ -200,10 +277,10 @@ npm run test:coverage
 ```
 
 ### Test Coverage
-- 312 tests across 9 test files
-- 85% code coverage
-- Tests for all core systems (Resource, Crafting, Drone, Structure managers)
-- Utility function tests (hex math, formatting, i18n, save/load)
+- 333 tests across 10 test files
+- 79% code coverage (core systems at 97-100%)
+- Tests for all core systems (Resource, Crafting, Drone, Structure, Config managers)
+- Utility function tests (hex math, formatting, i18n, save/load, config storage)
 
 ## Save System
 
@@ -226,7 +303,7 @@ To clear all save data and start fresh:
 
 ## Roadmap
 
-### Completed (v2.0)
+### Completed (v2.1 - Stage 3)
 - ✅ Core resource gathering and generation
 - ✅ Component crafting system
 - ✅ Drone building and deployment
@@ -235,7 +312,15 @@ To clear all save data and start fresh:
 - ✅ Full English and German translations
 - ✅ Comprehensive testing framework
 - ✅ Auto-save and manual save/load
-- ✅ Dev mode config editor
+- ✅ Production build translation loading
+- ✅ Structure tier indicators on map
+- ✅ Live resource updates in all scenes
+- ✅ Drone capacity color indicators
+- ✅ Form-based config editor for all entity types
+- ✅ Config validation and relationship management
+- ✅ Live preview system for configs
+- ✅ Secure config storage (dev-only editing)
+- ✅ Config import/export functionality
 
 ### Planned Features
 - 🔲 Research system with tech tree

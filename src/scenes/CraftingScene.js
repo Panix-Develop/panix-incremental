@@ -33,6 +33,22 @@ export class CraftingScene extends Phaser.Scene {
         this.updateUI();
       }
     });
+
+    // REQ-VIS-002: Live resource updates using setInterval
+    // This runs independently of Phaser's update loop
+    this.updateInterval = setInterval(() => {
+      this.updateResourceDisplays();
+    }, 500);
+  }
+
+  /**
+   * Clean up when scene is destroyed
+   */
+  shutdown() {
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+      this.updateInterval = null;
+    }
   }
 
   /**
@@ -110,16 +126,18 @@ export class CraftingScene extends Phaser.Scene {
             <div style="color: var(--text-secondary); margin-bottom: 0.5rem;">${t('crafting.cost')}:</div>
       `;
 
-      // Display costs
+      // Display costs (only show resources that are needed with amount > 0)
       for (const [resource, amount] of Object.entries(recipe.cost)) {
+        if (amount <= 0) continue; // Skip resources with 0 cost
+        
         const current = this.resourceManager.getResource(resource);
         const hasEnough = current >= amount;
         const color = hasEnough ? 'var(--text-primary)' : 'var(--accent-primary)';
         
         html += `
-          <div style="color: ${color}; margin-left: 1rem;">
+          <div style="color: ${color}; margin-left: 1rem;" data-resource="${resource}" data-component="${componentType}">
             ${resource.charAt(0).toUpperCase() + resource.slice(1)}: ${amount}
-            <span style="color: var(--text-secondary);">(${current})</span>
+            <span class="resource-current" style="color: var(--text-secondary);">(${Math.floor(current)})</span>
           </div>
         `;
       }
@@ -150,6 +168,47 @@ export class CraftingScene extends Phaser.Scene {
         const componentType = e.target.getAttribute('data-component');
         this.handleCraft(componentType, e.target);
       });
+    });
+  }
+
+  /**
+   * Update resource displays without rebuilding entire UI
+   * REQ-VIS-002: Live resource updates
+   */
+  updateResourceDisplays() {
+    if (!this.uiContainer || !this.resourceManager) return;
+    
+    const panel = document.getElementById('crafting-panel');
+    if (!panel || panel.style.display === 'none') return;
+
+    // Update all resource cost displays
+    const resourceElements = this.uiContainer.querySelectorAll('[data-resource]');
+    resourceElements.forEach(el => {
+      const resource = el.getAttribute('data-resource');
+      const componentType = el.getAttribute('data-component');
+      const currentSpan = el.querySelector('.resource-current');
+      
+      if (currentSpan && resource) {
+        const current = this.resourceManager.getResource(resource);
+        currentSpan.textContent = `(${Math.floor(current)})`;
+        
+        // Update parent div color based on availability
+        const recipe = getComponentRecipe(componentType);
+        const required = recipe.cost[resource];
+        const hasEnough = current >= required;
+        el.style.color = hasEnough ? 'var(--text-primary)' : 'var(--accent-primary)';
+      }
+    });
+
+    // Update button states
+    const componentTypes = Object.keys(recipes.components);
+    componentTypes.forEach(componentType => {
+      const button = this.uiContainer.querySelector(`button.craft-btn[data-component="${componentType}"]`);
+      if (button) {
+        const canCraft = this.craftingManager.canCraft(componentType);
+        button.disabled = !canCraft;
+        button.textContent = canCraft ? t('crafting.craft') : t('crafting.insufficientResources');
+      }
     });
   }
 
@@ -194,17 +253,5 @@ export class CraftingScene extends Phaser.Scene {
       powerCore: 'Power Core'
     };
     return names[name] || name;
-  }
-
-  update(time, delta) {
-    // Update UI when panel is visible
-    const panel = document.getElementById('crafting-panel');
-    if (panel && panel.style.display !== 'none') {
-      // Update less frequently to avoid performance issues
-      if (!this.lastUpdate || time - this.lastUpdate > 500) {
-        this.updateUI();
-        this.lastUpdate = time;
-      }
-    }
   }
 }
