@@ -39,25 +39,21 @@ export const RESOURCES = {
  * @returns {object|null} Resource definition or null if not found
  */
 export function getResource(resourceId) {
-  // Check default resources first
-  if (RESOURCES[resourceId]) {
-    return RESOURCES[resourceId];
-  }
-  
-  // Check if it's a custom resource
-  if (resourceId.startsWith('custom_')) {
-    const customResources = localStorage.getItem('dev_resources_override');
-    if (customResources) {
-      try {
-        const overrides = JSON.parse(customResources);
-        return overrides[resourceId] || null;
-      } catch (error) {
-        console.warn('Failed to load custom resource:', error);
+  // First check localStorage for any overrides (custom or modified defaults)
+  const resourcesOverride = localStorage.getItem('dev_resources_override');
+  if (resourcesOverride) {
+    try {
+      const overrides = JSON.parse(resourcesOverride);
+      if (overrides[resourceId]) {
+        return overrides[resourceId];
       }
+    } catch (error) {
+      console.warn('Failed to load resource override:', error);
     }
   }
   
-  return null;
+  // Fall back to hardcoded default
+  return RESOURCES[resourceId] || null;
 }
 
 /**

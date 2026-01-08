@@ -38,30 +38,26 @@ export const TILE_TYPES = {
 
 /**
  * Get tile type definition by ID
- * Checks localStorage for custom tile types in dev mode
+ * Checks localStorage for custom tile types and overrides in dev mode
  * @param {string} tileTypeId - Tile type identifier
  * @returns {object|null} Tile type definition or null if not found
  */
 export function getTileType(tileTypeId) {
-  // Check default tile types first
-  if (TILE_TYPES[tileTypeId]) {
-    return TILE_TYPES[tileTypeId];
-  }
-  
-  // Check if it's a custom tile type
-  if (tileTypeId.startsWith('custom_')) {
-    const customTileTypes = localStorage.getItem('dev_tiles_override');
-    if (customTileTypes) {
-      try {
-        const overrides = JSON.parse(customTileTypes);
-        return overrides[tileTypeId] || null;
-      } catch (error) {
-        console.warn('Failed to load custom tile type:', error);
+  // First check localStorage for any overrides (custom or modified defaults)
+  const tilesOverride = localStorage.getItem('dev_tiles_override');
+  if (tilesOverride) {
+    try {
+      const overrides = JSON.parse(tilesOverride);
+      if (overrides[tileTypeId]) {
+        return overrides[tileTypeId];
       }
+    } catch (error) {
+      console.warn('Failed to load tile type override:', error);
     }
   }
   
-  return null;
+  // Fall back to hardcoded default
+  return TILE_TYPES[tileTypeId] || null;
 }
 
 /**
