@@ -348,20 +348,20 @@ Update the file after completing each sub-task, not just after completing an ent
     - [x] 4.3.10 Test: Create new resource, immediately available in structure costs
     - [x] 4.3.11 Test: Create new tile type, available in structure placement
     - [x] 4.3.12 Test: Dropdowns update without page reload
-  - [ ] 4.4 Add live preview system (REQ-CFG-009)
-    - [ ] 4.4.1 Create preview panel in ConfigScene
-    - [ ] 4.4.2 Show preview next to edit form
-    - [ ] 4.4.3 For structures: Show hex tile with structure indicator
-    - [ ] 4.4.4 Display structure icon, tier bars, costs, production
-    - [ ] 4.4.5 For drones: Show stat card
-    - [ ] 4.4.6 Display costs, components required, capacity
-    - [ ] 4.4.7 For resources: Show icon and usage count
-    - [ ] 4.4.8 For tile types: Show hex with resource info
-    - [ ] 4.4.9 Implement updatePreview() method
-    - [ ] 4.4.10 Call on every form field change
-    - [ ] 4.4.11 Use debounce to avoid excessive updates (250ms)
-    - [ ] 4.4.12 Test: Type in form, preview updates in real-time
-    - [ ] 4.4.13 Test: Change tier, structure indicator updates
+  - [x] 4.4 Add live preview system (REQ-CFG-009)
+    - [x] 4.4.1 Create preview panel in ConfigScene
+    - [x] 4.4.2 Show preview next to edit form
+    - [x] 4.4.3 For structures: Show hex tile with structure indicator
+    - [x] 4.4.4 Display structure icon, tier bars, costs, production
+    - [x] 4.4.5 For drones: Show stat card
+    - [x] 4.4.6 Display costs, components required, capacity
+    - [x] 4.4.7 For resources: Show icon and usage count
+    - [x] 4.4.8 For tile types: Show hex with resource info
+    - [x] 4.4.9 Implement updatePreview() method
+    - [x] 4.4.10 Call on every form field change
+    - [x] 4.4.11 Use debounce to avoid excessive updates (250ms)
+    - [x] 4.4.12 Test: Type in form, preview updates in real-time
+    - [x] 4.4.13 Test: Change tier, structure indicator updates
   - [ ] 4.5 Implement secure config storage (REQ-CFG-006)
     - [ ] 4.5.1 Create `src/utils/configStorage.js`
     - [ ] 4.5.2 Add saveConfigToDev(configType, data) method
