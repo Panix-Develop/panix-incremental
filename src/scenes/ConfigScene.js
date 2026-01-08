@@ -329,15 +329,15 @@ export class ConfigScene extends Phaser.Scene {
       return;
     }
 
-    // Use form-based editor for resources, tiles, and structures; JSON editor for drones
+    // Use form-based editor for all entity types
     if (this.selectedType === 'resources') {
       this.buildResourceEditor(editorEl, toolbarEl);
     } else if (this.selectedType === 'tiles') {
       this.buildTileTypeEditor(editorEl, toolbarEl);
     } else if (this.selectedType === 'structures') {
       this.buildStructureEditor(editorEl, toolbarEl);
-    } else {
-      this.buildJSONEditor(editorEl, toolbarEl);
+    } else if (this.selectedType === 'drones') {
+      this.buildDroneEditor(editorEl, toolbarEl);
     }
   }
 
@@ -743,6 +743,344 @@ export class ConfigScene extends Phaser.Scene {
         }
       });
     });
+  }
+
+  /**
+   * Build form-based drone editor UI
+   * REQ-CFG-004: Drone management UI
+   */
+  buildDroneEditor(editorEl, toolbarEl) {
+    // Update toolbar with action buttons
+    toolbarEl.innerHTML = `
+      <button id="config-save-changes" class="btn" style="padding: 0.5rem 1rem;">💾 Save</button>
+      <button id="config-reset-entity" class="btn secondary" style="padding: 0.5rem 1rem;">🔄 Reset</button>
+      <button id="config-migrate-id" class="btn secondary" style="padding: 0.5rem 1rem;">🔀 Migrate ID</button>
+      <button id="config-delete-entity" class="btn secondary" style="padding: 0.5rem 1rem; background: rgba(233, 69, 96, 0.2);">🗑️ Delete</button>
+    `;
+
+    // Get all resources for cost dropdowns
+    const allResources = getAllResources();
+    const resourceIds = Array.isArray(allResources) ? allResources.map(r => r.id) : Object.values(allResources).map(r => r.id);
+
+    // Get all tile types for restrictions
+    const allTileTypes = getAllTileTypes();
+    const tileTypeIds = Array.isArray(allTileTypes) ? allTileTypes.map(t => t.id) : Object.keys(allTileTypes);
+
+    // Get available components
+    const availableComponents = ['chassis', 'circuit', 'powerCore'];
+
+    // Prepare costs array
+    const costs = this.selectedEntity.costs || this.selectedEntity.cost || {};
+    const costsArray = Object.entries(costs);
+
+    // Prepare components array
+    const components = this.selectedEntity.components || {};
+    const componentsArray = Object.entries(components);
+
+    // Prepare tile type restrictions
+    const allowedTiles = this.selectedEntity.allowedTiles || [];
+
+    // Build form-based editor
+    editorEl.innerHTML = `
+      <div style="margin-bottom: 1rem;">
+        <h4 style="margin-bottom: 0.5rem;">${this.selectedEntity.icon || '🤖'} Edit Drone</h4>
+      </div>
+
+      <div id="config-validation-errors" style="display: none; margin-bottom: 1rem;"></div>
+
+      <form id="drone-editor-form" style="display: flex; flex-direction: column; gap: 1rem;">
+        <div>
+          <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">ID</label>
+          <input type="text" id="drone-id" value="${this.selectedEntity.id}" disabled
+            style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-secondary); border: 1px solid var(--border-color); border-radius: 4px; cursor: not-allowed;">
+          <small style="color: var(--text-secondary);">Use "Migrate ID" button to change ID</small>
+        </div>
+
+        <div>
+          <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">Name (i18n key)</label>
+          <input type="text" id="drone-name" value="${this.selectedEntity.name || ''}" 
+            style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+          <small style="color: var(--text-secondary);">e.g., drones.types.myDrone.name</small>
+        </div>
+
+        <div>
+          <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">Description (i18n key)</label>
+          <input type="text" id="drone-description" value="${this.selectedEntity.description || ''}" 
+            style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+          <small style="color: var(--text-secondary);">e.g., drones.types.myDrone.description</small>
+        </div>
+
+        <div>
+          <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">Icon (emoji)</label>
+          <input type="text" id="drone-icon" value="${this.selectedEntity.icon || '🤖'}" 
+            style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+          <small style="color: var(--text-secondary);">Single emoji character</small>
+        </div>
+
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Build Costs</label>
+          <div id="drone-costs-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            ${costsArray.length > 0 ? costsArray.map(([resource, amount], index) => `
+              <div class="cost-entry" data-index="${index}" style="display: flex; gap: 0.5rem; align-items: center;">
+                <select class="cost-resource" data-index="${index}" 
+                  style="flex: 1; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+                  ${resourceIds.map(id => `<option value="${id}" ${id === resource ? 'selected' : ''}>${id}</option>`).join('')}
+                </select>
+                <input type="number" class="cost-amount" data-index="${index}" value="${amount}" min="0" 
+                  style="width: 120px; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+                <button type="button" class="btn secondary remove-cost" data-index="${index}" style="padding: 0.5rem;">❌</button>
+              </div>
+            `).join('') : '<p style="color: var(--text-secondary); margin: 0;">No costs defined</p>'}
+          </div>
+          <button type="button" id="add-drone-cost-btn" class="btn secondary" style="margin-top: 0.5rem; padding: 0.5rem;">+ Add Cost</button>
+        </div>
+
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Required Components</label>
+          <div id="drone-components-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            ${componentsArray.map(([component, amount], index) => `
+              <div class="component-entry" data-index="${index}" style="display: flex; gap: 0.5rem; align-items: center;">
+                <select class="component-type" data-index="${index}" 
+                  style="flex: 1; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+                  ${availableComponents.map(comp => `<option value="${comp}" ${comp === component ? 'selected' : ''}>${comp}</option>`).join('')}
+                </select>
+                <input type="number" class="component-amount" data-index="${index}" value="${amount}" min="1" 
+                  style="width: 120px; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+                <button type="button" class="btn secondary remove-component" data-index="${index}" style="padding: 0.5rem;">❌</button>
+              </div>
+            `).join('')}
+          </div>
+          <button type="button" id="add-drone-component-btn" class="btn secondary" style="margin-top: 0.5rem; padding: 0.5rem;">+ Add Component</button>
+        </div>
+
+        <div>
+          <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">Gather Rate (resources/sec)</label>
+          <input type="number" id="drone-gather-rate" 
+            value="${this.selectedEntity.stats?.gatherRate || 0.5}" 
+            step="0.1" min="0"
+            style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+          <small style="color: var(--text-secondary);">How many resources per second this drone gathers</small>
+        </div>
+
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Deployable On (Tile Types)</label>
+          <div id="drone-deployable-on" style="display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.5rem; background: rgba(0,0,0,0.2); border-radius: 4px; min-height: 50px;">
+            ${tileTypeIds.map(id => `
+              <label style="display: flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.5rem; background: var(--bg-secondary); border-radius: 4px; cursor: pointer;">
+                <input type="checkbox" class="deployable-on-checkbox" value="${id}" ${allowedTiles.includes(id) ? 'checked' : ''}
+                  style="cursor: pointer;">
+                <span style="font-size: 0.9rem;">${id}</span>
+              </label>
+            `).join('')}
+          </div>
+          <small style="color: var(--text-secondary);">Select tile types where this drone can be deployed</small>
+        </div>
+      </form>
+    `;
+
+    // Add event listeners for dynamic cost and component management
+    this.attachDroneCostEventListeners();
+    this.attachDroneComponentEventListeners();
+
+    // Add event listeners for save/reset/migrate/delete
+    document.getElementById('config-save-changes')?.addEventListener('click', () => {
+      this.saveDroneChanges();
+    });
+
+    document.getElementById('config-reset-entity')?.addEventListener('click', () => {
+      this.resetEntity();
+    });
+
+    document.getElementById('config-migrate-id')?.addEventListener('click', () => {
+      this.migrateEntityId();
+    });
+
+    document.getElementById('config-delete-entity')?.addEventListener('click', () => {
+      this.deleteEntity();
+    });
+  }
+
+  /**
+   * Attach event listeners for drone cost entries
+   */
+  attachDroneCostEventListeners() {
+    // Add cost button
+    document.getElementById('add-drone-cost-btn')?.addEventListener('click', () => {
+      const costsList = document.getElementById('drone-costs-list');
+      if (!costsList) return;
+
+      // Remove "no costs" message if present
+      const noCostsMsg = costsList.querySelector('p');
+      if (noCostsMsg) noCostsMsg.remove();
+
+      const allResources = getAllResources();
+      const resourceIds = Array.isArray(allResources) ? allResources.map(r => r.id) : Object.values(allResources).map(r => r.id);
+      const defaultResource = resourceIds[0] || 'iron';
+      const currentIndex = costsList.querySelectorAll('.cost-entry').length;
+
+      const costEntryHTML = `
+        <div class="cost-entry" data-index="${currentIndex}" style="display: flex; gap: 0.5rem; align-items: center;">
+          <select class="cost-resource" data-index="${currentIndex}" 
+            style="flex: 1; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+            ${resourceIds.map(id => `<option value="${id}" ${id === defaultResource ? 'selected' : ''}>${id}</option>`).join('')}
+          </select>
+          <input type="number" class="cost-amount" data-index="${currentIndex}" value="10" min="0" 
+            style="width: 120px; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+          <button type="button" class="btn secondary remove-cost" data-index="${currentIndex}" style="padding: 0.5rem;">❌</button>
+        </div>
+      `;
+
+      costsList.insertAdjacentHTML('beforeend', costEntryHTML);
+      this.attachDroneRemoveCostListeners();
+    });
+
+    // Remove cost buttons
+    this.attachDroneRemoveCostListeners();
+  }
+
+  /**
+   * Attach event listeners to remove drone cost buttons
+   */
+  attachDroneRemoveCostListeners() {
+    document.querySelectorAll('#drone-costs-list .remove-cost').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const entry = e.target.closest('.cost-entry');
+        if (entry) {
+          entry.remove();
+        }
+      });
+    });
+  }
+
+  /**
+   * Attach event listeners for drone component entries
+   */
+  attachDroneComponentEventListeners() {
+    // Add component button
+    document.getElementById('add-drone-component-btn')?.addEventListener('click', () => {
+      const componentsList = document.getElementById('drone-components-list');
+      if (!componentsList) return;
+
+      const availableComponents = ['chassis', 'circuit', 'powerCore'];
+      const currentIndex = componentsList.querySelectorAll('.component-entry').length;
+
+      const componentEntryHTML = `
+        <div class="component-entry" data-index="${currentIndex}" style="display: flex; gap: 0.5rem; align-items: center;">
+          <select class="component-type" data-index="${currentIndex}" 
+            style="flex: 1; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+            ${availableComponents.map(comp => `<option value="${comp}">${comp}</option>`).join('')}
+          </select>
+          <input type="number" class="component-amount" data-index="${currentIndex}" value="1" min="1" 
+            style="width: 120px; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+          <button type="button" class="btn secondary remove-component" data-index="${currentIndex}" style="padding: 0.5rem;">❌</button>
+        </div>
+      `;
+
+      componentsList.insertAdjacentHTML('beforeend', componentEntryHTML);
+      this.attachDroneRemoveComponentListeners();
+    });
+
+    // Remove component buttons
+    this.attachDroneRemoveComponentListeners();
+  }
+
+  /**
+   * Attach event listeners to remove drone component buttons
+   */
+  attachDroneRemoveComponentListeners() {
+    document.querySelectorAll('#drone-components-list .remove-component').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const entry = e.target.closest('.component-entry');
+        if (entry) {
+          entry.remove();
+        }
+      });
+    });
+  }
+
+  /**
+   * Save drone changes
+   * REQ-CFG-004: Drone validation and save
+   */
+  saveDroneChanges() {
+    const id = this.selectedEntity.id;
+    const name = document.getElementById('drone-name')?.value || '';
+    const description = document.getElementById('drone-description')?.value || '';
+    const icon = document.getElementById('drone-icon')?.value || '🤖';
+    const gatherRate = parseFloat(document.getElementById('drone-gather-rate')?.value || '0.5');
+
+    // Collect costs
+    const costs = {};
+    document.querySelectorAll('#drone-costs-list .cost-entry').forEach(entry => {
+      const resource = entry.querySelector('.cost-resource')?.value;
+      const amount = parseInt(entry.querySelector('.cost-amount')?.value || '0');
+      if (resource && amount > 0) {
+        costs[resource] = amount;
+      }
+    });
+
+    // Collect components
+    const components = {};
+    document.querySelectorAll('#drone-components-list .component-entry').forEach(entry => {
+      const component = entry.querySelector('.component-type')?.value;
+      const amount = parseInt(entry.querySelector('.component-amount')?.value || '1');
+      if (component && amount > 0) {
+        components[component] = amount;
+      }
+    });
+
+    // Collect deployable tile types
+    const allowedTiles = [];
+    document.querySelectorAll('#drone-deployable-on .deployable-on-checkbox:checked').forEach(checkbox => {
+      allowedTiles.push(checkbox.value);
+    });
+
+    // Build drone object
+    const droneData = {
+      name,
+      description,
+      icon,
+      components,
+      buildTime: this.selectedEntity.buildTime || 0,
+      stats: {
+        gatherRate,
+        durability: this.selectedEntity.stats?.durability || Infinity
+      }
+    };
+
+    // Add costs if any
+    if (Object.keys(costs).length > 0) {
+      droneData.cost = costs;
+    }
+
+    // Add allowed tiles if any
+    if (allowedTiles.length > 0) {
+      droneData.allowedTiles = allowedTiles;
+    }
+
+    // Validate using ConfigManager
+    const validation = this.configManager.validateDrone(droneData);
+    
+    if (!validation.valid) {
+      this.showValidationErrors(validation.errors);
+      return;
+    }
+
+    // Save to localStorage
+    const dronesOverride = JSON.parse(localStorage.getItem('dev_drones_override') || '{}');
+    dronesOverride[id] = droneData;
+    localStorage.setItem('dev_drones_override', JSON.stringify(dronesOverride));
+
+    // Show success message
+    this.showValidationErrors(['✅ Drone saved successfully!'], true);
+
+    // Update selected entity
+    this.selectedEntity = { id, ...droneData };
+
+    // Refresh the entity list
+    this.updateEntityList();
+
+    console.log(`Saved drone: ${id}`, droneData);
   }
 
   /**

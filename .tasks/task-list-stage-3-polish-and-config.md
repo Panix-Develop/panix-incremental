@@ -444,7 +444,7 @@ Update the file after completing each sub-task, not just after completing an ent
     - [ ] 5.4.7 Final commit: `git commit -m "chore: Stage 3 complete - polish, visual enhancements, and config system"`
     - [ ] 5.4.8 Merge to main: `git checkout main && git merge phase/phase3 --no-ff`
     - [ ] 5.4.9 Tag release: `git tag v2.1.0 -m "Stage 3: Polish & Config Enhancement"`
-    - [ ] 5.4.10 Push to remote: `git push origin main --tags`
+    - [ ] 5.4.10 Push to remote: `git puersh origin main --tags`
 
 ---
 
