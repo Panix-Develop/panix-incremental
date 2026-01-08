@@ -243,7 +243,6 @@ export class ConfigScene extends Phaser.Scene {
     // so we don't need to load them separately here
 
     listEl.innerHTML = entities.map(entity => {
-      const isCustom = entity.id.startsWith('custom_');
       return `
       <div class="config-entity-item" data-id="${entity.id}" style="
         padding: 0.75rem;
@@ -275,35 +274,36 @@ export class ConfigScene extends Phaser.Scene {
    * Select an entity to edit
    */
   selectEntity(id) {
-    // Check if it's a custom entity in localStorage
-    if (id.startsWith('custom_')) {
-      let storageKey;
-      if (this.selectedType === 'resources') storageKey = 'dev_resources_override';
-      else if (this.selectedType === 'tiles') storageKey = 'dev_tiles_override';
-      else if (this.selectedType === 'structures') storageKey = 'dev_structures_override';
-      else if (this.selectedType === 'drones') storageKey = 'dev_drones_override';
+    // Try to load from localStorage first (for both modified defaults and user-created)
+    let storageKey;
+    if (this.selectedType === 'resources') storageKey = 'dev_resources_override';
+    else if (this.selectedType === 'tiles') storageKey = 'dev_tiles_override';
+    else if (this.selectedType === 'structures') storageKey = 'dev_structures_override';
+    else if (this.selectedType === 'drones') storageKey = 'dev_drones_override';
       
-      const existing = localStorage.getItem(storageKey);
-      if (existing) {
-        const overrides = JSON.parse(existing);
-        if (overrides[id]) {
-          this.selectedEntity = { id, ...overrides[id] };
-        }
+    const existing = localStorage.getItem(storageKey);
+    if (existing) {
+      const overrides = JSON.parse(existing);
+      if (overrides[id]) {
+        this.selectedEntity = { id, ...overrides[id] };
+        this.updateEntityList();
+        this.updateEditor();
+        return;
       }
-    } else {
-      // Load from defaults
-      if (this.selectedType === 'resources') {
-        const allResources = getAllResources();
-        this.selectedEntity = { id, ...allResources[id] };
-      } else if (this.selectedType === 'tiles') {
-        const allTileTypes = getAllTileTypes();
-        this.selectedEntity = { id, ...allTileTypes[id] };
-      } else if (this.selectedType === 'structures') {
-        this.selectedEntity = getAllStructures().find(s => s.id === id);
-      } else if (this.selectedType === 'drones') {
-        const allDrones = getAllDroneRecipes();
-        this.selectedEntity = { id, ...allDrones[id] };
-      }
+    }
+    
+    // Load from defaults
+    if (this.selectedType === 'resources') {
+      const allResources = getAllResources();
+      this.selectedEntity = { id, ...allResources[id] };
+    } else if (this.selectedType === 'tiles') {
+      const allTileTypes = getAllTileTypes();
+      this.selectedEntity = { id, ...allTileTypes[id] };
+    } else if (this.selectedType === 'structures') {
+      this.selectedEntity = getAllStructures().find(s => s.id === id);
+    } else if (this.selectedType === 'drones') {
+      const allDrones = getAllDroneRecipes();
+      this.selectedEntity = { id, ...allDrones[id] };
     }
 
     this.updateEntityList();
@@ -366,7 +366,6 @@ export class ConfigScene extends Phaser.Scene {
         <div>
           <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">ID</label>
           <input type="text" id="resource-id" value="${this.selectedEntity.id}" 
-            ${!this.selectedEntity.id.startsWith('custom_') ? 'disabled' : ''}
             style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
           <small style="color: var(--text-secondary);">Alphanumeric, hyphens, and underscores only</small>
         </div>
@@ -403,15 +402,13 @@ export class ConfigScene extends Phaser.Scene {
       this.resetEntity();
     });
 
-    if (this.selectedEntity.id.startsWith('custom_')) {
-      document.getElementById('config-migrate-id')?.addEventListener('click', () => {
-        this.migrateEntityId();
-      });
-      
-      document.getElementById('config-delete-entity')?.addEventListener('click', () => {
-        this.deleteEntity();
-      });
-    }
+    document.getElementById('config-migrate-id')?.addEventListener('click', () => {
+      this.migrateEntityId();
+    });
+    
+    document.getElementById('config-delete-entity')?.addEventListener('click', () => {
+      this.deleteEntity();
+    });
   }
 
   /**
@@ -445,7 +442,6 @@ export class ConfigScene extends Phaser.Scene {
         <div>
           <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">ID</label>
           <input type="text" id="tile-id" value="${this.selectedEntity.id}" 
-            ${!this.selectedEntity.id.startsWith('custom_') ? 'disabled' : ''}
             style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
           <small style="color: var(--text-secondary);">Alphanumeric, hyphens, and underscores only</small>
         </div>
@@ -506,15 +502,13 @@ export class ConfigScene extends Phaser.Scene {
       this.resetEntity();
     });
 
-    if (this.selectedEntity.id.startsWith('custom_')) {
-      document.getElementById('config-migrate-id')?.addEventListener('click', () => {
-        this.migrateEntityId();
-      });
-      
-      document.getElementById('config-delete-entity')?.addEventListener('click', () => {
-        this.deleteEntity();
-      });
-    }
+    document.getElementById('config-migrate-id')?.addEventListener('click', () => {
+      this.migrateEntityId();
+    });
+    
+    document.getElementById('config-delete-entity')?.addEventListener('click', () => {
+      this.deleteEntity();
+    });
   }
 
   /**
@@ -557,7 +551,6 @@ export class ConfigScene extends Phaser.Scene {
         <div>
           <label style="display: block; margin-bottom: 0.25rem; font-weight: 600;">ID</label>
           <input type="text" id="structure-id" value="${this.selectedEntity.id}" 
-            ${!this.selectedEntity.id.startsWith('custom_') ? 'disabled' : ''}
             style="width: 100%; padding: 0.5rem; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px;">
           <small style="color: var(--text-secondary);">Alphanumeric, hyphens, and underscores only</small>
         </div>
@@ -695,11 +688,9 @@ export class ConfigScene extends Phaser.Scene {
       this.resetEntity();
     });
 
-    if (this.selectedEntity.id.startsWith('custom_')) {
-      document.getElementById('config-delete-entity')?.addEventListener('click', () => {
-        this.deleteEntity();
-      });
-    }
+    document.getElementById('config-delete-entity')?.addEventListener('click', () => {
+      this.deleteEntity();
+    });
   }
 
   /**
@@ -801,16 +792,14 @@ export class ConfigScene extends Phaser.Scene {
       this.resetEntity();
     });
 
-    // Add migrate and delete listeners for custom entities
-    if (this.selectedEntity.id.startsWith('custom_')) {
-      document.getElementById('config-migrate-id')?.addEventListener('click', () => {
-        this.migrateEntityId();
-      });
-      
-      document.getElementById('config-delete-entity')?.addEventListener('click', () => {
-        this.deleteEntity();
-      });
-    }
+    // Add migrate and delete listeners for all entities
+    document.getElementById('config-migrate-id')?.addEventListener('click', () => {
+      this.migrateEntityId();
+    });
+    
+    document.getElementById('config-delete-entity')?.addEventListener('click', () => {
+      this.deleteEntity();
+    });
   }
 
   /**
@@ -988,7 +977,7 @@ export class ConfigScene extends Phaser.Scene {
     }
     
     // If ID changed, delete the old entry
-    if (this.selectedEntity && this.selectedEntity.id !== id && this.selectedEntity.id.startsWith('custom_')) {
+    if (this.selectedEntity && this.selectedEntity.id !== id) {
       delete overrides[this.selectedEntity.id];
       console.log(`Deleted old resource entry: ${this.selectedEntity.id}`);
     }
@@ -1085,7 +1074,7 @@ export class ConfigScene extends Phaser.Scene {
     }
     
     // If ID changed, delete the old entry
-    if (this.selectedEntity && this.selectedEntity.id !== id && this.selectedEntity.id.startsWith('custom_')) {
+    if (this.selectedEntity && this.selectedEntity.id !== id) {
       delete overrides[this.selectedEntity.id];
       console.log(`Deleted old tile type entry: ${this.selectedEntity.id}`);
     }
@@ -1236,7 +1225,7 @@ export class ConfigScene extends Phaser.Scene {
     }
     
     // If ID changed, delete the old entry
-    if (this.selectedEntity && this.selectedEntity.id !== id && this.selectedEntity.id.startsWith('custom_')) {
+    if (this.selectedEntity && this.selectedEntity.id !== id) {
       delete overrides[this.selectedEntity.id];
       console.log(`Deleted old structure entry: ${this.selectedEntity.id}`);
     }
@@ -1341,12 +1330,12 @@ export class ConfigScene extends Phaser.Scene {
 
     // Prompt for custom ID
     const entityTypeSingular = this.selectedType.slice(0, -1); // Remove 's'
-    const defaultId = `custom_${entityTypeSingular}_${Date.now()}`;
+    const defaultId = `my_${entityTypeSingular}_${Date.now()}`;
     const customId = prompt(
-      `Enter a custom ID for your new ${entityTypeSingular}:\n\n` +
-      `- Must start with "custom_"\n` +
+      `Enter an ID for your new ${entityTypeSingular}:\n\n` +
       `- Use only letters, numbers, hyphens, and underscores\n` +
-      `- Example: custom_my_${entityTypeSingular}`,
+      `- Should be unique and descriptive\n` +
+      `- Example: my_${entityTypeSingular}, advanced_${entityTypeSingular}`,
       defaultId
     );
     
@@ -1358,11 +1347,6 @@ export class ConfigScene extends Phaser.Scene {
     
     // Validate ID format
     const newId = customId.trim();
-    if (!newId.startsWith('custom_')) {
-      alert('ID must start with "custom_"');
-      this._creatingEntity = false;
-      return;
-    }
     
     if (!/^[a-zA-Z0-9_-]+$/.test(newId)) {
       alert('ID can only contain letters, numbers, hyphens, and underscores');
@@ -1481,8 +1465,8 @@ export class ConfigScene extends Phaser.Scene {
    * Delete a custom entity
    */
   deleteEntity() {
-    if (!this.selectedEntity || !this.selectedEntity.id.startsWith('custom_')) {
-      console.warn('Can only delete custom entities');
+    if (!this.selectedEntity) {
+      console.warn('No entity selected');
       return;
     }
 
@@ -1551,8 +1535,8 @@ export class ConfigScene extends Phaser.Scene {
    * REQ-CFG-003: Enhanced ID management
    */
   migrateEntityId() {
-    if (!this.selectedEntity || !this.selectedEntity.id.startsWith('custom_')) {
-      console.warn('Can only migrate custom entity IDs');
+    if (!this.selectedEntity) {
+      console.warn('No entity selected');
       return;
     }
 
@@ -1564,7 +1548,6 @@ export class ConfigScene extends Phaser.Scene {
       `Migrate ID for ${this.selectedEntity.name || oldId}\n\n` +
       `Current ID: ${oldId}\n\n` +
       `Enter new ID:\n` +
-      `- Must start with "custom_"\n` +
       `- Use only letters, numbers, hyphens, and underscores\n` +
       `- All references will be updated automatically`,
       oldId
@@ -1577,10 +1560,6 @@ export class ConfigScene extends Phaser.Scene {
     
     // Validate ID format
     const trimmedNewId = newId.trim();
-    if (!trimmedNewId.startsWith('custom_')) {
-      alert('ID must start with "custom_"');
-      return;
-    }
     
     if (!/^[a-zA-Z0-9_-]+$/.test(trimmedNewId)) {
       alert('ID can only contain letters, numbers, hyphens, and underscores');
