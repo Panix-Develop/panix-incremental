@@ -80,17 +80,31 @@ export class TileInfoPanel {
       if (existingStructure) {
         // Show existing structure info
         const structureDef = getStructure(existingStructure.structureType);
-        const energyRate = existingStructure.stats?.energyPerSecond || 0;
-        content += `
-          <div class="tile-info-row">
-            <span class="tile-info-label">Structure:</span>
-            <span class="tile-info-value">${structureDef.icon} ${t(structureDef.name)}</span>
-          </div>
-          <div class="tile-info-row">
-            <span class="tile-info-label">${t('structures.stats')}:</span>
-            <span class="tile-info-value">${t('structures.energyPerSecond', { amount: energyRate.toFixed(1) })}</span>
-          </div>
-        `;
+        
+        // Handle case where structure definition no longer exists (e.g., after deletion or ID change)
+        if (!structureDef) {
+          content += `
+            <div class="tile-info-row">
+              <span class="tile-info-label">Structure:</span>
+              <span class="tile-info-value" style="color: var(--error);">⚠️ Unknown (${existingStructure.structureType})</span>
+            </div>
+            <div class="tile-info-row" style="color: var(--text-secondary); font-size: 0.85rem;">
+              <span>This structure's definition is missing. It may have been deleted or renamed in the config editor.</span>
+            </div>
+          `;
+        } else {
+          const energyRate = existingStructure.stats?.energyPerSecond || 0;
+          content += `
+            <div class="tile-info-row">
+              <span class="tile-info-label">Structure:</span>
+              <span class="tile-info-value">${structureDef.icon} ${t(structureDef.name)}</span>
+            </div>
+            <div class="tile-info-row">
+              <span class="tile-info-label">${t('structures.stats')}:</span>
+              <span class="tile-info-value">${t('structures.energyPerSecond', { amount: energyRate.toFixed(1) })}</span>
+            </div>
+          `;
+        }
       } else {
         // Show empty tile + structure building options
         content += `
