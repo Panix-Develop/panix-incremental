@@ -912,13 +912,17 @@ export class ConfigScene extends Phaser.Scene {
     const baseRate = parseFloat(document.getElementById('resource-baseRate').value);
     
     // Build resource data
-    const resourceData = { id, name, icon, baseRate };
-    
-    // Check if this is editing an existing resource or creating new
-    const isCustom = id.startsWith('custom_');
+    const resourceData = { 
+      id, 
+      name, 
+      icon, 
+      baseRate,
+      // Mark as edit if we're modifying an existing entity
+      _isEdit: this.selectedEntity && this.selectedEntity.id === id
+    };
     
     // Validate using ConfigManager
-    const validation = this.configManager.validateResource(resourceData, isCustom);
+    const validation = this.configManager.validateResource(resourceData);
     
     if (!validation.valid) {
       // Show validation errors
@@ -1003,14 +1007,13 @@ export class ConfigScene extends Phaser.Scene {
       name, 
       resourceProduced: resourceProduced || null, 
       baseRate,
-      allowedDrones
+      allowedDrones,
+      // Mark as edit if we're modifying an existing entity
+      _isEdit: this.selectedEntity && this.selectedEntity.id === id
     };
     
-    // Check if this is editing an existing tile or creating new
-    const isCustom = id.startsWith('custom_');
-    
     // Validate using ConfigManager
-    const validation = this.configManager.validateTileType(tileData, isCustom);
+    const validation = this.configManager.validateTileType(tileData);
     
     if (!validation.valid) {
       // Show validation errors
@@ -1130,14 +1133,13 @@ export class ConfigScene extends Phaser.Scene {
       stats,
       buildableOn,
       category: type, // Category matches type for now
-      color: this.selectedEntity.color || 0xF5A623 // Keep existing color or default
+      color: this.selectedEntity.color || 0xF5A623, // Keep existing color or default
+      // Mark as edit if we're modifying an existing entity (either default or custom)
+      _isEdit: this.selectedEntity && this.selectedEntity.id === id
     };
     
-    // Check if this is editing an existing structure or creating new
-    const isEdit = !id.startsWith('custom_') || (this.selectedEntity && this.selectedEntity.id === id);
-    
     // Validate using ConfigManager
-    const validation = this.configManager.validateStructure(structureData, isEdit);
+    const validation = this.configManager.validateStructure(structureData);
     
     if (!validation.valid) {
       // Show validation errors
